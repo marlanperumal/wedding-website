@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wedding Website Design Spec — Marlan & Tramaine</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<style>
+  :root {
+    --orange: #F4A261;
+    --purple: #7A4C8C;
+    --teal: #3DA4A1;
+    --green: #5FAE7E;
+    --cream: #FAF4EE;
+    --text: #2E1A10;
+    --muted: #7a6a60;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f5f5f5;
+    color: var(--text);
+    line-height: 1.6;
+  }
+  .accent-bar {
+    height: 5px;
+    background: linear-gradient(90deg, var(--purple), var(--orange), var(--teal), var(--orange), var(--purple));
+  }
+  header {
+    background: var(--cream);
+    border-bottom: 1px solid var(--orange);
+    padding: 40px 48px 32px;
+  }
+  header .eyebrow {
+    font-size: 11px; letter-spacing: 5px; color: var(--purple);
+    text-transform: uppercase; margin-bottom: 12px;
+  }
+  header h1 {
+    font-family: Georgia, serif;
+    font-size: 36px; font-style: italic;
+    color: var(--text); margin-bottom: 8px;
+  }
+  header .meta { font-size: 13px; color: var(--muted); }
+
+  .container { max-width: 900px; margin: 0 auto; padding: 40px 24px; }
+
+  section { background: white; border-radius: 4px; padding: 32px 36px; margin-bottom: 24px;
+    border-left: 4px solid var(--orange); box-shadow: 0 1px 3px rgba(0,0,0,0.06); }
+  section.purple { border-left-color: var(--purple); }
+  section.teal   { border-left-color: var(--teal); }
+  section.green  { border-left-color: var(--green); }
+
+  h2 { font-family: Georgia, serif; font-size: 22px; color: var(--text); margin-bottom: 20px;
+    padding-bottom: 10px; border-bottom: 1px solid #eee; }
+  h3 { font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+    color: var(--purple); margin: 24px 0 10px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 12px 0; }
+  th { background: var(--cream); text-align: left; padding: 8px 12px;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); }
+  td { padding: 8px 12px; border-bottom: 1px solid #f0ece8; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+
+  code, pre { font-family: 'SF Mono', 'Fira Code', monospace; }
+  pre { background: #1e1a18; color: #f0ece8; padding: 20px 24px; border-radius: 4px;
+    overflow-x: auto; font-size: 13px; line-height: 1.7; margin: 12px 0; }
+  code { background: #f0ece8; padding: 2px 6px; border-radius: 3px; font-size: 13px; }
+
+  .pill {
+    display: inline-block; padding: 3px 12px; border-radius: 2px;
+    font-size: 11px; letter-spacing: 1px; color: white; font-family: sans-serif;
+    text-transform: uppercase; margin: 2px;
+  }
+
+  .swatch-grid { display: flex; flex-wrap: wrap; gap: 12px; margin: 12px 0; }
+  .swatch { width: 60px; text-align: center; }
+  .swatch-color { width: 60px; height: 40px; border-radius: 3px; margin-bottom: 4px;
+    border: 1px solid rgba(0,0,0,0.08); }
+  .swatch-label { font-size: 10px; color: var(--muted); line-height: 1.3; }
+
+  .flow-step {
+    display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px;
+  }
+  .step-num {
+    width: 28px; height: 28px; border-radius: 50%; background: var(--orange);
+    color: white; font-size: 12px; font-weight: bold; display: flex;
+    align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+  }
+  .step-num.purple { background: var(--purple); }
+  .step-num.teal   { background: var(--teal); }
+  .step-body { font-size: 14px; line-height: 1.6; }
+  .step-body strong { color: var(--text); }
+
+  .route-table td:first-child { font-family: 'SF Mono', monospace; font-size: 13px; color: var(--purple); }
+
+  .env-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 12px 0; }
+  .env-item { background: #f9f5f0; padding: 10px 14px; border-radius: 3px; }
+  .env-name { font-family: monospace; font-size: 12px; color: var(--purple); margin-bottom: 4px; }
+  .env-desc { font-size: 12px; color: var(--muted); }
+
+  .note { background: rgba(122,76,140,0.06); border-left: 3px solid var(--purple);
+    padding: 12px 16px; border-radius: 2px; font-size: 13px; color: #555; margin-top: 16px; }
+
+  details summary { cursor: pointer; font-size: 13px; color: var(--muted);
+    padding: 8px 0; user-select: none; }
+  details[open] summary { color: var(--text); }
+
+  .mermaid { margin: 16px 0; }
+
+  footer { text-align: center; padding: 32px; font-size: 12px; color: #aaa; }
+</style>
+</head>
+<body>
+
+<div class="accent-bar"></div>
+
+<header>
+  <div class="eyebrow">Design Specification · 10 June 2026</div>
+  <h1>Marlan &amp; Tramaine</h1>
+  <div class="meta">wedding.liedeman.perumal.co.za &nbsp;·&nbsp; Next.js · Prisma Postgres · Vercel · Tailwind</div>
+</header>
+
+<div class="container">
+
+  <!-- Overview -->
+  <section>
+    <h2>Overview</h2>
+    <p style="font-size:15px; line-height:1.8; color:#444;">
+      A wedding website for Marlan Perumal and Tramaine Liedeman. South Indian traditional aesthetic with a modern touch.
+      Guests receive personalised invite links; the site handles digital invitations and per-person RSVPs
+      across five events over two days in Cape Town, November 2026.
+    </p>
+
+    <h3>Events</h3>
+    <table>
+      <tr><th>Day</th><th>Date</th><th>Events</th><th>Venue</th></tr>
+      <tr>
+        <td>Thursday</td>
+        <td>26 Nov 2026</td>
+        <td>
+          <span class="pill" style="background:#7A4C8C">Mehndi</span>
+          <span class="pill" style="background:#E07A29">Nelengu</span>
+          <span class="pill" style="background:#9E6BB5">Sangeeth</span>
+        </td>
+        <td>11 Orient Road, Wynberg, Cape Town</td>
+      </tr>
+      <tr>
+        <td>Friday</td>
+        <td>27 Nov 2026</td>
+        <td>
+          <span class="pill" style="background:#3DA4A1">Wedding</span>
+          <span class="pill" style="background:#5FAE7E">Reception</span>
+        </td>
+        <td>Goedgeleven, Durbanville, Cape Town</td>
+      </tr>
+    </table>
+    <p class="note">Full venue addresses are withheld from the public invite page — revealed only in the RSVP confirmation email and /rsvp/confirmed page.</p>
+  </section>
+
+  <!-- Design System -->
+  <section class="purple">
+    <h2>Design System</h2>
+    <p style="font-size:14px; color:#555; margin-bottom:16px;">Modern South Indian — warm ivory base, paisley watermarks, contemporary layout. Inspired by lantern glow, blooming flowers and tranquil skies.</p>
+
+    <h3>Colour Palette</h3>
+    <div class="swatch-grid">
+      <div class="swatch"><div class="swatch-color" style="background:#F4A261"></div><div class="swatch-label">Soft Orange<br>#F4A261</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#FFB07C"></div><div class="swatch-label">Warm Apricot<br>#FFB07C</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#F28C38"></div><div class="swatch-label">Sunset Orange<br>#F28C38</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#E07A29"></div><div class="swatch-label">Golden Amber<br>#E07A29</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#FFC8A2"></div><div class="swatch-label">Peach Glow<br>#FFC8A2</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#9E6BB5"></div><div class="swatch-label">Orchid Purple<br>#9E6BB5</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#7A4C8C"></div><div class="swatch-label">Deep Violet<br>#7A4C8C</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#3DA4A1"></div><div class="swatch-label">Turquoise Teal<br>#3DA4A1</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#2E7D7A"></div><div class="swatch-label">Deep Teal<br>#2E7D7A</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#5FAE7E"></div><div class="swatch-label">Leaf Green<br>#5FAE7E</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#FAF4EE; border:1px solid #ddd"></div><div class="swatch-label">Warm Cream<br>#FAF4EE</div></div>
+      <div class="swatch"><div class="swatch-color" style="background:#2E1A10"></div><div class="swatch-label">Near-black<br>#2E1A10</div></div>
+    </div>
+
+    <h3>Typography</h3>
+    <p style="font-size:14px; color:#555;">Georgia (serif) for names and headings &nbsp;·&nbsp; System sans-serif for labels and UI chrome</p>
+
+    <h3>Event Colour Mapping</h3>
+    <table>
+      <tr><th>Event</th><th>Colour</th><th>Hex</th></tr>
+      <tr><td><span class="pill" style="background:#7A4C8C">Mehndi</span></td><td>Deep Violet</td><td><code>#7A4C8C</code></td></tr>
+      <tr><td><span class="pill" style="background:#E07A29">Nelengu</span></td><td>Sunset Orange</td><td><code>#E07A29</code></td></tr>
+      <tr><td><span class="pill" style="background:#9E6BB5">Sangeeth</span></td><td>Orchid Purple</td><td><code>#9E6BB5</code></td></tr>
+      <tr><td><span class="pill" style="background:#3DA4A1">Wedding</span></td><td>Turquoise Teal</td><td><code>#3DA4A1</code></td></tr>
+      <tr><td><span class="pill" style="background:#5FAE7E">Reception</span></td><td>Leaf Green</td><td><code>#5FAE7E</code></td></tr>
+    </table>
+  </section>
+
+  <!-- Tech Stack -->
+  <section class="teal">
+    <h2>Tech Stack</h2>
+    <table>
+      <tr><th>Concern</th><th>Choice</th><th>Notes</th></tr>
+      <tr><td>Framework</td><td>Next.js (App Router)</td><td>Server Components + Server Actions</td></tr>
+      <tr><td>Database</td><td>Prisma Postgres</td><td>Vercel managed prod / Docker local</td></tr>
+      <tr><td>ORM</td><td>Prisma</td><td><code>prisma migrate deploy</code> in build step</td></tr>
+      <tr><td>Hosting</td><td>Vercel</td><td>Push to <code>main</code> = auto-deploy</td></tr>
+      <tr><td>Styling</td><td>Tailwind CSS</td><td>Responsive, mobile-first</td></tr>
+      <tr><td>Forms</td><td>Server Actions + Zod</td><td>No form library; progressive enhancement</td></tr>
+      <tr><td>Email</td><td>Resend</td><td>Free tier; confirmation + admin notification</td></tr>
+      <tr><td>Admin auth</td><td>Passphrase + HttpOnly cookie</td><td>bcrypt compare, signed cookie</td></tr>
+      <tr><td>Guest auth</td><td>Invite cookie</td><td>Set on first invite link visit, 90-day expiry</td></tr>
+    </table>
+  </section>
+
+  <!-- Data Model -->
+  <section>
+    <h2>Data Model</h2>
+
+    <div class="mermaid">
+erDiagram
+  Invite {
+    string id PK
+    string slug
+    string label
+    string email
+    boolean submitted
+    datetime submittedAt
+  }
+  Guest {
+    string id PK
+    string name
+    string inviteId FK
+  }
+  Event {
+    string id PK
+    string name
+    datetime date
+    string venue
+    string address
+    int sortOrder
+  }
+  InviteEvent {
+    string inviteId FK
+    string eventId FK
+  }
+  Rsvp {
+    string id PK
+    string guestId FK
+    string eventId FK
+    boolean attending
+    string[] dietary
+    string dietaryNotes
+  }
+
+  Invite ||--o{ Guest : "has"
+  Invite ||--o{ InviteEvent : "invited to"
+  Event  ||--o{ InviteEvent : "includes"
+  Guest  ||--o{ Rsvp : "submits"
+  Event  ||--o{ Rsvp : "receives"
+    </div>
+
+    <h3>Dietary Options</h3>
+    <p style="font-size:14px; color:#555;">Fixed set: <code>Vegetarian</code>, <code>Vegan</code>, <code>Halal</code>, <code>Gluten-free</code>, <code>Nut allergy</code>, <code>Other</code> (triggers free-text <code>dietaryNotes</code> field).</p>
+
+    <h3>Invite Slug Format</h3>
+    <p style="font-size:14px; color:#555;"><code>[name-slug]-[4-char random]</code> &nbsp;e.g. <code>naidoo-family-x3f2</code><br>
+    Name slug generated from label on creation (admin-editable). Suffix is cryptographically random. Stored as single unique <code>slug</code> column.</p>
+  </section>
+
+  <!-- Routing -->
+  <section class="purple">
+    <h2>Routing</h2>
+    <table class="route-table">
+      <tr><th>Route</th><th>Description</th></tr>
+      <tr><td>/[inviteSlug]</td><td>Invite landing. Validates slug, sets <code>guestInviteId</code> cookie, renders personalised invite. 404 if unknown.</td></tr>
+      <tr><td>/rsvp</td><td>RSVP form. Middleware-protected — redirects to <code>/</code> if no cookie.</td></tr>
+      <tr><td>/rsvp/confirmed</td><td>Post-submission. Shows full venue addresses + <code>.ics</code> download links.</td></tr>
+      <tr><td>/admin</td><td>Passphrase login page.</td></tr>
+      <tr><td>/admin/dashboard</td><td>RSVP counts per event, dietary totals. Protected.</td></tr>
+      <tr><td>/admin/guests</td><td>Guest/invite management — add, edit, copy links. Protected.</td></tr>
+    </table>
+    <h3>Middleware</h3>
+    <ul style="font-size:14px; color:#555; padding-left:20px; line-height:2;">
+      <li><code>/rsvp*</code> — no <code>guestInviteId</code> cookie → redirect to <code>/</code></li>
+      <li><code>/admin/dashboard*</code>, <code>/admin/guests*</code> — no valid <code>adminSession</code> → redirect to <code>/admin</code></li>
+    </ul>
+  </section>
+
+  <!-- Key Flows -->
+  <section class="teal">
+    <h2>Key Flows</h2>
+
+    <h3>Invite Flow</h3>
+    <div class="flow-step"><div class="step-num">1</div><div class="step-body">Guest visits <code>wedding.liedeman.perumal.co.za/naidoo-family-x3f2</code></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-body">Server Component looks up <code>Invite</code> by slug — 404 if not found</div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-body">Route Handler sets signed HttpOnly <code>guestInviteId=&lt;invite.id&gt;</code> cookie (90-day expiry)</div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-body">Renders invite page: personalised greeting, invited events grouped by day, venue names (not addresses), RSVP CTA</div></div>
+
+    <h3>RSVP Flow</h3>
+    <div class="flow-step"><div class="step-num teal">1</div><div class="step-body">Guest navigates to <code>/rsvp</code>; middleware verifies <code>guestInviteId</code> cookie</div></div>
+    <div class="flow-step"><div class="step-num teal">2</div><div class="step-body">Server Component loads <code>Invite</code> → guests + InviteEvent records + any existing Rsvp rows (supports editing)</div></div>
+    <div class="flow-step"><div class="step-num teal">3</div><div class="step-body">Renders one card per Guest — only their invited events, grouped Thu / Fri</div></div>
+    <div class="flow-step"><div class="step-num teal">4</div><div class="step-body">Guest confirms attendance per event, dietary requirements per person, contact email</div></div>
+    <div class="flow-step"><div class="step-num teal">5</div><div class="step-body">Submit → Server Action → Zod validation → upsert Rsvp rows → mark Invite.submitted → send confirmation email → redirect to <code>/rsvp/confirmed</code></div></div>
+    <div class="flow-step"><div class="step-num teal">6</div><div class="step-body"><code>/rsvp/confirmed</code> reveals full venue addresses and <code>.ics</code> calendar links per event</div></div>
+
+    <h3>Admin Flow</h3>
+    <div class="flow-step"><div class="step-num purple">1</div><div class="step-body">Passphrase form → bcrypt compare → set signed <code>adminSession</code> cookie → redirect to <code>/admin/dashboard</code></div></div>
+    <div class="flow-step"><div class="step-num purple">2</div><div class="step-body">Dashboard: RSVP counts per event (attending / not / no response), dietary breakdown totals</div></div>
+    <div class="flow-step"><div class="step-num purple">3</div><div class="step-body">Guests: invite table with RSVP status; expandable rows for per-person detail; Add / Edit / Copy Link / Regenerate Slug actions</div></div>
+  </section>
+
+  <!-- Local Dev & Deployment -->
+  <section class="green">
+    <h2>Local Dev &amp; Deployment</h2>
+
+    <h3>Local Setup</h3>
+    <pre>docker-compose up -d        # start local Postgres
+npm install
+npx prisma db push          # sync schema
+npx prisma db seed          # seed events + test invite
+npm run dev</pre>
+    <p style="font-size:13px; color:#555; margin-top:8px;">Seed creates 5 events and one test invite <code>test-invite-dev1</code> with 2 guests, all events.</p>
+
+    <h3>Environment Variables</h3>
+    <div class="env-grid">
+      <div class="env-item"><div class="env-name">DATABASE_URL</div><div class="env-desc">Postgres connection string</div></div>
+      <div class="env-item"><div class="env-name">ADMIN_PASSPHRASE_HASH</div><div class="env-desc">bcrypt hash of admin passphrase</div></div>
+      <div class="env-item"><div class="env-name">COOKIE_SECRET</div><div class="env-desc">32-byte hex string, signs cookies</div></div>
+      <div class="env-item"><div class="env-name">RESEND_API_KEY</div><div class="env-desc">From resend.com dashboard</div></div>
+      <div class="env-item"><div class="env-name">NEXT_PUBLIC_BASE_URL</div><div class="env-desc">https://wedding.liedeman.perumal.co.za</div></div>
+    </div>
+
+    <h3>Deployment</h3>
+    <ul style="font-size:14px; color:#555; padding-left:20px; line-height:2.2;">
+      <li>Push to <code>main</code> → Vercel auto-deploys</li>
+      <li><code>prisma migrate deploy</code> runs in Vercel build step</li>
+      <li><code>dev</code> branch → Vercel preview deployment with separate preview DB</li>
+      <li>DNS at domains.co.za: CNAME <code>wedding.liedeman</code> under <code>perumal.co.za</code> → <code>cname.vercel-dns.com</code></li>
+    </ul>
+    <p class="note"><strong>DNS note:</strong> <code>liedeman.perumal.co.za</code> is a second-level subdomain. You may need to add a CNAME for the full label <code>wedding.liedeman</code> under <code>perumal.co.za</code> — check what your domains.co.za control panel supports for nested subdomain CNAMEs.</p>
+  </section>
+
+  <!-- Future Scope -->
+  <details style="background:white; border-radius:4px; padding: 20px 28px; margin-bottom:24px; box-shadow: 0 1px 3px rgba(0,0,0,0.06);">
+    <summary><strong>Future Expansion (out of scope for v1)</strong></summary>
+    <ul style="font-size:14px; color:#555; padding: 12px 0 0 20px; line-height:2.2;">
+      <li>Venue detail pages — add content to Event records</li>
+      <li>Wedding registry — new page, no DB changes</li>
+      <li>Gallery &amp; photo upload — new Photo model, Vercel Blob storage</li>
+      <li>Additional info pages — static Next.js pages</li>
+    </ul>
+  </details>
+
+</div>
+
+<div class="accent-bar"></div>
+<footer>Liedeman · Perumal Wedding — Design Spec · Generated 10 June 2026</footer>
+
+<script>mermaid.initialize({ startOnLoad: true, theme: 'neutral' });</script>
+</body>
+</html>
