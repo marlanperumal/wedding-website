@@ -6,6 +6,10 @@ const adapter = new PrismaPg({ connectionString, max: 2 })
 const prisma = new PrismaClient({ adapter })
 
 async function main() {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL environment variable is not set')
+  }
+
   // Clear existing data in order (respects FK constraints)
   await prisma.rsvp.deleteMany()
   await prisma.inviteEvent.deleteMany()
