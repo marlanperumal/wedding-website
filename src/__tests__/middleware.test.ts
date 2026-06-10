@@ -1,5 +1,5 @@
 /**
- * Middleware smoke test.
+ * Proxy smoke test.
  *
  * next/server relies on the Next.js Edge runtime and cannot be executed in
  * Vitest's Node environment, so it is mocked here. Full route-guard behaviour
@@ -14,11 +14,11 @@ vi.mock('next/server', () => ({
   },
 }))
 
-import { middleware, config } from '@/middleware'
+import { proxy, config } from '@/proxy'
 
-describe('middleware exports', () => {
-  it('exports a middleware function', () => {
-    expect(typeof middleware).toBe('function')
+describe('proxy exports', () => {
+  it('exports a proxy function', () => {
+    expect(typeof proxy).toBe('function')
   })
 
   it('exports a config with a matcher array', () => {
