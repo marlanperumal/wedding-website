@@ -7,7 +7,7 @@
   );
 }
 
-@theme {
+@theme inline {
   /* Orange family */
   --color-orange-soft:   #F4A261;
   --color-orange-warm:   #FFB07C;
@@ -33,7 +33,7 @@
 
   /* Typography */
   --font-serif: Georgia, serif;
-  --font-sans:  var(--font-sans), system-ui, sans-serif;
+  --font-sans:  var(--font-geist-sans), system-ui, sans-serif;
 }
 
 @layer base {
