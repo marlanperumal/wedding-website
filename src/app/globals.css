@@ -1,26 +1,58 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --accent-gradient: linear-gradient(
+    90deg,
+    #7A4C8C, #F4A261, #3DA4A1, #F4A261, #7A4C8C
+  );
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@theme {
+  /* Orange family */
+  --color-orange-soft:   #F4A261;
+  --color-orange-warm:   #FFB07C;
+  --color-orange-sunset: #F28C38;
+  --color-orange-amber:  #E07A29;
+  --color-orange-peach:  #FFC8A2;
+
+  /* Purple family */
+  --color-purple-orchid: #9E6BB5;
+  --color-purple-deep:   #7A4C8C;
+
+  /* Teal family */
+  --color-teal-turquoise: #3DA4A1;
+  --color-teal-deep:      #2E7D7A;
+
+  /* Green family */
+  --color-green-leaf: #5FAE7E;
+  --color-green-sage: #7BAF9B;
+
+  /* Base */
+  --color-cream:      #FAF4EE;
+  --color-near-black: #2E1A10;
+
+  /* Typography */
+  --font-serif: Georgia, serif;
+  --font-sans:  var(--font-sans), system-ui, sans-serif;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    @apply bg-cream text-near-black;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  .accent-bar {
+    height: 4px;
+    background: var(--accent-gradient);
+  }
+
+  .paisley-watermark {
+    @apply absolute border-[3px] rounded-[60%_0_60%_0] opacity-[0.07];
+  }
+
+  .event-day-label {
+    @apply text-[10px] tracking-[3px] uppercase font-sans text-green-sage mb-2;
+  }
 }
