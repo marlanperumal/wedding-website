@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Invite {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  label       String
+  email       String?
+  submitted   Boolean   @default(false)
+  submittedAt DateTime?
+  createdAt   DateTime  @default(now())
+
+  guests Guest[]
+  events InviteEvent[]
+}
+
+model Guest {
+  id       String @id @default(cuid())
+  name     String
+  inviteId String
+  invite   Invite @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+
+  rsvps Rsvp[]
+}
+
+model Event {
+  id        String   @id @default(cuid())
+  name      String
+  date      DateTime @db.Timestamptz
+  venue     String
+  address   String
+  sortOrder Int      @default(0)
+
+  invites InviteEvent[]
+  rsvps   Rsvp[]
+}
+
+model InviteEvent {
+  inviteId String
+  eventId  String
+  invite   Invite @relation(fields: [inviteId], references: [id], onDelete: Cascade)
+  event    Event  @relation(fields: [eventId], references: [id])
+
+  @@id([inviteId, eventId])
+}
+
+model Rsvp {
+  id           String   @id @default(cuid())
+  guestId      String
+  eventId      String
+  attending    Boolean
+  dietary      String[]
+  dietaryNotes String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  guest Guest @relation(fields: [guestId], references: [id], onDelete: Cascade)
+  event Event @relation(fields: [eventId], references: [id])
+
+  @@unique([guestId, eventId])
+}
