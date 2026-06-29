@@ -1,58 +1,57 @@
 @import "tailwindcss";
 
-:root {
-  --accent-gradient: linear-gradient(
-    90deg,
-    #7A4C8C, #F4A261, #3DA4A1, #F4A261, #7A4C8C
-  );
-}
-
 @theme inline {
-  /* Orange family */
-  --color-orange-soft:   #F4A261;
-  --color-orange-warm:   #FFB07C;
-  --color-orange-sunset: #F28C38;
-  --color-orange-amber:  #E07A29;
-  --color-orange-peach:  #FFC8A2;
+  /* Paper / surfaces */
+  --color-paper:           #f4ecda;
+  --color-paper-raised:    #f6efdf;
+  --color-paper-panel:     #efe6d2;
+  --color-paper-card:      #faf4e6;
+  --color-paper-card-warm: #fbf5e8;
+  --color-paper-input:     #fffdf7;
 
-  /* Purple family */
-  --color-purple-orchid: #9E6BB5;
-  --color-purple-deep:   #7A4C8C;
+  /* Gold / ink (brand neutrals) */
+  --color-gold-deep:  #7c5c14;
+  --color-gold-mid:   #856312;
+  --color-gold-soft:  #a08648;
+  --color-gold-line:  #b08a36;
+  --color-gold-spine: #c2a14e;
+  --color-script-gold: #8a5f10;
+  --color-ink:        #46370f;
+  --color-ink-soft:   #5c4e2e;
+  --color-ink-muted:  #7c6a44;
+  --color-ink-eyebrow: #6a5016;
 
-  /* Teal family */
-  --color-teal-turquoise: #3DA4A1;
-  --color-teal-deep:      #2E7D7A;
+  /* Accent colours (décor colour board) */
+  --color-acc-orange:     #e07a29;
+  --color-acc-purple:     #9e6bb5;
+  --color-acc-teal:       #3da4a1;
+  --color-acc-teal-deep:  #2e7d7a;
+  --color-acc-green:      #5fae7e;
+  --color-acc-green-deep: #2e7d5a;
+  --color-acc-rust:       #b0451f;
+  --color-acc-gold:       #b08a36;
 
-  /* Green family */
-  --color-green-leaf: #5FAE7E;
-  --color-green-sage: #7BAF9B;
-
-  /* Base */
-  --color-cream:      #FAF4EE;
-  --color-near-black: #2E1A10;
+  /* Footer */
+  --color-footer-name: #f6ecd0;
+  --color-footer-date: #dcc99a;
+  --color-footer-link: #e7d3a6;
+  --color-footer-body: #f1e3c4;
 
   /* Typography */
-  --font-serif: Georgia, serif;
-  --font-sans:  var(--font-geist-sans), system-ui, sans-serif;
+  --font-script: var(--font-parisienne), cursive;
+  --font-serif:  var(--font-cormorant), Georgia, serif;
+  --font-label:  var(--font-cinzel), serif;
 }
 
 @layer base {
   body {
-    @apply bg-cream text-near-black;
+    background: #f4ecda;
+    color: #46370f;
+    font-family: var(--font-serif);
   }
 }
 
-@layer components {
-  .accent-bar {
-    height: 4px;
-    background: var(--accent-gradient);
-  }
-
-  .paisley-watermark {
-    @apply absolute border-[3px] rounded-[60%_0_60%_0] opacity-[0.07];
-  }
-
-  .event-day-label {
-    @apply text-[10px] tracking-[3px] uppercase font-sans text-green-sage mb-2;
-  }
-}
+/* Custom scrollbar */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #cdb47a; border-radius: 6px; }
+::-webkit-scrollbar-track { background: #efe6d2; }

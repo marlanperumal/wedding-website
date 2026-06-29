@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { extractGuestInviteId } from '@/lib/cookies'
 import { prisma } from '@/lib/prisma'
-import { AccentBar, EventPill } from '@/components/ui'
+import { Diamond, EventPill } from '@/components/ui'
 import { isRsvpClosed } from '@/lib/deadline'
 
 export default async function RsvpConfirmedPage() {
@@ -51,42 +51,48 @@ export default async function RsvpConfirmedPage() {
       : guestNames.slice(0, -1).join(', ') + ' & ' + guestNames.at(-1)
 
   return (
-    <div className="relative">
-      <AccentBar />
-      <div className="max-w-xl mx-auto px-6 py-16 text-center">
-        {/* Confirmation header */}
-        <p className="text-xs tracking-[5px] text-purple-orchid uppercase font-sans mb-4">
-          You&apos;re confirmed
-        </p>
-        <h1 className="font-serif text-4xl italic text-near-black mb-3">
+    <div
+      className="mx-auto"
+      style={{ maxWidth: 640, padding: 'clamp(40px,6vw,64px) clamp(20px,5vw,40px)' }}
+    >
+      {/* Confirmation header */}
+      <div className="text-center">
+        <div className="font-label text-[12px] tracking-[.3em] text-gold-deep">
+          YOU&rsquo;RE CONFIRMED
+        </div>
+        <h1
+          className="font-serif italic text-ink mt-2"
+          style={{ fontSize: 'clamp(34px,6vw,46px)' }}
+        >
           See you there, {greeting}!
         </h1>
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="h-px w-10 bg-orange-soft" />
-          <span className="text-orange-soft text-sm">✦</span>
-          <div className="h-px w-10 bg-orange-soft" />
-        </div>
-        <p className="font-sans text-sm text-near-black/60 leading-relaxed mb-12">
-          A confirmation email will be on its way. We look forward to celebrating with you.
+        <Diamond className="mt-3.5 mb-5" />
+        <p className="font-serif text-[18px] text-ink-soft leading-[1.55] mb-3">
+          A confirmation email will be on its way. We look forward to celebrating
+          with you.
         </p>
-
         {!closed && (
-          <p className="mb-12 -mt-8">
+          <p className="mb-10">
             <a
               href="/rsvp/edit"
-              className="text-xs tracking-[2px] uppercase font-sans text-teal-deep underline underline-offset-4"
+              className="font-label text-[11px] tracking-[.12em] text-acc-purple underline underline-offset-4 hover:text-gold-deep transition-colors"
             >
-              Edit my RSVP
+              EDIT MY RSVP
             </a>
           </p>
         )}
+      </div>
 
-        {/* Venue details */}
-        {attendedEvents.length > 0 && (
-          <div className="text-left space-y-8">
-            <p className="text-xs tracking-[3px] text-teal-deep uppercase font-sans">
-              Event details
-            </p>
+      {/* Event details */}
+      {attendedEvents.length > 0 && (
+        <div
+          className="bg-paper-card"
+          style={{ border: '1px solid rgba(176,138,54,.5)', padding: 'clamp(24px,4vw,34px)' }}
+        >
+          <div className="font-label text-[11px] tracking-[.22em] text-acc-teal-deep mb-5">
+            EVENT DETAILS
+          </div>
+          <div className="flex flex-col gap-7">
             {[...grouped.entries()].map(([dateKey, dayEvents]) => {
               const date = new Date(dateKey + 'T00:00:00Z')
               const dayLabel = date.toLocaleDateString('en-GB', {
@@ -98,23 +104,25 @@ export default async function RsvpConfirmedPage() {
               })
               return (
                 <div key={dateKey}>
-                  <p className="event-day-label mb-3">{dayLabel}</p>
-                  <p className="font-sans text-xs text-near-black/50 mb-3 uppercase tracking-wide">
+                  <div className="font-label text-[11px] tracking-[.2em] text-gold-mid">
+                    {dayLabel.toUpperCase()}
+                  </div>
+                  <div className="font-serif text-[16px] text-ink-muted mt-0.5">
                     {dayEvents[0].venue}
-                  </p>
-                  <p className="font-sans text-sm text-near-black/70 mb-4">
+                  </div>
+                  <div className="font-serif text-[16px] text-ink-soft mb-3">
                     {dayEvents[0].address}
-                  </p>
-                  <div className="flex flex-wrap gap-3">
+                  </div>
+                  <div className="flex flex-col gap-2.5">
                     {dayEvents.map((event) => (
-                      <div key={event.id} className="flex items-center gap-2">
+                      <div key={event.id} className="flex items-center gap-2.5">
                         <EventPill name={event.name} />
                         <a
                           href={`/api/calendar/${event.id}`}
                           download={`${event.name.toLowerCase()}.ics`}
-                          className="text-xs font-sans text-teal-deep underline underline-offset-2"
+                          className="font-label text-[9.5px] tracking-[.1em] text-acc-purple underline underline-offset-2 hover:text-gold-deep transition-colors"
                         >
-                          Add to calendar
+                          ADD TO CALENDAR
                         </a>
                       </div>
                     ))}
@@ -123,23 +131,23 @@ export default async function RsvpConfirmedPage() {
               )
             })}
           </div>
-        )}
+        </div>
+      )}
 
-        {attendedEvents.length === 0 && invite.submitted && (
-          <p className="font-sans text-sm text-near-black/60 italic">
-            You have indicated that you won&apos;t be attending. We&apos;ll miss you!
-          </p>
-        )}
+      {attendedEvents.length === 0 && invite.submitted && (
+        <p className="font-serif italic text-[17px] text-ink-muted text-center">
+          You have indicated that you won&apos;t be attending. We&apos;ll miss
+          you!
+        </p>
+      )}
 
-        {attendedEvents.length === 0 && !invite.submitted && (
-          <p className="font-sans text-sm text-near-black/60 italic">
-            {closed
-              ? "RSVP is now closed and we don't have a response on record for you."
-              : 'We don’t have an RSVP from you yet.'}
-          </p>
-        )}
-      </div>
-      <AccentBar />
+      {attendedEvents.length === 0 && !invite.submitted && (
+        <p className="font-serif italic text-[17px] text-ink-muted text-center">
+          {closed
+            ? "RSVP is now closed and we don't have a response on record for you."
+            : 'We don’t have an RSVP from you yet.'}
+        </p>
+      )}
     </div>
   )
 }

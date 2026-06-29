@@ -18,9 +18,10 @@ export function CopyLinkButton({ slug }: CopyLinkButtonProps) {
   return (
     <button
       onClick={handleCopy}
-      className="text-xs font-sans text-teal-deep hover:underline"
+      className="inline-flex items-center gap-1.5 font-label text-[9px] tracking-[.1em] text-acc-purple whitespace-nowrap transition-colors hover:text-gold-deep"
+      style={{ border: '1px solid rgba(158,107,181,.45)', padding: '5px 11px' }}
     >
-      {copied ? 'Copied!' : 'Copy link'}
+      {copied ? '✓ COPIED' : '📋 COPY LINK'}
     </button>
   )
 }

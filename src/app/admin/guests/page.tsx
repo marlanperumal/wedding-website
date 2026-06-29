@@ -2,9 +2,19 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { extractAdminSession } from '@/lib/cookies'
 import { prisma } from '@/lib/prisma'
-import { AccentBar } from '@/components/ui'
+import { AdminTopBar } from '@/components/admin/AdminTopBar'
 import { InviteTable } from '@/components/admin/InviteTable'
 import { addInvite } from './actions'
+
+const fieldLabel =
+  'block font-label text-[9px] tracking-[.16em] text-gold-soft mb-1.5'
+const fieldInput =
+  'w-full font-serif text-[16px] text-ink outline-none'
+const fieldInputStyle = {
+  background: '#fffdf7',
+  border: '1px solid rgba(176,138,54,.45)',
+  padding: '10px 13px',
+}
 
 export default async function AdminGuestsPage() {
   const cookieStore = await cookies()
@@ -24,84 +34,85 @@ export default async function AdminGuestsPage() {
 
   return (
     <div>
-      <AccentBar />
-      <div className="max-w-5xl mx-auto px-6 py-12">
+      <AdminTopBar />
+      <div
+        className="mx-auto"
+        style={{ maxWidth: 1040, padding: 'clamp(28px,4vw,48px) clamp(18px,4vw,36px)' }}
+      >
         {/* Header */}
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <p className="text-xs tracking-[5px] text-purple-orchid uppercase font-sans mb-2">
-              Admin
-            </p>
-            <h1 className="font-serif text-3xl italic text-near-black">Guests</h1>
+        <div className="mb-[30px]">
+          <div className="font-label text-[11px] tracking-[.3em] text-gold-soft">
+            MANAGE
           </div>
-          <nav className="flex gap-6 text-xs font-sans tracking-wider text-near-black/50">
-            <a href="/admin/dashboard" className="hover:text-near-black">
-              Overview
-            </a>
-            <span className="text-orange-soft font-medium">Guests</span>
-          </nav>
+          <h1
+            className="font-serif italic text-ink mt-1"
+            style={{ fontSize: 'clamp(32px,5vw,42px)' }}
+          >
+            Guests
+          </h1>
         </div>
 
         {/* Add Invite Form */}
-        <div className="border border-orange-soft/40 p-6 mb-10">
-          <p className="text-xs tracking-[3px] text-teal-deep uppercase font-sans mb-5">
-            Add Invite
-          </p>
-          <form action={addInvite} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div
+          className="bg-paper-card mb-10"
+          style={{ border: '1px solid rgba(176,138,54,.4)', padding: 'clamp(20px,3vw,28px)' }}
+        >
+          <div className="font-label text-[11px] tracking-[.22em] text-acc-teal-deep mb-5">
+            ADD INVITE
+          </div>
+          <form action={addInvite}>
+            <div
+              className="grid gap-4 mb-4"
+              style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(220px,1fr))' }}
+            >
               <div>
-                <label className="block text-[10px] tracking-[2px] text-near-black/60 uppercase font-sans mb-1.5">
-                  Invite label *
-                </label>
+                <label className={fieldLabel}>INVITE LABEL *</label>
                 <input
                   name="label"
                   required
                   placeholder="The Naidoo Family"
-                  className="w-full border border-near-black/20 px-3 py-2 text-sm font-sans bg-white outline-none focus:border-orange-soft"
+                  className={fieldInput}
+                  style={fieldInputStyle}
                 />
               </div>
               <div>
-                <label className="block text-[10px] tracking-[2px] text-near-black/60 uppercase font-sans mb-1.5">
-                  Contact email
-                </label>
+                <label className={fieldLabel}>CONTACT EMAIL</label>
                 <input
                   name="email"
                   type="email"
                   placeholder="guest@example.com"
-                  className="w-full border border-near-black/20 px-3 py-2 text-sm font-sans bg-white outline-none focus:border-orange-soft"
+                  className={fieldInput}
+                  style={fieldInputStyle}
                 />
               </div>
             </div>
 
-            <div>
-              <label className="block text-[10px] tracking-[2px] text-near-black/60 uppercase font-sans mb-1.5">
-                Guest names (one per line) *
-              </label>
+            <div className="mb-4">
+              <label className={fieldLabel}>GUEST NAMES · ONE PER LINE *</label>
               <textarea
                 name="guestNames"
                 required
                 rows={3}
-                placeholder={"Priya Naidoo\nRajan Naidoo"}
-                className="w-full border border-near-black/20 px-3 py-2 text-sm font-sans bg-white outline-none focus:border-orange-soft resize-none"
+                placeholder={'Priya Naidoo\nRajan Naidoo'}
+                className={`${fieldInput} resize-none`}
+                style={fieldInputStyle}
               />
             </div>
 
-            <div>
-              <label className="block text-[10px] tracking-[2px] text-near-black/60 uppercase font-sans mb-2">
-                Events *
-              </label>
-              <div className="flex flex-wrap gap-x-5 gap-y-2">
+            <div className="mb-5">
+              <label className={fieldLabel}>EVENTS *</label>
+              <div className="flex flex-wrap gap-x-5 gap-y-2.5">
                 {events.map((event) => (
                   <label
                     key={event.id}
-                    className="flex items-center gap-2 text-sm font-sans text-near-black/70 cursor-pointer"
+                    className="flex items-center gap-2 font-serif text-[17px] text-ink-soft cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       name="eventIds"
                       value={event.id}
                       defaultChecked
-                      className="w-3.5 h-3.5"
+                      className="w-[15px] h-[15px] accent-[#7c5c14]"
                     />
                     {event.name}
                   </label>
@@ -111,20 +122,19 @@ export default async function AdminGuestsPage() {
 
             <button
               type="submit"
-              className="bg-orange-soft text-white px-6 py-2.5 text-xs tracking-[3px] uppercase font-sans"
+              className="font-label text-[11px] tracking-[.2em] text-paper-raised bg-gold-deep transition-colors hover:bg-[#6a4e10]"
+              style={{ padding: '12px 28px', border: 'none' }}
             >
-              Add Invite
+              ADD INVITE
             </button>
           </form>
         </div>
 
         {/* Invite table */}
-        <div>
-          <p className="text-xs tracking-[3px] text-teal-deep uppercase font-sans mb-4">
-            All Invites ({invites.length})
-          </p>
-          <InviteTable invites={invites} />
+        <div className="font-label text-[11px] tracking-[.22em] text-acc-teal-deep mb-3.5">
+          ALL INVITES · {invites.length}
         </div>
+        <InviteTable invites={invites} />
       </div>
     </div>
   )

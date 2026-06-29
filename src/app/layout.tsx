@@ -1,16 +1,26 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Parisienne, Cormorant_Garamond, Cinzel } from "next/font/google";
 import "./globals.css";
 import { SiteNavServer } from "@/components/ui/SiteNavServer";
+import { Footer } from "@/components/ui/Footer";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const parisienne = Parisienne({
+  variable: "--font-parisienne",
   subsets: ["latin"],
+  weight: ["400"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const cormorant = Cormorant_Garamond({
+  variable: "--font-cormorant",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+});
+
+const cinzel = Cinzel({
+  variable: "--font-cinzel",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -27,11 +37,12 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable}`}
+      className={`${parisienne.variable} ${cormorant.variable} ${cinzel.variable}`}
     >
-      <body className="bg-cream text-near-black antialiased">
+      <body className="bg-paper text-ink antialiased">
         <SiteNavServer />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

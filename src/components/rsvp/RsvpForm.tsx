@@ -29,6 +29,7 @@ interface RsvpFormProps {
   events: EventData[]
   existingRsvps: ExistingRsvp[]
   initialEmail: string
+  greeting: string
 }
 
 function buildInitialState(
@@ -60,7 +61,7 @@ function buildInitialState(
   return { attending, dietary, dietaryNotes }
 }
 
-export function RsvpForm({ guests, events, existingRsvps, initialEmail }: RsvpFormProps) {
+export function RsvpForm({ guests, events, existingRsvps, initialEmail, greeting }: RsvpFormProps) {
   const initial = buildInitialState(guests, events, existingRsvps)
   const [attending, setAttending] = useState(initial.attending)
   const [dietary, setDietary] = useState(initial.dietary)
@@ -73,6 +74,14 @@ export function RsvpForm({ guests, events, existingRsvps, initialEmail }: RsvpFo
       ...prev,
       [guestId]: { ...prev[guestId], [eventId]: val },
     }))
+  }
+
+  function handleAllAttendingChange(guestId: string, val: boolean) {
+    setAttending((prev) => {
+      const next: Record<string, boolean> = {}
+      for (const event of events) next[event.id] = val
+      return { ...prev, [guestId]: next }
+    })
   }
 
   function handleDietaryChange(guestId: string, option: string, checked: boolean) {
@@ -105,12 +114,24 @@ export function RsvpForm({ guests, events, existingRsvps, initialEmail }: RsvpFo
   }
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-xl mx-auto px-6 pb-20">
-      <p className="text-xs tracking-[3px] text-teal-deep uppercase font-sans mb-4">
-        Please confirm attendance for each event
-      </p>
+    <form
+      onSubmit={handleSubmit}
+      className="mx-auto bg-paper-card"
+      style={{
+        maxWidth: 640,
+        marginTop: 30,
+        border: '1px solid rgba(176,138,54,.5)',
+        padding: 'clamp(24px,4vw,34px)',
+      }}
+    >
+      <div className="font-serif italic text-[24px] text-ink mb-1">
+        Dear {greeting}
+      </div>
+      <div className="font-label text-[10px] tracking-[.14em] text-gold-soft mb-[22px]">
+        YOUR PERSONAL INVITATION · {guests.length} GUEST{guests.length === 1 ? '' : 'S'}
+      </div>
 
-      {guests.map((guest, idx) => (
+      {guests.map((guest) => (
         <GuestCard
           key={guest.id}
           guestId={guest.id}
@@ -120,18 +141,18 @@ export function RsvpForm({ guests, events, existingRsvps, initialEmail }: RsvpFo
           dietary={dietary[guest.id] ?? []}
           dietaryNotes={dietaryNotes[guest.id] ?? ''}
           onAttendingChange={(eventId, val) => handleAttendingChange(guest.id, eventId, val)}
+          onAllAttendingChange={(val) => handleAllAttendingChange(guest.id, val)}
           onDietaryChange={(option, checked) => handleDietaryChange(guest.id, option, checked)}
           onDietaryNotesChange={(notes) =>
             setDietaryNotes((prev) => ({ ...prev, [guest.id]: notes }))
           }
-          cardIndex={idx}
         />
       ))}
 
-      {/* Contact email */}
-      <div className="mb-6">
-        <label className="block text-[10px] tracking-[3px] text-teal-deep uppercase font-sans mb-2">
-          Contact email (for confirmation &amp; updates)
+      {/* Contact email + submit */}
+      <div style={{ borderTop: '1px solid rgba(176,138,54,.3)', paddingTop: 18 }}>
+        <label className="block font-label text-[10px] tracking-[.12em] text-gold-soft mb-2">
+          CONTACT EMAIL · FOR CONFIRMATION &amp; UPDATES
         </label>
         <input
           type="email"
@@ -139,17 +160,22 @@ export function RsvpForm({ guests, events, existingRsvps, initialEmail }: RsvpFo
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           placeholder="your@email.com"
-          className="w-full border border-near-black/20 px-3.5 py-2.5 text-sm font-sans bg-white outline-none focus:border-orange-soft"
+          className="w-full font-serif text-[16px] text-ink outline-none mb-4"
+          style={{
+            background: '#fffdf7',
+            border: '1px solid rgba(176,138,54,.45)',
+            padding: '11px 14px',
+          }}
         />
+        <button
+          type="submit"
+          disabled={pending}
+          className="w-full font-label text-[13px] tracking-[.2em] text-paper-raised bg-gold-deep disabled:opacity-60 transition-colors hover:bg-[#6a4e10]"
+          style={{ padding: 16, border: 'none' }}
+        >
+          {pending ? 'SENDING…' : 'SEND OUR RSVP'}
+        </button>
       </div>
-
-      <button
-        type="submit"
-        disabled={pending}
-        className="w-full bg-orange-soft text-white py-4 text-xs tracking-[3px] uppercase font-sans disabled:opacity-60"
-      >
-        {pending ? 'Submitting...' : 'Confirm RSVP'}
-      </button>
     </form>
   )
 }

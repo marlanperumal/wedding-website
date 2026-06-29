@@ -1,6 +1,6 @@
-import Link from "next/link";
+import Image from "next/image";
 
-import { AccentBar } from "@/components/ui";
+import { PageHeader } from "@/components/ui";
 
 export const metadata = { title: "Attire — Marlan & Tramaine" };
 
@@ -45,14 +45,6 @@ const mensWear = [
   },
 ];
 
-const capeTownShops = [
-  {
-    name: "Shahzadi — Home of Indian Attire",
-    detail: "65 Ernest Road, Rylands — men's & women's eastern wear",
-    href: "https://www.instagram.com/shahzadi_indian_attire/",
-  },
-];
-
 const onlineShops = [
   { name: "Jayshrees / Rivaz", href: "https://jayshrees.co.za" },
   { name: "Shringar", href: "https://shringar.co.za" },
@@ -88,139 +80,114 @@ const credits = [
   },
 ];
 
+function InlineLink({ href, children }: { href: string; children: React.ReactNode }) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="text-ink underline underline-offset-2 hover:text-gold-deep transition-colors"
+    >
+      {children}
+    </a>
+  );
+}
+
 export default function AttirePage() {
   return (
-    <div className="relative min-h-[calc(100vh-56px)]">
-      <AccentBar />
-      <div className="paisley-watermark" />
+    <div
+      className="mx-auto"
+      style={{ maxWidth: 820, padding: "clamp(40px,6vw,64px) clamp(20px,5vw,40px)" }}
+    >
+      <PageHeader eyebrow="WHAT TO WEAR" title="Attire" />
 
-      <div className="max-w-2xl mx-auto px-6 py-16">
-        {/* Header */}
-        <header className="text-center mb-10">
-          <h1 className="font-serif text-4xl italic text-near-black mb-6">
-            Attire
-          </h1>
-          <div className="flex items-center justify-center gap-3">
-            <div className="h-px w-10 bg-orange-soft" />
-            <span className="text-orange-soft text-sm">✦</span>
-            <div className="h-px w-10 bg-orange-soft" />
-          </div>
-        </header>
+      <p
+        className="font-serif text-ink-soft leading-[1.65] text-center mx-auto mb-3"
+        style={{ fontSize: "clamp(18px,2.4vw,20px)", maxWidth: 620 }}
+      >
+        For the wedding we encourage traditional Indian attire in bright, festive
+        colours. You don&rsquo;t need to be Indian to join in &mdash; we&rsquo;d
+        love to see everyone dressed for the occasion. Below are a few of the
+        most common options to give you some ideas.
+      </p>
+      <p
+        className="font-serif text-ink-muted leading-[1.6] text-center mx-auto mb-12"
+        style={{ fontSize: "18px", maxWidth: 620 }}
+      >
+        Please avoid pure white (worn for funerals), red &amp; gold (the
+        bride&rsquo;s colours), and jeans. The Thursday events are more relaxed.
+      </p>
 
-        {/* Intro */}
-        <p className="font-sans text-sm text-near-black/75 leading-relaxed mb-3">
-          For the wedding we encourage traditional Indian attire in bright,
-          festive colours. You don&rsquo;t need to be Indian to join in &mdash;
-          we&rsquo;d love to see everyone dressed for the occasion. Below are a
-          few of the most common options to give you some ideas.
-        </p>
-        <p className="font-sans text-sm text-near-black/75 leading-relaxed mb-12">
-          Please avoid pure white (worn for funerals), red &amp; gold
-          (that&rsquo;s what the bride will be wearing), and jeans. The Thursday
-          events are more relaxed &mdash; see the{" "}
-          <AttireLink href="/events">Events page</AttireLink> for the dress code
-          for each.
-        </p>
-
-        {/* Women */}
-        <section className="mb-12">
-          <h2 className="font-serif text-2xl italic text-purple-deep mb-5">
-            For the women
-          </h2>
-          <div className="space-y-8">
-            {womensWear.map((g) => (
-              <Garment key={g.name} {...g} />
-            ))}
-          </div>
-        </section>
-
-        {/* Men */}
-        <section className="mb-12">
-          <h2 className="font-serif text-2xl italic text-purple-deep mb-5">
-            For the men
-          </h2>
-          <div className="space-y-8">
-            {mensWear.map((g) => (
-              <Garment key={g.name} {...g} />
-            ))}
-          </div>
-        </section>
-
-        {/* Where to find it */}
-        <section>
-          <h2 className="font-serif text-2xl italic text-purple-deep mb-3">
-            Where to find it
-          </h2>
-          <p className="font-sans text-sm text-near-black/75 leading-relaxed mb-5">
-            If you don&rsquo;t already have something suitable, here are a few
-            places to start. We&rsquo;ll add more as we come across them.
-          </p>
-
-          <h3 className="font-sans text-xs tracking-[1px] uppercase text-purple-orchid mb-2">
-            In Cape Town
-          </h3>
-          <ul className="space-y-2 mb-3">
-            {capeTownShops.map((s) => (
-              <li key={s.name} className="font-sans text-sm">
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-purple-orchid underline underline-offset-2 hover:text-purple-deep transition-colors"
-                >
-                  {s.name}
-                </a>
-                <span className="text-near-black/60"> &mdash; {s.detail}</span>
-              </li>
-            ))}
-          </ul>
-          <p className="font-sans text-sm text-near-black/60 leading-relaxed mb-6">
-            The Rylands and Athlone area is the hub for eastern wear in Cape
-            Town, with several boutiques worth a browse in person.
-          </p>
-
-          <h3 className="font-sans text-xs tracking-[1px] uppercase text-purple-orchid mb-2">
-            Online (ships within South Africa)
-          </h3>
-          <ul className="space-y-2 font-sans text-sm">
-            {onlineShops.map((s) => (
-              <li key={s.name}>
-                <a
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-purple-orchid underline underline-offset-2 hover:text-purple-deep transition-colors"
-                >
-                  {s.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-
-        {/* Image credits */}
-        <footer className="mt-14 pt-5 border-t border-orange-soft/30">
-          <p className="font-sans text-[11px] leading-relaxed text-near-black/40">
-            Image credits:{" "}
-            {credits.map((c, i) => (
-              <span key={c.label}>
-                <a
-                  href={c.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="hover:text-near-black/70 underline underline-offset-2"
-                >
-                  {c.label}
-                </a>{" "}
-                ({c.by}){i < credits.length - 1 ? "; " : "."}
-              </span>
-            ))}
-          </p>
-        </footer>
+      <SectionHeading>For the women</SectionHeading>
+      <div className="flex flex-col gap-[26px] mb-12">
+        {womensWear.map((g) => (
+          <Garment key={g.name} {...g} />
+        ))}
       </div>
 
-      <AccentBar />
+      <SectionHeading>For the men</SectionHeading>
+      <div className="flex flex-col gap-[26px] mb-12">
+        {mensWear.map((g) => (
+          <Garment key={g.name} {...g} />
+        ))}
+      </div>
+
+      <SectionHeading>Where to find it</SectionHeading>
+      <div className="font-label text-[11px] tracking-[.14em] text-acc-purple mb-2">
+        IN CAPE TOWN
+      </div>
+      <p className="font-serif text-[18px] leading-[1.6] text-ink-soft mb-2">
+        <InlineLink href="https://www.instagram.com/shahzadi_indian_attire/">
+          Shahzadi — Home of Indian Attire
+        </InlineLink>{" "}
+        — 65 Ernest Road, Rylands. The Rylands &amp; Athlone area is the hub for
+        eastern wear, with several boutiques worth a browse in person.
+      </p>
+      <div className="font-label text-[11px] tracking-[.14em] text-acc-purple mt-5 mb-2">
+        ONLINE (SHIPS WITHIN SOUTH AFRICA)
+      </div>
+      <div className="flex flex-wrap gap-x-[26px] gap-y-2 font-serif text-[18px]">
+        {onlineShops.map((s) => (
+          <InlineLink key={s.name} href={s.href}>
+            {s.name}
+          </InlineLink>
+        ))}
+      </div>
+
+      {/* Image credits */}
+      <footer
+        className="mt-14 pt-5"
+        style={{ borderTop: "1px solid rgba(176,138,54,.3)" }}
+      >
+        <p className="font-label text-[10px] tracking-[.06em] leading-relaxed text-gold-soft">
+          IMAGE CREDITS:{" "}
+          {credits.map((c, i) => (
+            <span key={c.label}>
+              <a
+                href={c.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline underline-offset-2 hover:text-gold-deep"
+              >
+                {c.label}
+              </a>{" "}
+              ({c.by}){i < credits.length - 1 ? "; " : "."}
+            </span>
+          ))}
+        </p>
+      </footer>
     </div>
+  );
+}
+
+function SectionHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2
+      className="font-serif italic text-gold-deep mb-[22px]"
+      style={{ fontSize: "clamp(26px,4vw,32px)" }}
+    >
+      {children}
+    </h2>
   );
 }
 
@@ -236,39 +203,26 @@ function Garment({
   blurb: string;
 }) {
   return (
-    <article className="flex flex-col sm:flex-row gap-4">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src={img}
-        alt={alt}
-        loading="lazy"
-        className="w-full sm:w-40 h-56 sm:h-52 object-cover rounded-lg border border-orange-soft shadow-sm shrink-0"
-      />
-      <div>
-        <h3 className="font-serif text-xl italic text-near-black mb-1.5">
-          {name}
-        </h3>
-        <p className="font-sans text-sm text-near-black/75 leading-relaxed">
+    <article className="flex flex-wrap gap-[22px] items-start">
+      <div
+        className="shrink-0"
+        style={{ border: "1px solid rgba(176,138,54,.5)", padding: 5 }}
+      >
+        <Image
+          src={img}
+          alt={alt}
+          width={170}
+          height={220}
+          className="block object-cover"
+          style={{ width: 170, height: 220 }}
+        />
+      </div>
+      <div className="flex-1 basis-60">
+        <div className="font-serif italic text-[26px] text-ink mb-1.5">{name}</div>
+        <p className="font-serif text-[18px] leading-[1.6] text-ink-soft">
           {blurb}
         </p>
       </div>
     </article>
-  );
-}
-
-function AttireLink({
-  href,
-  children,
-}: {
-  href: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <Link
-      href={href}
-      className="text-purple-orchid underline underline-offset-2 hover:text-purple-deep transition-colors"
-    >
-      {children}
-    </Link>
   );
 }
