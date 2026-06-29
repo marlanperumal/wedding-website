@@ -39,4 +39,20 @@ describe('SiteNav', () => {
     expect(html).toContain('Liedeman')
     expect(html).toContain('Perumal')
   })
+
+  it('renders an RSVP link', () => {
+    const html = renderToStaticMarkup(<SiteNav />)
+    expect(html).toContain('href="/rsvp"')
+    expect(html).toContain('RSVP')
+  })
+
+  it('shows a completion badge when rsvpStatus is submitted', () => {
+    const html = renderToStaticMarkup(<SiteNav rsvpStatus="submitted" />)
+    expect(html).toContain('✓')
+  })
+
+  it('shows no completion badge when rsvpStatus is none', () => {
+    const html = renderToStaticMarkup(<SiteNav rsvpStatus="none" />)
+    expect(html).not.toContain('✓')
+  })
 })
