@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Wedding Website
 
-## Getting Started
+Wedding website for Marlan Perumal and Tramaine Liedeman, hosted at
+[wedding.liedeman.perumal.co.za](https://wedding.liedeman.perumal.co.za).
+Guests receive personalised invite links with per-person, per-event RSVP.
 
-First, run the development server:
+Built with Next.js 16 (App Router), Prisma 7 + PostgreSQL, and Tailwind v4.
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org) 20+
+- [pnpm](https://pnpm.io) (`corepack enable` or `npm i -g pnpm`)
+- [Docker](https://docs.docker.com/get-docker/) (for local Postgres)
+- [just](https://github.com/casey/just) (task runner — `brew install just`,
+  `cargo install just`, or see the install docs)
+
+## Quick start
+
+First-time setup installs dependencies, creates `.env.local`, starts Postgres,
+applies migrations, generates the Prisma client, and seeds test data:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+just setup
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Before the database steps run, you'll want real secrets in `.env.local`
+(see [Environment variables](#environment-variables) below). Then start the dev
+server:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+just dev
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Open [http://localhost:3000](http://localhost:3000). Test the invite and RSVP
+flows at [/test-invite-dev1](http://localhost:3000/test-invite-dev1) (created by
+the seed).
 
-## Learn More
+## Environment variables
 
-To learn more about Next.js, take a look at the following resources:
+`just env` copies `.env.example` to `.env.local`. The defaults work for local
+development except for two secrets you must generate:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+# COOKIE_SECRET — 32-byte random hex string for HMAC cookie signing
+just secret
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# ADMIN_PASSPHRASE_HASH — bcrypt hash of your admin passphrase
+just hash "your-admin-passphrase"
+```
 
-## Deploy on Vercel
+Copy each output into the matching variable in `.env.local`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL` | PostgreSQL connection string (default matches Docker) |
+| `ADMIN_PASSPHRASE_HASH` | bcrypt hash gating the admin area |
+| `COOKIE_SECRET` | 32+ byte hex key for signing cookies |
+| `RESEND_API_KEY` | [Resend](https://resend.com) key (optional — email is skipped if absent) |
+| `NEXT_PUBLIC_BASE_URL` | Public base URL (`http://localhost:3000` locally) |
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Common tasks
+
+Run `just` (or `just --list`) to see all recipes.
+
+| Command | Description |
+| --- | --- |
+| `just setup` | Full first-time setup (deps, env, db, migrate, seed) |
+| `just dev` | Start the dev server |
+| `just install` | Install dependencies |
+| `just db-up` / `just db-down` | Start / stop local Postgres |
+| `just migrate` | Apply database migrations |
+| `just generate` | Regenerate the Prisma client |
+| `just seed` | Seed events + test invite |
+| `just studio` | Open Prisma Studio |
+| `just test` | Run the test suite |
+| `just typecheck` | Type-check only |
+| `just build` | Production build |
+
+## Deployment
+
+Deployed on [Vercel](https://vercel.com). See `vercel.json` and `CLAUDE.md` for
+architecture and deployment details.
