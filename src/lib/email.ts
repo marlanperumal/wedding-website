@@ -1,8 +1,45 @@
 import { Resend } from 'resend'
+import nodemailer from 'nodemailer'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
 const FROM = 'Marlan & Tramaine <wedding@liedeman.perumal.co.za>'
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wedding.liedeman.perumal.co.za'
+
+interface EmailMessage {
+  from: string
+  to: string
+  subject: string
+  html: string
+  text: string
+}
+
+/**
+ * Sends an email via whichever transport is configured:
+ * - SMTP_HOST set → a local SMTP catcher (e.g. Mailpit in dev). Takes precedence.
+ * - else RESEND_API_KEY set → Resend (production).
+ * - else → logged and skipped (no transport configured).
+ */
+async function deliver(message: EmailMessage) {
+  if (process.env.SMTP_HOST) {
+    const transport = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT ?? 1025),
+      secure: false,
+      auth: process.env.SMTP_USER
+        ? { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS }
+        : undefined,
+    })
+    await transport.sendMail(message)
+    return
+  }
+
+  if (process.env.RESEND_API_KEY) {
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    await resend.emails.send(message)
+    return
+  }
+
+  console.warn('[email] No SMTP_HOST or RESEND_API_KEY set — skipping email')
+}
 
 interface AttendingEvent {
   name: string
@@ -21,11 +58,6 @@ export async function sendRsvpConfirmation({
   guestNames,
   attendingEvents,
 }: RsvpConfirmationParams) {
-  if (!process.env.RESEND_API_KEY) {
-    console.warn('[email] RESEND_API_KEY not set — skipping confirmation email')
-    return
-  }
-
   const greeting =
     guestNames.length === 1
       ? guestNames[0]
@@ -100,7 +132,7 @@ export async function sendRsvpConfirmation({
     attendingEvents.length > 0 ? `You're attending:\n${eventLines}\n\n` : ''
   }Full venue addresses and .ics calendar downloads: ${BASE_URL}/rsvp/confirmed\n\nWith love,\nMarlan & Tramaine`
 
-  await resend.emails.send({
+  await deliver({
     from: FROM,
     to,
     subject: `You're confirmed — Marlan & Tramaine, November 2026`,

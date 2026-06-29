@@ -27,13 +27,18 @@ secret:
 hash passphrase:
     @node -e "require('bcryptjs').hash(process.argv[1], 10).then(console.log)" "{{passphrase}}"
 
-# Start the local Postgres container
+# Start local services (Postgres + Mailpit email catcher)
 db-up:
     docker compose up -d
 
-# Stop the local Postgres container
+# Stop local services (Postgres + Mailpit)
 db-down:
     docker compose down
+
+# Open the Mailpit web inbox (captured dev emails)
+mail:
+    @echo "Mailpit inbox: http://localhost:8025"
+    @command -v xdg-open >/dev/null && xdg-open http://localhost:8025 >/dev/null 2>&1 || true
 
 # Apply database migrations
 migrate:

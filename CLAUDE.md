@@ -59,7 +59,7 @@ Next.js 16 App Router. All data fetching in Server Components. Mutations via Ser
   - `slugs.ts` — Invite slug generation
   - `schemas.ts` — Zod validation schemas
   - `rsvp.ts` — processRsvp business logic
-  - `email.ts` — Resend email sending
+  - `email.ts` — confirmation email; transport switch: `SMTP_HOST` (Mailpit, dev) → Resend (prod) → skip
 
 ### Auth
 
@@ -80,8 +80,9 @@ Required (see `.env.example`):
 - `DATABASE_URL` — PostgreSQL connection string
 - `ADMIN_PASSPHRASE_HASH` — bcrypt hash of admin passphrase (generate with `node -e "require('bcryptjs').hash('yourpassphrase', 10).then(console.log)"`)
 - `COOKIE_SECRET` — 32+ byte random hex string for HMAC signing
-- `RESEND_API_KEY` — from resend.com (email skipped gracefully if absent)
+- `RESEND_API_KEY` — from resend.com (used in production; ignored locally when `SMTP_HOST` is set)
 - `NEXT_PUBLIC_BASE_URL` — `https://wedding.liedeman.perumal.co.za`
+- `SMTP_HOST` / `SMTP_PORT` — local email catcher (Mailpit on `localhost:1025`); when set, email goes to SMTP instead of Resend. Inbox UI at `http://localhost:8025`. Unset in production.
 
 ## Test Invite
 

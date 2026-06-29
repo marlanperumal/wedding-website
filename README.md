@@ -55,8 +55,21 @@ Copy each output into the matching variable in `.env.local`.
 | `DATABASE_URL` | PostgreSQL connection string (default matches Docker) |
 | `ADMIN_PASSPHRASE_HASH` | bcrypt hash gating the admin area |
 | `COOKIE_SECRET` | 32+ byte hex key for signing cookies |
-| `RESEND_API_KEY` | [Resend](https://resend.com) key (optional — email is skipped if absent) |
+| `RESEND_API_KEY` | [Resend](https://resend.com) key (used in production; ignored locally if `SMTP_HOST` is set) |
 | `NEXT_PUBLIC_BASE_URL` | Public base URL (`http://localhost:3000` locally) |
+| `SMTP_HOST` / `SMTP_PORT` | Local email catcher (Mailpit). When set, email is sent via SMTP instead of Resend |
+
+## Email in development
+
+`docker compose` (via `just db-up`) starts [Mailpit](https://mailpit.axllent.org),
+a local SMTP catcher. With `SMTP_HOST=localhost` / `SMTP_PORT=1025` set (the
+`.env.example` defaults), all outgoing email is captured by Mailpit instead of
+hitting Resend. View captured messages at
+[http://localhost:8025](http://localhost:8025) (or run `just mail`).
+
+Transport selection (in `src/lib/email.ts`): `SMTP_HOST` wins if set → Resend if
+`RESEND_API_KEY` is set → otherwise email is logged and skipped. Production
+(Vercel) leaves `SMTP_HOST` unset, so Resend is used there.
 
 ## Common tasks
 
@@ -67,7 +80,8 @@ Run `just` (or `just --list`) to see all recipes.
 | `just setup` | Full first-time setup (deps, env, db, migrate, seed) |
 | `just dev` | Start the dev server |
 | `just install` | Install dependencies |
-| `just db-up` / `just db-down` | Start / stop local Postgres |
+| `just db-up` / `just db-down` | Start / stop local services (Postgres + Mailpit) |
+| `just mail` | Open the Mailpit inbox (captured dev emails) |
 | `just migrate` | Apply database migrations |
 | `just generate` | Regenerate the Prisma client |
 | `just seed` | Seed events + test invite |
