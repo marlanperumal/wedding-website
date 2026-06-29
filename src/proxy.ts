@@ -3,9 +3,9 @@ import { NextRequest, NextResponse } from 'next/server'
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  if (pathname.startsWith('/rsvp')) {
+  if (pathname.startsWith('/rsvp/edit')) {
     if (!request.cookies.has('guestInviteId')) {
-      return NextResponse.redirect(new URL('/', request.url))
+      return NextResponse.redirect(new URL('/rsvp', request.url))
     }
   }
 
@@ -19,5 +19,5 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/rsvp/:path*', '/admin/dashboard/:path*', '/admin/guests/:path*'],
+  matcher: ['/rsvp/edit/:path*', '/admin/dashboard/:path*', '/admin/guests/:path*'],
 }
