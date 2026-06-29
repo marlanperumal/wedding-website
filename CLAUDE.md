@@ -83,6 +83,7 @@ Required (see `.env.example`):
 - `RESEND_API_KEY` — from resend.com (used in production; ignored locally when `SMTP_HOST` is set)
 - `NEXT_PUBLIC_BASE_URL` — `https://wedding.liedeman.perumal.co.za`
 - `SMTP_HOST` / `SMTP_PORT` — local email catcher (Mailpit on `localhost:1025`); when set, email goes to SMTP instead of Resend. Inbox UI at `http://localhost:8025`. Unset in production.
+- `RSVP_DEADLINE` — ISO 8601 datetime after which RSVPs become read-only (form hidden, summary only). Unset ⇒ RSVP always open (dev default).
 
 ## Test Invite
 
