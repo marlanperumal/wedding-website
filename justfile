@@ -1,8 +1,10 @@
 # Wedding website — task runner
 # Run `just` to list available recipes.
-
-set dotenv-load := true
-set dotenv-filename := ".env.local"
+#
+# Note: just does NOT load .env.local itself. Next.js loads it for dev/build,
+# and prisma.config.ts loads it for the Prisma recipes. We deliberately avoid
+# `set dotenv-load` because just's dotenv parser performs shell-style `$`
+# expansion, which corrupts values containing `$` (e.g. bcrypt hashes).
 
 # List available recipes
 default:
