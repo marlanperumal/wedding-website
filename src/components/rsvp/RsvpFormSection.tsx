@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { AccentBar } from '@/components/ui'
+import { Diamond } from '@/components/ui'
 import { RsvpForm } from '@/components/rsvp/RsvpForm'
 
 export async function RsvpFormSection({ inviteId }: { inviteId: string }) {
@@ -29,21 +29,28 @@ export async function RsvpFormSection({ inviteId }: { inviteId: string }) {
       : guestNames.slice(0, -1).join(', ') + ' & ' + guestNames.at(-1)
 
   return (
-    <div className="relative">
-      <AccentBar />
-      <div className="text-center py-12 px-6">
-        <p className="text-xs tracking-[5px] text-purple-orchid uppercase font-sans mb-3">
-          You are invited
-        </p>
-        <h1 className="font-serif text-4xl italic text-near-black mb-2">
-          Marlan &amp; Tramaine
-        </h1>
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="h-px w-10 bg-orange-soft" />
-          <span className="text-orange-soft text-sm">✦</span>
-          <div className="h-px w-10 bg-orange-soft" />
+    <div
+      className="mx-auto"
+      style={{ maxWidth: 640, padding: 'clamp(40px,6vw,64px) clamp(20px,5vw,40px)' }}
+    >
+      <div className="text-center mb-3.5">
+        <div className="font-label text-[12px] tracking-[.3em] text-gold-deep">
+          KINDLY RSVP
         </div>
-        <p className="font-serif text-2xl italic text-near-black/80">Dear {greeting}</p>
+        <div
+          className="font-script text-script-gold leading-[1.05] mt-1.5"
+          style={{ fontSize: 'clamp(42px,8vw,58px)' }}
+        >
+          Will you join us?
+        </div>
+        <Diamond className="mt-3.5" />
+        <p
+          className="font-serif text-[18px] text-ink-soft leading-[1.55] mx-auto"
+          style={{ maxWidth: 440, marginTop: 16 }}
+        >
+          Please respond by <b className="font-semibold">30 September 2026</b>.
+          Let us know who&rsquo;s coming and add any dietary notes for each guest.
+        </p>
       </div>
 
       <RsvpForm
@@ -54,8 +61,8 @@ export async function RsvpFormSection({ inviteId }: { inviteId: string }) {
           dietaryNotes: r.dietaryNotes ?? null,
         }))}
         initialEmail={invite.email ?? ''}
+        greeting={greeting}
       />
-      <AccentBar />
     </div>
   )
 }

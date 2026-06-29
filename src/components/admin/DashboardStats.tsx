@@ -14,96 +14,140 @@ interface DashboardStatsProps {
   submittedInvites: number
 }
 
+const EVENT_DOT: Record<string, string> = {
+  Mehndi: '#e07a29',
+  Nelengu: '#9e6bb5',
+  Sangeet: '#3da4a1',
+  Sangeeth: '#3da4a1',
+  Wedding: '#b08a36',
+  Reception: '#b08a36',
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="font-label text-[11px] tracking-[.22em] text-acc-teal-deep mb-3.5">
+      {children}
+    </div>
+  )
+}
+
 export function DashboardStats({
   eventStats,
   dietaryCounts,
   totalInvites,
   submittedInvites,
 }: DashboardStatsProps) {
+  const summary = [
+    { label: 'TOTAL INVITES', value: totalInvites },
+    { label: 'RESPONDED', value: submittedInvites },
+    { label: 'PENDING', value: totalInvites - submittedInvites },
+    {
+      label: 'RESPONSE RATE',
+      value:
+        totalInvites > 0
+          ? `${Math.round((submittedInvites / totalInvites) * 100)}%`
+          : '—',
+    },
+  ]
+
+  const th =
+    'text-right p-[12px_18px] font-label text-[9.5px] tracking-[.14em] text-gold-soft'
+
   return (
-    <div className="space-y-10">
-      {/* Summary */}
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-        {[
-          { label: 'Total Invites', value: totalInvites },
-          { label: 'Responded', value: submittedInvites },
-          {
-            label: 'Pending',
-            value: totalInvites - submittedInvites,
-          },
-          {
-            label: 'Response Rate',
-            value:
-              totalInvites > 0
-                ? `${Math.round((submittedInvites / totalInvites) * 100)}%`
-                : '—',
-          },
-        ].map(({ label, value }) => (
-          <div key={label} className="border border-orange-soft/40 p-4 text-center">
-            <p className="font-serif text-3xl text-near-black mb-1">{value}</p>
-            <p className="text-[10px] tracking-[2px] text-near-black/50 uppercase font-sans">
+    <div>
+      {/* Summary cards */}
+      <div
+        className="grid gap-3.5 mb-10"
+        style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(150px,1fr))' }}
+      >
+        {summary.map(({ label, value }) => (
+          <div
+            key={label}
+            className="bg-paper-card text-center"
+            style={{ border: '1px solid rgba(176,138,54,.4)', padding: '22px 16px' }}
+          >
+            <div className="font-serif text-[44px] leading-none text-ink">{value}</div>
+            <div className="font-label text-[9.5px] tracking-[.16em] text-gold-soft mt-2">
               {label}
-            </p>
+            </div>
           </div>
         ))}
       </div>
 
       {/* Per-event RSVP table */}
-      <div>
-        <p className="text-xs tracking-[3px] text-teal-deep uppercase font-sans mb-4">
-          RSVPs per Event
-        </p>
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm font-sans">
-            <thead>
-              <tr className="border-b border-orange-soft/30">
-                {['Event', 'Invited', 'Attending', 'Declined', 'Pending'].map((h) => (
-                  <th
-                    key={h}
-                    className="py-2 px-3 text-left text-[10px] tracking-[2px] text-near-black/50 uppercase"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {eventStats.map((stat) => (
-                <tr key={stat.id} className="border-b border-near-black/5">
-                  <td className="py-3 px-3 font-medium text-near-black">{stat.name}</td>
-                  <td className="py-3 px-3 text-near-black/70">{stat.invited}</td>
-                  <td className="py-3 px-3 text-teal-deep font-medium">{stat.attending}</td>
-                  <td className="py-3 px-3 text-near-black/50">{stat.notAttending}</td>
-                  <td className="py-3 px-3 text-orange-soft">{stat.noResponse}</td>
-                </tr>
+      <SectionLabel>RSVPS PER EVENT</SectionLabel>
+      <div
+        className="bg-paper-card overflow-x-auto mb-10"
+        style={{ border: '1px solid rgba(176,138,54,.4)' }}
+      >
+        <table className="w-full border-collapse" style={{ minWidth: 520 }}>
+          <thead>
+            <tr style={{ borderBottom: '1px solid rgba(176,138,54,.4)' }}>
+              <th className="text-left p-[12px_18px] font-label text-[9.5px] tracking-[.14em] text-gold-soft">
+                EVENT
+              </th>
+              {['INVITED', 'ATTENDING', 'DECLINED', 'PENDING'].map((h) => (
+                <th key={h} className={th}>
+                  {h}
+                </th>
               ))}
-            </tbody>
-          </table>
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            {eventStats.map((stat) => (
+              <tr key={stat.id} style={{ borderBottom: '1px solid rgba(176,138,54,.18)' }}>
+                <td className="p-[13px_18px] font-serif text-[18px] text-ink">
+                  <span
+                    className="inline-block w-[7px] h-[7px] rounded-full mr-[9px] align-middle"
+                    style={{ background: EVENT_DOT[stat.name] ?? '#b08a36' }}
+                  />
+                  {stat.name}
+                </td>
+                <td className="p-[13px_18px] text-right font-serif text-[18px] text-ink-muted">
+                  {stat.invited}
+                </td>
+                <td className="p-[13px_18px] text-right font-serif text-[18px] font-semibold text-acc-green-deep">
+                  {stat.attending}
+                </td>
+                <td className="p-[13px_18px] text-right font-serif text-[18px] text-gold-soft">
+                  {stat.notAttending}
+                </td>
+                <td className="p-[13px_18px] text-right font-serif text-[18px] text-acc-orange">
+                  {stat.noResponse}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
 
       {/* Dietary breakdown */}
       {Object.keys(dietaryCounts).length > 0 && (
-        <div>
-          <p className="text-xs tracking-[3px] text-teal-deep uppercase font-sans mb-4">
-            Dietary Requirements (attending guests)
-          </p>
+        <>
+          <SectionLabel>DIETARY REQUIREMENTS · ATTENDING GUESTS</SectionLabel>
           <div className="flex flex-wrap gap-3">
             {Object.entries(dietaryCounts)
               .sort(([, a], [, b]) => b - a)
               .map(([option, count]) => (
                 <div
                   key={option}
-                  className="border border-orange-soft/40 px-4 py-2 text-center min-w-[100px]"
+                  className="bg-paper-card text-center"
+                  style={{
+                    border: '1px solid rgba(176,138,54,.4)',
+                    padding: '14px 20px',
+                    minWidth: 108,
+                  }}
                 >
-                  <p className="font-serif text-2xl text-near-black">{count}</p>
-                  <p className="text-[10px] tracking-[1px] text-near-black/50 uppercase font-sans">
-                    {option}
-                  </p>
+                  <div className="font-serif text-[30px] leading-none text-ink">
+                    {count}
+                  </div>
+                  <div className="font-label text-[9px] tracking-[.1em] text-gold-soft mt-1.5">
+                    {option.toUpperCase()}
+                  </div>
                 </div>
               ))}
           </div>
-        </div>
+        </>
       )}
     </div>
   )

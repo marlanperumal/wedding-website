@@ -1,6 +1,5 @@
 import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
-import { AccentBar } from '@/components/ui'
 import { InviteHero } from '@/components/invite/InviteHero'
 import { EventBlock } from '@/components/invite/EventBlock'
 import { acceptInvite } from './actions'
@@ -29,22 +28,23 @@ export default async function InvitePage({ params }: Props) {
     .sort((a, b) => a.sortOrder - b.sortOrder)
 
   return (
-    <div className="relative">
-      <AccentBar />
-      <InviteHero guestNames={invite.guests.map((g) => g.name)} />
+    <div className="pb-16">
+      <InviteHero
+        guestNames={invite.guests.map((g) => g.name)}
+        cta={
+          <form action={acceptInvite}>
+            <input type="hidden" name="inviteId" value={invite.id} />
+            <button
+              type="submit"
+              className="inline-block font-label text-[12px] tracking-[.2em] text-paper-raised bg-gold-deep rounded-[2px] transition-colors hover:bg-[#6a4e10]"
+              style={{ padding: '14px 40px' }}
+            >
+              RSVP
+            </button>
+          </form>
+        }
+      />
       <EventBlock events={events} />
-      <div className="max-w-xl mx-auto px-6 pb-20 text-center">
-        <form action={acceptInvite}>
-          <input type="hidden" name="inviteId" value={invite.id} />
-          <button
-            type="submit"
-            className="bg-orange-soft text-white px-8 py-4 text-xs tracking-[3px] uppercase font-sans w-full max-w-xs hover:opacity-90 transition-colors"
-          >
-            RSVP Now
-          </button>
-        </form>
-      </div>
-      <AccentBar />
     </div>
   )
 }

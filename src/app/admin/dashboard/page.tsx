@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { extractAdminSession } from '@/lib/cookies'
 import { prisma } from '@/lib/prisma'
-import { AccentBar } from '@/components/ui'
+import { AdminTopBar } from '@/components/admin/AdminTopBar'
 import { DashboardStats } from '@/components/admin/DashboardStats'
 
 export default async function AdminDashboardPage() {
@@ -71,21 +71,21 @@ export default async function AdminDashboardPage() {
 
   return (
     <div>
-      <AccentBar />
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <div className="flex justify-between items-center mb-8">
-          <div>
-            <p className="text-xs tracking-[5px] text-purple-orchid uppercase font-sans mb-2">
-              Admin
-            </p>
-            <h1 className="font-serif text-3xl italic text-near-black">Dashboard</h1>
+      <AdminTopBar />
+      <div
+        className="mx-auto"
+        style={{ maxWidth: 1000, padding: 'clamp(28px,4vw,48px) clamp(18px,4vw,36px)' }}
+      >
+        <div className="mb-[30px]">
+          <div className="font-label text-[11px] tracking-[.3em] text-gold-soft">
+            OVERVIEW
           </div>
-          <nav className="flex gap-6 text-xs font-sans tracking-wider text-near-black/50">
-            <span className="text-orange-soft font-medium">Overview</span>
-            <a href="/admin/guests" className="hover:text-near-black">
-              Guests
-            </a>
-          </nav>
+          <h1
+            className="font-serif italic text-ink mt-1"
+            style={{ fontSize: 'clamp(32px,5vw,42px)' }}
+          >
+            Dashboard
+          </h1>
         </div>
 
         <DashboardStats

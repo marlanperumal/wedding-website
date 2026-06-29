@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#f4ecda; }
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb { background:#cdb47a; border-radius:6px; }
+  ::-webkit-scrollbar-track { background:#efe6d2; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; background:#f4ecda; font-family:'Cormorant Garamond',serif; color:#46370f;">
+
+  <!-- ===== Top bar (hidden on login) ===== -->
+  <sc-if value="{{ showChrome }}" hint-placeholder-val="{{ true }}">
+  <div style="position:sticky; top:0; z-index:40; background:#f6efdf; border-bottom:1px solid rgba(176,138,54,.4); box-shadow:0 4px 18px -12px rgba(120,90,30,.4);">
+    <div style="max-width:1080px; margin:0 auto; padding:12px clamp(18px,4vw,36px); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px 24px;">
+      <div style="display:flex; align-items:baseline; gap:12px;">
+        <span style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:13px; color:#7c5c14;">LIEDEMAN &middot; PERUMAL</span>
+        <span style="font-family:'Cinzel',serif; letter-spacing:.28em; font-size:9px; color:#a08648;">ADMIN</span>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px 22px;">
+        <span onClick="{{ goDashboard }}" style="position:relative; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:11px; color:{{ overviewColor }}; cursor:pointer; padding-bottom:3px;">OVERVIEW<sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}"><span style="position:absolute; left:0; right:0; bottom:0; height:1.5px; background:#b0451f;"></span></sc-if></span>
+        <span onClick="{{ goGuests }}" style="position:relative; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:11px; color:{{ guestsColor }}; cursor:pointer; padding-bottom:3px;">GUESTS<sc-if value="{{ isGuests }}" hint-placeholder-val="{{ true }}"><span style="position:absolute; left:0; right:0; bottom:0; height:1.5px; background:#b0451f;"></span></sc-if></span>
+        <span onClick="{{ goLogin }}" style="font-family:'Cinzel',serif; letter-spacing:.14em; font-size:10px; color:#7c6a44; cursor:pointer; border:1px solid rgba(176,138,54,.5); padding:7px 14px; white-space:nowrap;">SIGN OUT</span>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= LOGIN ================= -->
+  <sc-if value="{{ isLogin }}" hint-placeholder-val="{{ true }}">
+  <div style="min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;">
+    <div style="width:100%; max-width:380px; text-align:center;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:11px; color:#a08648; margin-bottom:10px;">ADMIN</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:34px; color:#46370f;">Marlan &amp; Tramaine</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin:18px 0 28px;"><span style="height:1px; width:50px; background:linear-gradient(90deg,transparent,#b08a36);"></span><span style="color:#b08a36; font-size:9px;">&#9670;</span><span style="height:1px; width:50px; background:linear-gradient(90deg,#b08a36,transparent);"></span></div>
+      <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.5); padding:28px 26px; text-align:left;">
+        <div style="font-family:'Cinzel',serif; letter-spacing:.2em; font-size:10px; color:#a08648; margin-bottom:8px;">PASSPHRASE</div>
+        <input type="password" value="" style="width:100%; font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; background:#fffdf7; border:1px solid rgba(176,138,54,.45); padding:11px 14px; outline:none; margin-bottom:18px;">
+        <button type="button" onClick="{{ goDashboard }}" style="width:100%; font-family:'Cinzel',serif; letter-spacing:.2em; font-size:12px; color:#f6efdf; background:#7c5c14; border:none; padding:14px; cursor:pointer;">SIGN IN</button>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= DASHBOARD ================= -->
+  <sc-if value="{{ isDashboard }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1000px; margin:0 auto; padding:clamp(28px,4vw,48px) clamp(18px,4vw,36px);">
+    <div style="margin-bottom:30px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:11px; color:#a08648;">OVERVIEW</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(32px,5vw,42px); color:#46370f; margin-top:4px;">Dashboard</div>
+    </div>
+
+    <!-- summary stat cards -->
+    <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:40px;">
+      <sc-for list="{{ summary }}" as="s" hint-placeholder-count="4">
+        <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.4); padding:22px 16px; text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif; font-size:44px; line-height:1; color:#46370f;">{{ s.value }}</div>
+          <div style="font-family:'Cinzel',serif; letter-spacing:.16em; font-size:9.5px; color:#a08648; margin-top:8px;">{{ s.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- per-event RSVP table -->
+    <div style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:11px; color:#2e7d7a; margin-bottom:14px;">RSVPS PER EVENT</div>
+    <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.4); overflow-x:auto; margin-bottom:40px;">
+      <table style="width:100%; border-collapse:collapse; min-width:520px;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(176,138,54,.4);">
+            <th style="text-align:left; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">EVENT</th>
+            <th style="text-align:right; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">INVITED</th>
+            <th style="text-align:right; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">ATTENDING</th>
+            <th style="text-align:right; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">DECLINED</th>
+            <th style="text-align:right; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">PENDING</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ eventStats }}" as="e" hint-placeholder-count="5">
+            <tr style="border-bottom:1px solid rgba(176,138,54,.18);">
+              <td style="padding:13px 18px; font-family:'Cormorant Garamond',serif; font-size:18px; color:#46370f;"><span style="display:inline-block; width:7px; height:7px; border-radius:50%; background:{{ e.color }}; margin-right:9px; vertical-align:middle;"></span>{{ e.name }}</td>
+              <td style="padding:13px 18px; text-align:right; font-family:'Cormorant Garamond',serif; font-size:18px; color:#7c6a44;">{{ e.invited }}</td>
+              <td style="padding:13px 18px; text-align:right; font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:#2e7d5a;">{{ e.attending }}</td>
+              <td style="padding:13px 18px; text-align:right; font-family:'Cormorant Garamond',serif; font-size:18px; color:#a08648;">{{ e.declined }}</td>
+              <td style="padding:13px 18px; text-align:right; font-family:'Cormorant Garamond',serif; font-size:18px; color:#e07a29;">{{ e.pending }}</td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- dietary -->
+    <div style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:11px; color:#2e7d7a; margin-bottom:14px;">DIETARY REQUIREMENTS &middot; ATTENDING GUESTS</div>
+    <div style="display:flex; flex-wrap:wrap; gap:12px;">
+      <sc-for list="{{ dietary }}" as="d" hint-placeholder-count="5">
+        <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.4); padding:14px 20px; text-align:center; min-width:108px;">
+          <div style="font-family:'Cormorant Garamond',serif; font-size:30px; line-height:1; color:#46370f;">{{ d.count }}</div>
+          <div style="font-family:'Cinzel',serif; letter-spacing:.1em; font-size:9px; color:#a08648; margin-top:6px;">{{ d.label }}</div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= GUESTS ================= -->
+  <sc-if value="{{ isGuests }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1040px; margin:0 auto; padding:clamp(28px,4vw,48px) clamp(18px,4vw,36px);">
+    <div style="margin-bottom:30px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:11px; color:#a08648;">MANAGE</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(32px,5vw,42px); color:#46370f; margin-top:4px;">Guests</div>
+    </div>
+
+    <!-- add invite -->
+    <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.4); padding:clamp(20px,3vw,28px); margin-bottom:40px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:11px; color:#2e7d7a; margin-bottom:20px;">ADD INVITE</div>
+      <div style="display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:16px; margin-bottom:16px;">
+        <div>
+          <div style="font-family:'Cinzel',serif; letter-spacing:.16em; font-size:9px; color:#a08648; margin-bottom:6px;">INVITE LABEL *</div>
+          <input type="text" placeholder="The Naidoo Family" style="width:100%; font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; background:#fffdf7; border:1px solid rgba(176,138,54,.45); padding:10px 13px; outline:none;">
+        </div>
+        <div>
+          <div style="font-family:'Cinzel',serif; letter-spacing:.16em; font-size:9px; color:#a08648; margin-bottom:6px;">CONTACT EMAIL</div>
+          <input type="email" placeholder="guest@example.com" style="width:100%; font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; background:#fffdf7; border:1px solid rgba(176,138,54,.45); padding:10px 13px; outline:none;">
+        </div>
+      </div>
+      <div style="margin-bottom:16px;">
+        <div style="font-family:'Cinzel',serif; letter-spacing:.16em; font-size:9px; color:#a08648; margin-bottom:6px;">GUEST NAMES &middot; ONE PER LINE *</div>
+        <textarea rows="3" placeholder="Priya Naidoo&#10;Rajan Naidoo" style="width:100%; font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; background:#fffdf7; border:1px solid rgba(176,138,54,.45); padding:10px 13px; outline:none; resize:none;"></textarea>
+      </div>
+      <div style="margin-bottom:20px;">
+        <div style="font-family:'Cinzel',serif; letter-spacing:.16em; font-size:9px; color:#a08648; margin-bottom:10px;">EVENTS *</div>
+        <div style="display:flex; flex-wrap:wrap; gap:10px 20px;">
+          <sc-for list="{{ eventNames }}" as="n" hint-placeholder-count="5">
+            <span style="display:inline-flex; align-items:center; gap:8px; font-family:'Cormorant Garamond',serif; font-size:17px; color:#5c4e2e;"><span style="width:15px; height:15px; border:1px solid #7c5c14; background:#7c5c14; display:inline-flex; align-items:center; justify-content:center; color:#faf4e6; font-size:10px;">&#10003;</span>{{ n }}</span>
+          </sc-for>
+        </div>
+      </div>
+      <button type="button" style="font-family:'Cinzel',serif; letter-spacing:.2em; font-size:11px; color:#f6efdf; background:#7c5c14; border:none; padding:12px 28px; cursor:pointer;">ADD INVITE</button>
+    </div>
+
+    <!-- invites table -->
+    <div style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:11px; color:#2e7d7a; margin-bottom:14px;">ALL INVITES &middot; {{ inviteCount }}</div>
+    <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.4); overflow-x:auto;">
+      <table style="width:100%; border-collapse:collapse; min-width:720px;">
+        <thead>
+          <tr style="border-bottom:1px solid rgba(176,138,54,.4);">
+            <th style="text-align:left; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">INVITE</th>
+            <th style="text-align:left; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">GUESTS</th>
+            <th style="text-align:left; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">EVENTS</th>
+            <th style="text-align:left; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">STATUS</th>
+            <th style="text-align:left; padding:12px 18px; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:9.5px; color:#a08648;">LINK</th>
+          </tr>
+        </thead>
+        <tbody>
+          <sc-for list="{{ invites }}" as="i" hint-placeholder-count="5">
+            <tr style="border-bottom:1px solid rgba(176,138,54,.18);">
+              <td style="padding:14px 18px; vertical-align:top;"><div style="font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:#46370f;">{{ i.label }}</div><div style="font-family:'Cormorant Garamond',serif; font-size:14px; color:#a08648;">{{ i.email }}</div></td>
+              <td style="padding:14px 18px; vertical-align:top; font-family:'Cormorant Garamond',serif; font-size:16px; color:#5c4e2e;">{{ i.guests }}</td>
+              <td style="padding:14px 18px; vertical-align:top;"><div style="display:flex; flex-wrap:wrap; gap:5px;"><sc-for list="{{ i.events }}" as="ev" hint-placeholder-count="3"><span style="font-family:'Cinzel',serif; letter-spacing:.08em; font-size:9px; color:#7c5c14; background:rgba(176,138,54,.14); border:1px solid rgba(176,138,54,.3); padding:3px 9px; border-radius:11px;">{{ ev }}</span></sc-for></div></td>
+              <td style="padding:14px 18px; vertical-align:top;"><span style="font-family:'Cinzel',serif; letter-spacing:.1em; font-size:9px; color:{{ i.statusColor }}; background:{{ i.statusBg }}; padding:4px 10px;">{{ i.status }}</span></td>
+              <td style="padding:14px 18px; vertical-align:top;"><span style="display:inline-flex; align-items:center; gap:6px; font-family:'Cinzel',serif; letter-spacing:.1em; font-size:9px; color:#9e6bb5; border:1px solid rgba(158,107,181,.45); padding:5px 11px; cursor:pointer;">&#128203; COPY LINK</span></td>
+            </tr>
+          </sc-for>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { page: 'login' };
+
+  go(p) {
+    this.setState({ page: p });
+    try { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) {}
+  }
+
+  renderVals() {
+    const p = this.state.page;
+
+    const summary = [
+      { label: 'TOTAL INVITES', value: 84 },
+      { label: 'RESPONDED', value: 57 },
+      { label: 'PENDING', value: 27 },
+      { label: 'RESPONSE RATE', value: '68%' },
+    ];
+    const eventStats = [
+      { name: 'Mehndi', color: '#e07a29', invited: 38, attending: 24, declined: 6, pending: 8 },
+      { name: 'Nelengu', color: '#9e6bb5', invited: 41, attending: 28, declined: 5, pending: 8 },
+      { name: 'Sangeet', color: '#3da4a1', invited: 84, attending: 52, declined: 9, pending: 23 },
+      { name: 'Wedding Ceremony', color: '#b08a36', invited: 84, attending: 61, declined: 7, pending: 16 },
+      { name: 'Reception', color: '#b08a36', invited: 84, attending: 61, declined: 7, pending: 16 },
+    ];
+    const dietary = [
+      { label: 'VEGETARIAN', count: 22 },
+      { label: 'HALAAL', count: 14 },
+      { label: 'NO BEEF', count: 9 },
+      { label: 'VEGAN', count: 4 },
+      { label: 'NUT ALLERGY', count: 3 },
+    ];
+    const eventNames = ['Mehndi', 'Nelengu', 'Sangeet', 'Wedding Ceremony', 'Reception'];
+
+    const sub = { status: 'SUBMITTED', statusColor: '#2e7d7a', statusBg: 'rgba(46,125,122,.12)' };
+    const pen = { status: 'PENDING', statusColor: '#c0631f', statusBg: 'rgba(224,122,41,.12)' };
+    const invites = [
+      { label: 'The Naidoo Family', email: 'priya.naidoo@example.com', guests: 'Priya Naidoo, Rajan Naidoo', events: ['Mehndi', 'Sangeet', 'Wedding', 'Reception'], ...sub },
+      { label: 'Aunty Shameema & Family', email: 'shameema@example.com', guests: 'Shameema Adams, Yusuf Adams, Layla Adams', events: ['Sangeet', 'Wedding', 'Reception'], ...pen },
+      { label: 'David & Sarah', email: 'dave.k@example.com', guests: 'David Klein, Sarah Klein', events: ['Wedding', 'Reception'], ...sub },
+      { label: 'The Pillay Cousins', email: '', guests: 'Anand Pillay, Kavitha Pillay', events: ['Nelengu', 'Sangeet', 'Wedding', 'Reception'], ...pen },
+      { label: 'Grandma Rosie', email: 'rosie@example.com', guests: 'Rosie Liedeman', events: ['Mehndi', 'Sangeet', 'Wedding', 'Reception'], ...sub },
+    ];
+
+    return {
+      showChrome: p !== 'login',
+      isLogin: p === 'login', isDashboard: p === 'dashboard', isGuests: p === 'guests',
+      overviewColor: p === 'dashboard' ? '#b0451f' : '#8a6f2e',
+      guestsColor: p === 'guests' ? '#b0451f' : '#8a6f2e',
+      goLogin: () => this.go('login'), goDashboard: () => this.go('dashboard'), goGuests: () => this.go('guests'),
+      summary, eventStats, dietary, eventNames, invites, inviteCount: invites.length,
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -1,7 +1,7 @@
 'use client'
 import { useActionState } from 'react'
 import { enterInviteCode, type EnterCodeState } from '@/app/rsvp/actions'
-import { AccentBar } from '@/components/ui'
+import { Diamond } from '@/components/ui'
 
 const initialState: EnterCodeState = {}
 
@@ -9,53 +9,62 @@ export function RsvpEntry() {
   const [state, formAction, pending] = useActionState(enterInviteCode, initialState)
 
   return (
-    <div className="relative">
-      <AccentBar />
-      <div className="max-w-md mx-auto px-6 py-16 text-center">
-        <p className="text-xs tracking-[5px] text-purple-orchid uppercase font-sans mb-3">
-          RSVP
-        </p>
-        <h1 className="font-serif text-3xl italic text-near-black mb-3">
-          Find your invitation
-        </h1>
-        <p className="font-sans text-sm text-near-black/60 leading-relaxed mb-8">
-          Enter the invitation code from your invite link or card to view and
-          confirm your RSVP.
-        </p>
-
-        <form action={formAction} className="text-left">
-          <label
-            htmlFor="rsvp-code"
-            className="block text-[10px] tracking-[3px] text-teal-deep uppercase font-sans mb-2"
-          >
-            Invitation code
-          </label>
-          <input
-            id="rsvp-code"
-            name="code"
-            type="text"
-            required
-            autoComplete="off"
-            placeholder="e.g. smith-family-ab12"
-            className="w-full border border-near-black/20 px-3.5 py-2.5 text-sm font-sans bg-white outline-none focus:border-orange-soft"
-          />
-
-          {state.error && (
-            <p className="mt-3 text-sm font-sans text-red-700" role="alert">
-              {state.error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={pending}
-            className="mt-6 w-full bg-orange-soft text-white py-4 text-xs tracking-[3px] uppercase font-sans disabled:opacity-60"
-          >
-            {pending ? 'Looking…' : 'Continue'}
-          </button>
-        </form>
+    <div
+      className="mx-auto text-center"
+      style={{ maxWidth: 440, padding: 'clamp(40px,6vw,64px) clamp(20px,5vw,40px)' }}
+    >
+      <div className="font-label text-[12px] tracking-[.3em] text-gold-deep">
+        RSVP
       </div>
-      <AccentBar />
+      <h1
+        className="font-serif italic text-ink mt-2"
+        style={{ fontSize: 'clamp(34px,6vw,46px)' }}
+      >
+        Find your invitation
+      </h1>
+      <Diamond className="mt-3.5 mb-6" />
+      <p className="font-serif text-[18px] text-ink-soft leading-[1.55] mb-8">
+        Enter the invitation code from your invite link or card to view and
+        confirm your RSVP.
+      </p>
+
+      <form action={formAction} className="text-left">
+        <label
+          htmlFor="rsvp-code"
+          className="block font-label text-[10px] tracking-[.12em] text-gold-soft mb-2"
+        >
+          INVITATION CODE
+        </label>
+        <input
+          id="rsvp-code"
+          name="code"
+          type="text"
+          required
+          autoComplete="off"
+          placeholder="e.g. smith-family-ab12"
+          className="w-full font-serif text-[16px] text-ink outline-none"
+          style={{
+            background: '#fffdf7',
+            border: '1px solid rgba(176,138,54,.45)',
+            padding: '11px 14px',
+          }}
+        />
+
+        {state.error && (
+          <p className="mt-3 font-serif text-[16px] text-acc-rust" role="alert">
+            {state.error}
+          </p>
+        )}
+
+        <button
+          type="submit"
+          disabled={pending}
+          className="mt-6 w-full font-label text-[13px] tracking-[.2em] text-paper-raised bg-gold-deep disabled:opacity-60 transition-colors hover:bg-[#6a4e10]"
+          style={{ padding: 16, border: 'none' }}
+        >
+          {pending ? 'LOOKING…' : 'CONTINUE'}
+        </button>
+      </form>
     </div>
   )
 }

@@ -25,25 +25,32 @@ interface InviteTableProps {
   invites: InviteData[]
 }
 
+const th =
+  'text-left p-[12px_18px] font-label text-[9.5px] tracking-[.14em] text-gold-soft'
+const td = 'p-[14px_18px] align-top'
+
 export function InviteTable({ invites }: InviteTableProps) {
   if (invites.length === 0) {
     return (
-      <p className="text-sm font-sans text-near-black/50 text-center py-12">
-        No invites yet. Add the first one above.
-      </p>
+      <div
+        className="bg-paper-card text-center font-serif italic text-[17px] text-ink-muted"
+        style={{ border: '1px solid rgba(176,138,54,.4)', padding: '48px 18px' }}
+      >
+        No invites yet.
+      </div>
     )
   }
 
   return (
-    <div className="overflow-x-auto">
-      <table className="w-full text-sm font-sans">
+    <div
+      className="bg-paper-card overflow-x-auto"
+      style={{ border: '1px solid rgba(176,138,54,.4)' }}
+    >
+      <table className="w-full border-collapse" style={{ minWidth: 720 }}>
         <thead>
-          <tr className="border-b border-orange-soft/30">
-            {['Invite', 'Guests', 'Events', 'Status', 'Link'].map((h) => (
-              <th
-                key={h}
-                className="py-2 px-3 text-left text-[10px] tracking-[2px] text-near-black/50 uppercase"
-              >
+          <tr style={{ borderBottom: '1px solid rgba(176,138,54,.4)' }}>
+            {['INVITE', 'GUESTS', 'EVENTS', 'STATUS', 'LINK'].map((h) => (
+              <th key={h} className={th}>
                 {h}
               </th>
             ))}
@@ -51,35 +58,40 @@ export function InviteTable({ invites }: InviteTableProps) {
         </thead>
         <tbody>
           {invites.map((invite) => (
-            <tr key={invite.id} className="border-b border-near-black/5 hover:bg-orange-soft/5">
-              <td className="py-3 px-3">
-                <p className="font-medium text-near-black">{invite.label}</p>
+            <tr key={invite.id} style={{ borderBottom: '1px solid rgba(176,138,54,.18)' }}>
+              <td className={td}>
+                <div className="font-serif text-[18px] font-semibold text-ink">
+                  {invite.label}
+                </div>
                 {invite.email && (
-                  <p className="text-xs text-near-black/50">{invite.email}</p>
+                  <div className="font-serif text-[14px] text-gold-soft">
+                    {invite.email}
+                  </div>
                 )}
               </td>
-              <td className="py-3 px-3 text-near-black/70">
+              <td className={`${td} font-serif text-[16px] text-ink-soft`}>
                 {invite.guests.map((g) => g.name).join(', ')}
               </td>
-              <td className="py-3 px-3">
-                <div className="flex flex-wrap gap-1">
+              <td className={td}>
+                <div className="flex flex-wrap gap-1.5">
                   {invite.events.map(({ event }) => (
                     <EventPill key={event.id} name={event.name} />
                   ))}
                 </div>
               </td>
-              <td className="py-3 px-3">
+              <td className={td}>
                 <span
-                  className={`text-[10px] tracking-wider uppercase font-sans px-2 py-0.5 ${
+                  className="font-label text-[9px] tracking-[.1em]"
+                  style={
                     invite.submitted
-                      ? 'bg-teal-deep/10 text-teal-deep'
-                      : 'bg-orange-soft/10 text-orange-soft'
-                  }`}
+                      ? { color: '#2e7d7a', background: 'rgba(46,125,122,.12)', padding: '4px 10px' }
+                      : { color: '#c0631f', background: 'rgba(224,122,41,.12)', padding: '4px 10px' }
+                  }
                 >
-                  {invite.submitted ? 'Submitted' : 'Pending'}
+                  {invite.submitted ? 'SUBMITTED' : 'PENDING'}
                 </span>
               </td>
-              <td className="py-3 px-3">
+              <td className={td}>
                 <CopyLinkButton slug={invite.slug} />
               </td>
             </tr>

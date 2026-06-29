@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Cinzel:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="./image-slot.js"></script>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; background:#f4ecda; }
+  @keyframes sway { 0%,100%{ transform:rotate(-2.5deg);} 50%{ transform:rotate(2.5deg);} }
+  @keyframes swaySlow { 0%,100%{ transform:rotate(1.8deg);} 50%{ transform:rotate(-1.8deg);} }
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb { background:#cdb47a; border-radius:6px; }
+  ::-webkit-scrollbar-track { background:#efe6d2; }
+</style>
+</helmet>
+
+<div style="min-height:100vh; background:#f4ecda; font-family:'Cormorant Garamond',serif; color:#46370f;">
+
+  <!-- ================= NAV ================= -->
+  <div style="position:sticky; top:0; z-index:40; background:#f6efdf; border-bottom:1px solid rgba(176,138,54,.4); box-shadow:0 4px 18px -12px rgba(120,90,30,.4);">
+    <div style="max-width:1080px; margin:0 auto; padding:14px clamp(18px,4vw,40px); display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:10px 24px;">
+      <span onClick="{{ goHome }}" style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:13px; color:#7c5c14; cursor:pointer; white-space:nowrap;">LIEDEMAN &middot; PERUMAL</span>
+      <div style="display:flex; flex-wrap:wrap; align-items:center; gap:8px 22px;">
+        <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="6">
+          <span onClick="{{ item.onClick }}" style="position:relative; font-family:'Cinzel',serif; letter-spacing:.14em; font-size:11px; color:{{ item.color }}; cursor:pointer; padding-bottom:3px; white-space:nowrap;">{{ item.label }}<sc-if value="{{ item.active }}" hint-placeholder-val="{{ true }}"><span style="position:absolute; left:0; right:0; bottom:0; height:1.5px; background:#b0451f;"></span></sc-if></span>
+        </sc-for>
+        <span onClick="{{ goRsvp }}" style="font-family:'Cinzel',serif; letter-spacing:.16em; font-size:11px; color:#f6efdf; background:#7c5c14; padding:9px 20px; border-radius:2px; cursor:pointer; white-space:nowrap;">RSVP</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= HOME ================= -->
+  <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+  <div>
+    <!-- hero -->
+    <div style="position:relative; padding:clamp(20px,4vw,40px);">
+      <div style="position:absolute; left:clamp(14px,4vw,60px); top:18px; width:clamp(90px,14vw,160px); height:120px; transform-origin:top center; animation:sway 6s ease-in-out infinite; pointer-events:none;">
+        <div style="width:100%; height:100%; border-radius:0 0 50% 50%; background:repeating-linear-gradient(180deg,#e9a23f,#e9a23f 8px,#d98a2e 8px,#d98a2e 16px); opacity:.45;"></div>
+        <div style="position:absolute; bottom:6px; width:100%; text-align:center; font-family:monospace; font-size:9px; color:#7c5c14;">garland</div>
+      </div>
+      <div style="position:absolute; right:clamp(14px,4vw,60px); top:18px; width:clamp(90px,14vw,160px); height:120px; transform-origin:top center; animation:swaySlow 6.5s ease-in-out infinite; pointer-events:none;">
+        <div style="width:100%; height:100%; border-radius:0 0 50% 50%; background:repeating-linear-gradient(180deg,#e9a23f,#e9a23f 8px,#d98a2e 8px,#d98a2e 16px); opacity:.45;"></div>
+        <div style="position:absolute; bottom:6px; width:100%; text-align:center; font-family:monospace; font-size:9px; color:#7c5c14;">garland</div>
+      </div>
+      <div style="max-width:760px; margin:0 auto; border:1px solid rgba(176,138,54,.55); padding:6px; background:radial-gradient(120% 80% at 50% 0%, #faf4e6 0%, #f1e7d1 100%);">
+        <div style="border:1px solid rgba(176,138,54,.4); padding:clamp(40px,7vw,64px) clamp(24px,5vw,60px); text-align:center;">
+          <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(18px,3vw,24px); color:#6a5016;">Together with their families</div>
+          <div style="font-family:'Parisienne',cursive; color:#8a5f10; line-height:1.02; margin:14px 0 6px;">
+            <div style="font-size:clamp(52px,11vw,92px);">Marlan</div>
+            <div style="font-size:clamp(28px,5vw,44px); color:#b08a36; margin:-4px 0;">&amp;</div>
+            <div style="font-size:clamp(52px,11vw,92px);">Tramaine</div>
+          </div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:clamp(17px,2.4vw,22px); line-height:1.5; color:#46370f; margin-top:12px;">joyfully request the pleasure of your company<br>to share in their wedding celebrations</div>
+          <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin:24px 0 16px;">
+            <span style="height:1px; width:70px; background:linear-gradient(90deg,transparent,#b08a36);"></span>
+            <span style="color:#b08a36; font-size:10px;">&#9670;</span>
+            <span style="height:1px; width:70px; background:linear-gradient(90deg,#b08a36,transparent);"></span>
+          </div>
+          <div style="font-family:'Cinzel',serif; letter-spacing:.26em; font-size:clamp(13px,2vw,16px); color:#7c5c14;">26 &amp; 27 NOVEMBER 2026</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:18px; color:#856312; margin-top:4px;">Cape Town, South Africa</div>
+          <span onClick="{{ goRsvp }}" style="display:inline-block; margin-top:26px; font-family:'Cinzel',serif; letter-spacing:.2em; font-size:12px; color:#f6efdf; background:#7c5c14; padding:14px 40px; border-radius:2px; cursor:pointer;">RSVP</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- story + couple photo -->
+    <div style="background:#efe6d2; border-top:1px solid rgba(176,138,54,.3); padding:clamp(36px,6vw,64px) clamp(20px,5vw,60px);">
+      <div style="max-width:1040px; margin:0 auto; display:flex; flex-wrap:wrap; align-items:center; gap:clamp(24px,4vw,44px);">
+        <div style="flex:1 1 320px; border:1px solid rgba(176,138,54,.55); padding:6px;">
+          <image-slot id="couple-home" shape="rect" placeholder="Drop a photo of you two" style="display:block; width:100%; height:clamp(240px,32vw,340px); border:1px solid rgba(176,138,54,.35);"></image-slot>
+        </div>
+        <div style="flex:1 1 320px;">
+          <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:11px; color:#7c5c14;">OUR STORY</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,34px); color:#46370f; margin:10px 0 14px; line-height:1.25;">Two days, both families, and everyone we love in one place.</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-size:clamp(17px,2.2vw,19px); line-height:1.65; color:#5c4e2e;">We&rsquo;re bringing everyone together in Cape Town for a Mehndi, a Nelengu, a Sangeet, and the wedding itself. The Thursday gatherings are completely optional &mdash; but we&rsquo;d love to have you share in them with us.</div>
+          <span onClick="{{ goEvents }}" style="display:inline-block; margin-top:20px; font-family:'Cinzel',serif; letter-spacing:.18em; font-size:11px; color:#7c5c14; border:1px solid rgba(176,138,54,.6); padding:11px 26px; cursor:pointer;">SEE THE EVENTS</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- two-day timeline -->
+    <div style="background:radial-gradient(120% 60% at 50% 0%, #faf4e6 0%, #f1e7d1 100%); border-top:1px solid rgba(176,138,54,.3); padding:clamp(40px,6vw,58px) clamp(20px,5vw,60px);">
+      <div style="text-align:center; margin-bottom:42px;">
+        <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(30px,5vw,38px); color:#46370f;">A two-day celebration</div>
+        <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#7c5c14; margin-top:8px;">NOVEMBER 2026</div>
+      </div>
+      <div style="position:relative; max-width:680px; margin:0 auto; padding-left:84px;">
+        <div style="position:absolute; left:31px; top:14px; bottom:14px; width:2px; background:linear-gradient(180deg,transparent,#c2a14e 8%,#c2a14e 92%,transparent);"></div>
+        <div style="position:relative; margin-bottom:18px;">
+          <div style="position:absolute; left:-84px; top:-2px; width:64px; height:64px; border-radius:50%; background:#f6efdf; border:1px solid rgba(176,138,54,.55); display:flex; align-items:center; justify-content:center;"><span style="font-family:'Cinzel',serif; font-weight:700; font-size:26px; color:#7c5c14;">26</span></div>
+          <div style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:13px; color:#856312; padding-top:6px;">THURSDAY</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; color:#9e6bb5;">optional &mdash; come if you can</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:14px; margin-bottom:34px;">
+          <div style="background:#fbf5e8; border:1px solid rgba(176,138,54,.3); border-left:4px solid #e07a29; border-radius:6px; padding:16px 20px;"><div style="display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f;">Mehndi</span><span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:11px; color:#e07a29;">FROM 10AM</span></div><div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#7c6a44; margin-top:2px;">Henna for the bride &middot; Wynberg</div></div>
+          <div style="background:#fbf5e8; border:1px solid rgba(176,138,54,.3); border-left:4px solid #9e6bb5; border-radius:6px; padding:16px 20px;"><div style="display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f;">Nelengu</span><span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:11px; color:#9e6bb5;">FROM 10AM</span></div><div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#7c6a44; margin-top:2px;">Groom&rsquo;s blessing &middot; Constantia</div></div>
+          <div style="background:#fbf5e8; border:1px solid rgba(176,138,54,.3); border-left:4px solid #3da4a1; border-radius:6px; padding:16px 20px;"><div style="display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f;">Sangeet</span><span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:11px; color:#2e7d7a;">FROM 5PM</span></div><div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#7c6a44; margin-top:2px;">Music &amp; dancing at our home &middot; Wynberg</div></div>
+        </div>
+        <div style="position:relative; margin-bottom:18px;">
+          <div style="position:absolute; left:-84px; top:-2px; width:64px; height:64px; border-radius:50%; background:#7c5c14; display:flex; align-items:center; justify-content:center;"><span style="font-family:'Cinzel',serif; font-weight:700; font-size:26px; color:#f6efdf;">27</span></div>
+          <div style="font-family:'Cinzel',serif; letter-spacing:.22em; font-size:13px; color:#856312; padding-top:6px;">FRIDAY</div>
+          <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:17px; color:#5fae7e;">the main event</div>
+        </div>
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="background:#fbf5e8; border:1px solid rgba(176,138,54,.45); border-left:4px solid #b08a36; border-radius:6px; padding:16px 20px;"><div style="display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f;">Wedding Ceremony</span><span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:11px; color:#7c5c14;">3:30PM &middot; ARRIVE BY 3</span></div><div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#7c6a44; margin-top:2px;">Goedgeleven &middot; Durbanville</div></div>
+          <div style="background:#fbf5e8; border:1px solid rgba(176,138,54,.45); border-left:4px solid #b08a36; border-radius:6px; padding:16px 20px;"><div style="display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between; gap:4px;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f;">Reception</span><span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:11px; color:#7c5c14;">TO FOLLOW &middot; TILL 11:30</span></div><div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#7c6a44; margin-top:2px;">Dinner, speeches &amp; dancing</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- explore links -->
+    <div style="background:#efe6d2; border-top:1px solid rgba(176,138,54,.3); padding:clamp(36px,6vw,56px) clamp(20px,5vw,60px);">
+      <div style="max-width:1040px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px;">
+        <span onClick="{{ goVenue }}" style="cursor:pointer; background:#faf4e6; border:1px solid rgba(176,138,54,.4); padding:24px; text-align:center; display:block;"><div style="font-family:'Cinzel',serif; letter-spacing:.2em; font-size:10px; color:#9e6bb5;">FIND US</div><div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:26px; color:#46370f; margin-top:6px;">Venue &amp; Directions</div></span>
+        <span onClick="{{ goStay }}" style="cursor:pointer; background:#faf4e6; border:1px solid rgba(176,138,54,.4); padding:24px; text-align:center; display:block;"><div style="font-family:'Cinzel',serif; letter-spacing:.2em; font-size:10px; color:#2e7d7a;">STAY OVER</div><div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:26px; color:#46370f; margin-top:6px;">Accommodation</div></span>
+        <span onClick="{{ goAttire }}" style="cursor:pointer; background:#faf4e6; border:1px solid rgba(176,138,54,.4); padding:24px; text-align:center; display:block;"><div style="font-family:'Cinzel',serif; letter-spacing:.2em; font-size:10px; color:#e07a29;">WHAT TO WEAR</div><div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:26px; color:#46370f; margin-top:6px;">Attire Guide</div></span>
+        <span onClick="{{ goFaqs }}" style="cursor:pointer; background:#faf4e6; border:1px solid rgba(176,138,54,.4); padding:24px; text-align:center; display:block;"><div style="font-family:'Cinzel',serif; letter-spacing:.2em; font-size:10px; color:#5fae7e;">GOOD TO KNOW</div><div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:26px; color:#46370f; margin-top:6px;">FAQs</div></span>
+      </div>
+    </div>
+
+    <!-- rsvp band -->
+    <div style="padding:clamp(40px,6vw,60px) clamp(20px,5vw,60px); text-align:center; background:radial-gradient(120% 80% at 50% 100%, #faf4e6 0%, #f1e7d1 100%); border-top:1px solid rgba(176,138,54,.3);">
+      <div style="display:inline-block; border:1px solid rgba(176,138,54,.5); padding:clamp(28px,4vw,36px) clamp(28px,5vw,60px); background:#faf4e6;">
+        <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:14px; color:#7c5c14;">KINDLY RSVP</div>
+        <div style="font-family:'Cormorant Garamond',serif; color:#46370f; margin:10px 0 14px;"><span style="font-style:italic; font-size:20px;">by </span><span style="font-weight:600; font-size:clamp(28px,4vw,34px);">30 September 2026</span></div>
+        <div style="font-family:'Cormorant Garamond',serif; font-size:18px; color:#7c6a44; max-width:420px; margin:0 auto 24px; line-height:1.5;">Use the personalised link from your invitation, where you&rsquo;ll also find full event details.</div>
+        <span onClick="{{ goRsvp }}" style="display:inline-block; font-family:'Cinzel',serif; letter-spacing:.2em; font-size:12px; color:#f6efdf; background:#7c5c14; padding:14px 42px; border-radius:2px; cursor:pointer;">RSVP NOW</span>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= EVENTS ================= -->
+  <sc-if value="{{ isEvents }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:780px; margin:0 auto; padding:clamp(40px,6vw,64px) clamp(20px,5vw,40px);">
+    <div style="text-align:center; margin-bottom:30px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#7c5c14;">THE CELEBRATION</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(38px,7vw,52px); color:#46370f; margin-top:8px;">Events</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-top:14px;"><span style="height:1px; width:60px; background:linear-gradient(90deg,transparent,#b08a36);"></span><span style="color:#b08a36; font-size:10px;">&#9670;</span><span style="height:1px; width:60px; background:linear-gradient(90deg,#b08a36,transparent);"></span></div>
+    </div>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:clamp(18px,2.4vw,20px); line-height:1.65; color:#5c4e2e; text-align:center; max-width:600px; margin:0 auto 44px;">Our celebration spans two days. The Thursday events are completely optional, but we&rsquo;d love to have you share in them with us.</p>
+
+    <!-- Day 1 -->
+    <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:6px;"><span style="font-family:'Cinzel',serif; font-weight:700; font-size:clamp(30px,5vw,40px); color:#7c5c14;">26</span><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(22px,3vw,28px); color:#7c5c14;">Thursday</span></div>
+    <div style="font-family:'Cinzel',serif; letter-spacing:.2em; font-size:11px; color:#9e6bb5; margin-bottom:6px;">OPTIONAL EVENTS</div>
+    <div style="height:1px; background:rgba(176,138,54,.4); margin-bottom:26px;"></div>
+    <div style="display:flex; flex-direction:column; gap:22px; margin-bottom:48px;">
+      <sc-for list="{{ day1 }}" as="ev" hint-placeholder-count="3">
+        <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.35); border-left:4px solid {{ ev.color }}; border-radius:6px; padding:clamp(20px,3vw,26px);">
+          <div style="display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin-bottom:8px;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,30px); color:#46370f;">{{ ev.name }}</span><span style="font-family:'Cinzel',serif; letter-spacing:.16em; font-size:10px; color:{{ ev.color }};">{{ ev.who }}</span></div>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:clamp(16px,2.2vw,18px); line-height:1.6; color:#5c4e2e; margin:0 0 14px;">{{ ev.desc }}</p>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex; gap:10px;"><span style="flex:0 0 64px; font-family:'Cinzel',serif; letter-spacing:.1em; font-size:10px; color:#a08648; padding-top:3px;">WHEN</span><span style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#46370f;">{{ ev.when }}</span></div>
+            <div style="display:flex; gap:10px;"><span style="flex:0 0 64px; font-family:'Cinzel',serif; letter-spacing:.1em; font-size:10px; color:#a08648; padding-top:3px;">WHERE</span><span style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#46370f;">{{ ev.where }}</span></div>
+            <div style="display:flex; gap:10px;"><span style="flex:0 0 64px; font-family:'Cinzel',serif; letter-spacing:.1em; font-size:10px; color:#a08648; padding-top:3px;">ATTIRE</span><span style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#46370f;">{{ ev.attire }}</span></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- Day 2 -->
+    <div style="display:flex; align-items:baseline; gap:14px; margin-bottom:6px;"><span style="font-family:'Cinzel',serif; font-weight:700; font-size:clamp(30px,5vw,40px); color:#7c5c14;">27</span><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(22px,3vw,28px); color:#7c5c14;">Friday</span></div>
+    <div style="font-family:'Cinzel',serif; letter-spacing:.2em; font-size:11px; color:#5fae7e; margin-bottom:6px;">THE MAIN EVENT</div>
+    <div style="height:1px; background:rgba(176,138,54,.4); margin-bottom:26px;"></div>
+    <div style="display:flex; flex-direction:column; gap:22px;">
+      <sc-for list="{{ day2 }}" as="ev" hint-placeholder-count="2">
+        <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.45); border-left:4px solid {{ ev.color }}; border-radius:6px; padding:clamp(20px,3vw,26px);">
+          <div style="display:flex; flex-wrap:wrap; align-items:baseline; gap:10px; margin-bottom:8px;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,30px); color:#46370f;">{{ ev.name }}</span><span style="font-family:'Cinzel',serif; letter-spacing:.16em; font-size:10px; color:{{ ev.color }};">{{ ev.who }}</span></div>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:clamp(16px,2.2vw,18px); line-height:1.6; color:#5c4e2e; margin:0 0 14px;">{{ ev.desc }}</p>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex; gap:10px;"><span style="flex:0 0 64px; font-family:'Cinzel',serif; letter-spacing:.1em; font-size:10px; color:#a08648; padding-top:3px;">WHEN</span><span style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#46370f;">{{ ev.when }}</span></div>
+            <div style="display:flex; gap:10px;"><span style="flex:0 0 64px; font-family:'Cinzel',serif; letter-spacing:.1em; font-size:10px; color:#a08648; padding-top:3px;">WHERE</span><span style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#46370f;">{{ ev.where }}</span></div>
+            <div style="display:flex; gap:10px;"><span style="flex:0 0 64px; font-family:'Cinzel',serif; letter-spacing:.1em; font-size:10px; color:#a08648; padding-top:3px;">ATTIRE</span><span style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#46370f;">{{ ev.attire }}</span></div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= VENUE ================= -->
+  <sc-if value="{{ isVenue }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:780px; margin:0 auto; padding:clamp(40px,6vw,64px) clamp(20px,5vw,40px);">
+    <div style="text-align:center; margin-bottom:30px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#7c5c14;">FIND US</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(38px,7vw,52px); color:#46370f; margin-top:8px;">Venue</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(22px,3vw,26px); color:#7c5c14; margin-top:8px;">Wedding &amp; Reception</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-size:19px; color:#5c4e2e; margin-top:4px;">Goedgeleven &middot; Klipheuwel Road, Durbanville</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-top:16px;"><span style="height:1px; width:60px; background:linear-gradient(90deg,transparent,#b08a36);"></span><span style="color:#b08a36; font-size:10px;">&#9670;</span><span style="height:1px; width:60px; background:linear-gradient(90deg,#b08a36,transparent);"></span></div>
+    </div>
+
+    <div style="border:1px solid rgba(176,138,54,.55); padding:6px; background:#faf4e6;">
+      <iframe title="Map to Goedgeleven" src="https://maps.google.com/maps?q=-33.7790704,18.7078956&amp;ll=-33.9442,18.5392&amp;z=9&amp;output=embed" style="width:100%; height:300px; border:0; display:block;" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    </div>
+    <div style="text-align:center; margin:14px 0 44px;"><a href="https://maps.app.goo.gl/wgQ6Qnsvks1ivaHaA" target="_blank" rel="noopener noreferrer" style="font-family:'Cinzel',serif; letter-spacing:.14em; font-size:11px; color:#9e6bb5; text-decoration:none; border-bottom:1px solid rgba(158,107,181,.5); padding-bottom:2px;">OPEN IN GOOGLE MAPS &rarr;</a></div>
+
+    <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,32px); color:#7c5c14; margin-bottom:18px;">Getting there</div>
+    <div style="margin-bottom:26px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.14em; font-size:11px; color:#9e6bb5; margin-bottom:8px;">FROM CAPE TOWN CBD</div>
+      <ol style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.55; color:#5c4e2e; padding-left:22px; margin:0;">
+        <li>Get onto the N1 heading north, towards Paarl.</li>
+        <li>Take Exit 23 (Okavango Road / R302) towards Durbanville.</li>
+        <li>Follow Okavango Road north into Durbanville, then continue onto Klipheuwel Road heading out of town.</li>
+        <li>Stay on Klipheuwel Road and follow the map for the final turn to Goedgeleven.</li>
+      </ol>
+    </div>
+    <div style="margin-bottom:26px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.14em; font-size:11px; color:#9e6bb5; margin-bottom:8px;">FROM CAPE TOWN INTERNATIONAL AIRPORT</div>
+      <ol style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.55; color:#5c4e2e; padding-left:22px; margin:0;">
+        <li>Follow signs for the R300 heading north, towards Bellville / Brackenfell.</li>
+        <li>Take the R300 until it joins the N1, then take the N1 towards Cape Town.</li>
+        <li>Take Exit 23 (Okavango Road / R302) towards Durbanville.</li>
+        <li>Continue onto Klipheuwel Road and follow the map for the final turn to Goedgeleven.</li>
+      </ol>
+    </div>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.6; color:#5c4e2e; background:#fbf0d9; border-left:3px solid #e07a29; padding:14px 18px; margin:0 0 48px;">Please note: travel times on the Friday will be affected by traffic. Allow at least an hour to drive to the venue — or more if you’re travelling from the Southern Suburbs.</p>
+
+    <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,32px); color:#7c5c14; margin-bottom:18px;">Other events</div>
+    <div style="display:flex; flex-direction:column; gap:18px;">
+      <div><div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; color:#46370f;">Mehndi &amp; Sangeet</div><div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#5c4e2e;">11 Orient Road, Wynberg</div><a href="https://www.google.com/maps/search/?api=1&amp;query=11%20Orient%20Road%20Wynberg" target="_blank" rel="noopener noreferrer" style="font-family:'Cinzel',serif; letter-spacing:.1em; font-size:9.5px; color:#9e6bb5; text-decoration:none;">OPEN IN GOOGLE MAPS &rarr;</a></div>
+      <div><div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:22px; color:#46370f;">Nelengu</div><div style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#5c4e2e;">1 Belle Constantia Close, Kreupelbosch</div><a href="https://www.google.com/maps/search/?api=1&amp;query=1%20Belle%20Constantia%20Close%20Kreupelbosch" target="_blank" rel="noopener noreferrer" style="font-family:'Cinzel',serif; letter-spacing:.1em; font-size:9.5px; color:#9e6bb5; text-decoration:none;">OPEN IN GOOGLE MAPS &rarr;</a></div>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= ACCOMMODATION ================= -->
+  <sc-if value="{{ isStay }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:740px; margin:0 auto; padding:clamp(40px,6vw,64px) clamp(20px,5vw,40px);">
+    <div style="text-align:center; margin-bottom:30px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#7c5c14;">STAY OVER</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(38px,7vw,52px); color:#46370f; margin-top:8px;">Accommodation</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-top:14px;"><span style="height:1px; width:60px; background:linear-gradient(90deg,transparent,#b08a36);"></span><span style="color:#b08a36; font-size:10px;">&#9670;</span><span style="height:1px; width:60px; background:linear-gradient(90deg,#b08a36,transparent);"></span></div>
+    </div>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:clamp(18px,2.4vw,20px); line-height:1.65; color:#5c4e2e; margin:0 0 18px;">The wedding venue is about 40 minutes outside Cape Town (over an hour in traffic) and the Thursday events are in the Southern Suburbs. If you’re coming from out of town, your main options are probably:</p>
+    <ol style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.6; color:#5c4e2e; padding-left:22px; margin:0 0 44px;">
+      <li style="margin-bottom:10px;">Stay near us in the <b style="font-weight:600;">Southern Suburbs</b> (Wynberg, Constantia, Tokai, Kenilworth) — near the Thursday events, and drive through for the wedding.</li>
+      <li style="margin-bottom:10px;">Stay near the <b style="font-weight:600;">wedding venue</b> — limited accommodation at the venue itself, a few guest houses nearby, or anywhere in Durbanville.</li>
+      <li>Stay somewhere <b style="font-weight:600;">in the middle</b> — Cape Town CBD, Rondebosch or Century City.</li>
+    </ol>
+    <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,32px); color:#7c5c14; margin-bottom:12px;">Near the wedding venue</div>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.6; color:#5c4e2e; margin:0 0 22px;">A few options near the venue in Durbanville. We’ll add more if we find them — but we have no control over actual availability.</p>
+    <div style="display:flex; flex-direction:column; gap:16px;">
+      <a href="https://aloaccommodation.com/rooms" target="_blank" rel="noopener noreferrer" style="text-decoration:none; background:#faf4e6; border:1px solid rgba(176,138,54,.4); border-left:4px solid #3da4a1; padding:18px 22px; display:block;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f;">Alo Accommodation</span> <span style="font-family:'Cormorant Garamond',serif; font-size:17px; color:#7c6a44;">— at Goedgeleven</span></a>
+      <a href="https://www.dilisca.co.za" target="_blank" rel="noopener noreferrer" style="text-decoration:none; background:#faf4e6; border:1px solid rgba(176,138,54,.4); border-left:4px solid #9e6bb5; padding:18px 22px; display:block;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f;">Dilisca Guest House</span></a>
+      <a href="https://spesbonaguesthouse.com" target="_blank" rel="noopener noreferrer" style="text-decoration:none; background:#faf4e6; border:1px solid rgba(176,138,54,.4); border-left:4px solid #e07a29; padding:18px 22px; display:block;"><span style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f;">Spes Bona Guest House</span></a>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= ATTIRE ================= -->
+  <sc-if value="{{ isAttire }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:820px; margin:0 auto; padding:clamp(40px,6vw,64px) clamp(20px,5vw,40px);">
+    <div style="text-align:center; margin-bottom:30px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#7c5c14;">WHAT TO WEAR</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(38px,7vw,52px); color:#46370f; margin-top:8px;">Attire</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-top:14px;"><span style="height:1px; width:60px; background:linear-gradient(90deg,transparent,#b08a36);"></span><span style="color:#b08a36; font-size:10px;">&#9670;</span><span style="height:1px; width:60px; background:linear-gradient(90deg,#b08a36,transparent);"></span></div>
+    </div>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:clamp(18px,2.4vw,20px); line-height:1.65; color:#5c4e2e; text-align:center; max-width:620px; margin:0 auto 12px;">For the wedding we encourage traditional Indian attire in bright, festive colours. You don’t need to be Indian to join in — we’d love to see everyone dressed for the occasion.</p>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.6; color:#7c6a44; text-align:center; max-width:620px; margin:0 auto 48px;">Please avoid pure white (worn for funerals), red &amp; gold (the bride’s colours), and jeans. The Thursday events are more relaxed.</p>
+
+    <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,32px); color:#7c5c14; margin-bottom:22px;">For the women</div>
+    <div style="display:flex; flex-direction:column; gap:26px; margin-bottom:48px;">
+      <sc-for list="{{ womensWear }}" as="g" hint-placeholder-count="3">
+        <div style="display:flex; flex-wrap:wrap; gap:22px; align-items:flex-start;">
+          <div style="flex:0 0 auto; border:1px solid rgba(176,138,54,.5); padding:5px;"><img src="{{ g.img }}" alt="{{ g.name }}" loading="lazy" style="width:170px; height:220px; object-fit:cover; display:block;"></div>
+          <div style="flex:1 1 240px;"><div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:26px; color:#46370f; margin-bottom:6px;">{{ g.name }}</div><p style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.6; color:#5c4e2e; margin:0;">{{ g.blurb }}</p></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,32px); color:#7c5c14; margin-bottom:22px;">For the men</div>
+    <div style="display:flex; flex-direction:column; gap:26px; margin-bottom:48px;">
+      <sc-for list="{{ mensWear }}" as="g" hint-placeholder-count="2">
+        <div style="display:flex; flex-wrap:wrap; gap:22px; align-items:flex-start;">
+          <div style="flex:0 0 auto; border:1px solid rgba(176,138,54,.5); padding:5px;"><img src="{{ g.img }}" alt="{{ g.name }}" loading="lazy" style="width:170px; height:220px; object-fit:cover; display:block;"></div>
+          <div style="flex:1 1 240px;"><div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:26px; color:#46370f; margin-bottom:6px;">{{ g.name }}</div><p style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.6; color:#5c4e2e; margin:0;">{{ g.blurb }}</p></div>
+        </div>
+      </sc-for>
+    </div>
+
+    <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(26px,4vw,32px); color:#7c5c14; margin-bottom:14px;">Where to find it</div>
+    <div style="font-family:'Cinzel',serif; letter-spacing:.14em; font-size:11px; color:#9e6bb5; margin-bottom:8px;">IN CAPE TOWN</div>
+    <p style="font-family:'Cormorant Garamond',serif; font-size:18px; line-height:1.6; color:#5c4e2e; margin:0 0 8px;"><a href="https://www.instagram.com/shahzadi_indian_attire/" target="_blank" rel="noopener noreferrer" style="color:#46370f; text-decoration:underline; text-underline-offset:2px;">Shahzadi — Home of Indian Attire</a> — 65 Ernest Road, Rylands. The Rylands &amp; Athlone area is the hub for eastern wear, with several boutiques worth a browse in person.</p>
+    <div style="font-family:'Cinzel',serif; letter-spacing:.14em; font-size:11px; color:#9e6bb5; margin:20px 0 8px;">ONLINE (SHIPS WITHIN SOUTH AFRICA)</div>
+    <div style="display:flex; flex-wrap:wrap; gap:8px 26px; font-family:'Cormorant Garamond',serif; font-size:18px;">
+      <a href="https://jayshrees.co.za" target="_blank" rel="noopener noreferrer" style="color:#46370f; text-decoration:underline; text-underline-offset:2px;">Jayshrees / Rivaz</a>
+      <a href="https://shringar.co.za" target="_blank" rel="noopener noreferrer" style="color:#46370f; text-decoration:underline; text-underline-offset:2px;">Shringar</a>
+      <a href="https://www.maharaniscloset.co.za" target="_blank" rel="noopener noreferrer" style="color:#46370f; text-decoration:underline; text-underline-offset:2px;">The Maharani’s Closet</a>
+      <a href="https://www.rajaranis.co.za" target="_blank" rel="noopener noreferrer" style="color:#46370f; text-decoration:underline; text-underline-offset:2px;">Raja Rani’s Eastern Wear</a>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= FAQs ================= -->
+  <sc-if value="{{ isFaqs }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:740px; margin:0 auto; padding:clamp(40px,6vw,64px) clamp(20px,5vw,40px);">
+    <div style="text-align:center; margin-bottom:40px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#7c5c14;">GOOD TO KNOW</div>
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(34px,6vw,48px); color:#46370f; margin-top:8px;">Frequently Asked Questions</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-top:14px;"><span style="height:1px; width:60px; background:linear-gradient(90deg,transparent,#b08a36);"></span><span style="color:#b08a36; font-size:10px;">&#9670;</span><span style="height:1px; width:60px; background:linear-gradient(90deg,#b08a36,transparent);"></span></div>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:30px;">
+      <sc-for list="{{ faqs }}" as="f" hint-placeholder-count="6">
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(22px,3vw,26px); color:#7c5c14; margin-bottom:8px;">{{ f.q }}</div>
+          <p style="font-family:'Cormorant Garamond',serif; font-size:clamp(17px,2.2vw,19px); line-height:1.65; color:#5c4e2e; margin:0;">{{ f.a }}</p>
+          <sc-if value="{{ f.hasLink }}" hint-placeholder-val="{{ false }}"><span onClick="{{ f.onClick }}" style="display:inline-block; margin-top:8px; font-family:'Cinzel',serif; letter-spacing:.12em; font-size:10px; color:#9e6bb5; cursor:pointer;">{{ f.linkLabel }} &rarr;</span></sc-if>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- ================= RSVP ================= -->
+  <sc-if value="{{ isRsvp }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:640px; margin:0 auto; padding:clamp(40px,6vw,64px) clamp(20px,5vw,40px);">
+    <div style="text-align:center; margin-bottom:14px;">
+      <div style="font-family:'Cinzel',serif; letter-spacing:.3em; font-size:12px; color:#7c5c14;">KINDLY RSVP</div>
+      <div style="font-family:'Parisienne',cursive; font-size:clamp(42px,8vw,58px); color:#8a5f10; margin-top:6px; line-height:1.05;">Will you join us?</div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:12px; margin-top:14px;"><span style="height:1px; width:60px; background:linear-gradient(90deg,transparent,#b08a36);"></span><span style="color:#b08a36; font-size:10px;">&#9670;</span><span style="height:1px; width:60px; background:linear-gradient(90deg,#b08a36,transparent);"></span></div>
+      <p style="font-family:'Cormorant Garamond',serif; font-size:18px; color:#5c4e2e; margin:16px auto 0; max-width:440px; line-height:1.55;">Please respond by <b style="font-weight:600;">30 September 2026</b>. Let us know who’s coming and add any dietary notes for each guest.</p>
+    </div>
+
+    <div style="background:#faf4e6; border:1px solid rgba(176,138,54,.5); padding:clamp(24px,4vw,34px); margin-top:30px;">
+      <div style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:24px; color:#46370f; margin-bottom:4px;">Dear Marlan &amp; Tramaine</div>
+      <div style="font-family:'Cinzel',serif; letter-spacing:.14em; font-size:10px; color:#a08648; margin-bottom:22px;">YOUR PERSONAL INVITATION &middot; 2 GUESTS</div>
+
+      <!-- guest 1 -->
+      <div style="border-top:1px solid rgba(176,138,54,.3); padding:18px 0;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:#46370f; margin-bottom:12px;">Guest one</div>
+        <div style="display:flex; gap:10px; margin-bottom:14px;">
+          <span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:10px; color:#f6efdf; background:#5fae7e; padding:9px 18px; cursor:pointer;">JOYFULLY ACCEPTS</span>
+          <span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:10px; color:#a08648; background:transparent; border:1px solid rgba(176,138,54,.5); padding:9px 18px; cursor:pointer;">REGRETFULLY DECLINES</span>
+        </div>
+        <div style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:10px; color:#a08648; margin-bottom:8px;">ATTENDING</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+          <span style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; border:1px solid #e07a29; border-radius:20px; padding:6px 16px;">Mehndi</span>
+          <span style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; border:1px solid #9e6bb5; border-radius:20px; padding:6px 16px;">Nelengu</span>
+          <span style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; border:1px solid #3da4a1; border-radius:20px; padding:6px 16px;">Sangeet</span>
+          <span style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#f6efdf; background:#7c5c14; border:1px solid #7c5c14; border-radius:20px; padding:6px 16px;">Wedding</span>
+        </div>
+        <input type="text" placeholder="Dietary notes (optional)" style="width:100%; font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; background:#fffdf7; border:1px solid rgba(176,138,54,.45); padding:11px 14px; outline:none;">
+      </div>
+
+      <!-- guest 2 -->
+      <div style="border-top:1px solid rgba(176,138,54,.3); padding:18px 0;">
+        <div style="font-family:'Cormorant Garamond',serif; font-size:22px; color:#46370f; margin-bottom:12px;">Guest two</div>
+        <div style="display:flex; gap:10px; margin-bottom:14px;">
+          <span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:10px; color:#f6efdf; background:#5fae7e; padding:9px 18px; cursor:pointer;">JOYFULLY ACCEPTS</span>
+          <span style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:10px; color:#a08648; background:transparent; border:1px solid rgba(176,138,54,.5); padding:9px 18px; cursor:pointer;">REGRETFULLY DECLINES</span>
+        </div>
+        <div style="font-family:'Cinzel',serif; letter-spacing:.12em; font-size:10px; color:#a08648; margin-bottom:8px;">ATTENDING</div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px;">
+          <span style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; border:1px solid #e07a29; border-radius:20px; padding:6px 16px;">Mehndi</span>
+          <span style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; border:1px solid #9e6bb5; border-radius:20px; padding:6px 16px;">Nelengu</span>
+          <span style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; border:1px solid #3da4a1; border-radius:20px; padding:6px 16px;">Sangeet</span>
+          <span style="font-family:'Cormorant Garamond',serif; font-size:16px; color:#f6efdf; background:#7c5c14; border:1px solid #7c5c14; border-radius:20px; padding:6px 16px;">Wedding</span>
+        </div>
+        <input type="text" placeholder="Dietary notes (optional)" style="width:100%; font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; background:#fffdf7; border:1px solid rgba(176,138,54,.45); padding:11px 14px; outline:none;">
+      </div>
+
+      <div style="border-top:1px solid rgba(176,138,54,.3); padding-top:18px;">
+        <input type="email" placeholder="Email address" style="width:100%; font-family:'Cormorant Garamond',serif; font-size:16px; color:#46370f; background:#fffdf7; border:1px solid rgba(176,138,54,.45); padding:11px 14px; outline:none; margin-bottom:16px;">
+        <button type="button" style="width:100%; font-family:'Cinzel',serif; letter-spacing:.2em; font-size:13px; color:#f6efdf; background:#7c5c14; border:none; padding:16px; cursor:pointer;">SEND OUR RSVP</button>
+      </div>
+    </div>
+    <p style="font-family:'Cormorant Garamond',serif; font-style:italic; font-size:15px; color:#a08648; text-align:center; margin-top:16px;">This is a preview of the RSVP form — each guest sees their own names pre-filled from their personal link.</p>
+  </div>
+  </sc-if>
+
+  <!-- PAGES-END -->
+
+  <!-- ================= FOOTER ================= -->
+  <div style="background:#7c5c14; color:#f1e3c4; padding:clamp(36px,5vw,52px) clamp(20px,5vw,40px); text-align:center;">
+    <div style="font-family:'Parisienne',cursive; font-size:38px; color:#f6ecd0;">Marlan &amp; Tramaine</div>
+    <div style="font-family:'Cinzel',serif; letter-spacing:.24em; font-size:11px; color:#dcc99a; margin-top:8px;">26 &amp; 27 NOVEMBER 2026 &middot; CAPE TOWN</div>
+    <div style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px 22px; margin-top:22px;">
+      <sc-for list="{{ navItems }}" as="item" hint-placeholder-count="6">
+        <span onClick="{{ item.onClick }}" style="font-family:'Cinzel',serif; letter-spacing:.14em; font-size:10.5px; color:#e7d3a6; cursor:pointer;">{{ item.label }}</span>
+      </sc-for>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { page: 'home' };
+
+  go(p) {
+    this.setState({ page: p });
+    try { window.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) { try { window.scrollTo(0, 0); } catch (e2) {} }
+  }
+
+  renderVals() {
+    const p = this.state.page;
+    const items = [
+      ['home', 'Home'], ['events', 'Events'], ['venue', 'Venue'],
+      ['accommodation', 'Stay'], ['attire', 'Attire'], ['faqs', 'FAQs'],
+    ];
+    const navItems = items.map(([key, label]) => ({
+      label, active: p === key,
+      color: p === key ? '#b0451f' : '#8a6f2e',
+      onClick: () => this.go(key),
+    }));
+
+    const day1 = [
+      { name: 'Mehndi', who: 'BRIDE', color: '#e07a29', when: 'From 10am',
+        where: '11 Orient Road, Wynberg',
+        attire: 'Bright, festive colours (yellows & oranges). Casual or semi-formal — Eastern if you prefer.',
+        desc: 'A joyful pre-wedding gathering for the bride, where henna is applied in intricate designs to her hands and feet. A relaxed, celebratory occasion filled with family, colour and good food.' },
+      { name: 'Nelengu', who: 'GROOM', color: '#9e6bb5', when: 'From 10am',
+        where: '1 Belle Constantia Close, Kreupelbosch',
+        attire: 'Bright, festive colours (yellows & oranges). Casual or semi-formal — Eastern if you prefer.',
+        desc: 'The groom’s equivalent celebration — a traditional blessing ceremony where family come together to bless and prepare the groom ahead of the wedding day.' },
+      { name: 'Sangeet', who: 'COUPLE', color: '#3da4a1', when: 'From 5pm — pop in anytime before 9pm',
+        where: '11 Orient Road, Wynberg',
+        attire: "Come as you are — wear whatever you're most comfortable in.",
+        desc: 'Traditionally a lively evening of music and dancing that brings both families together. Ours will be a relaxed gathering at our home — pop in for a bite, a glass and some time with us before the formal stuff the next day.' },
+    ];
+    const day2 = [
+      { name: 'Wedding Ceremony', who: 'CEREMONY', color: '#b08a36',
+        when: 'Ceremony at 3:30pm — please arrive by 3pm',
+        where: 'Goedgeleven, Klipheuwel Road, Durbanville',
+        attire: 'Traditional Indian attire. Please avoid pure white, red & gold, and jeans.',
+        desc: 'The heart of the celebration. Please allow at least an hour to travel to the venue — see the Venue page for directions and the Attire page for full dress details.' },
+      { name: 'Reception', who: 'COUPLE', color: '#b08a36',
+        when: 'Following the ceremony — until 11:30pm',
+        where: 'Goedgeleven, Klipheuwel Road, Durbanville',
+        attire: 'As for the ceremony — traditional Indian attire.',
+        desc: 'After the ceremony, welcome drinks and canapés are served while we take photos, followed by dinner, speeches and dancing. Come ready to celebrate!' },
+    ];
+
+    const womensWear = [
+      { name: 'Sari', img: 'assets/attire/sari.jpg',
+        blurb: 'A length of fabric draped elegantly around the body over a fitted blouse (choli). Timeless and endlessly versatile — if you’re new to draping, the shops below can help, and many offer tutorials.' },
+      { name: 'Lehenga', img: 'assets/attire/lehenga.jpg',
+        blurb: 'A long, often embellished skirt worn with a cropped blouse and a flowing dupatta (scarf). A celebratory, festive choice that’s perfect for the wedding.' },
+      { name: 'Anarkali / Salwar Kameez', img: 'assets/attire/anarkali.jpg',
+        blurb: 'A long tunic (kameez) worn over fitted trousers with a dupatta. Comfortable and graceful — a lovely option if you’d prefer not to drape a sari.' },
+    ];
+    const mensWear = [
+      { name: 'Kurta', img: 'assets/attire/kurta.jpg',
+        blurb: 'A long tunic worn over loose or fitted trousers (the kurta pyjama). Light, comfortable and easy to wear — ideal for the more relaxed Thursday events.' },
+      { name: 'Sherwani', img: 'assets/attire/sherwani.jpg',
+        blurb: 'A structured, knee-length coat worn over a kurta, often with fine detailing for a more formal look. A Nehru jacket over a kurta works beautifully too.' },
+    ];
+    const faqs = [
+      { q: 'Why are there so many events?', a: 'Traditional Indian weddings tend to be a multi-day combination of ceremonies and celebrations — we’re keeping it light with just two days! On Thursday the bride and groom have separate morning blessing ceremonies (the Mehndi and Nelengu), and that evening a Sangeet: usually a big party of music and dancing, though ours is a simple, informal gathering at our home. Friday is the wedding and reception. The Thursday events are completely optional.', linkKey: 'events', linkLabel: 'See the Events page' },
+      { q: 'When should I RSVP by?', a: 'Please RSVP by 30 September 2026 and complete any dietary requirements for each guest named on the invite.' },
+      { q: 'What is the dress code for each event?', a: 'Mehndi / Nelengu: bright, festive colours, casual or semi-formal (Eastern if you prefer). Sangeet: informal — wear whatever you’re most comfortable in. Wedding ceremony: traditional Indian attire in bright, festive colours. Please avoid pure white, red & gold, and jeans.', linkKey: 'attire', linkLabel: 'See the Attire page' },
+      { q: 'What time should I arrive?', a: 'Mehndi / Nelengu: 10am. Sangeet: 5pm, or whenever you’d like to pop in before 9pm. Wedding ceremony: 3pm — 30 minutes before it begins — to allow time for parking and seating.' },
+      { q: 'Can I bring a plus one or additional guests?', a: 'Only guests named on your invitation are invited to celebrate with us, as we keep our guest list intimate. We love your little ones — but unless specifically named, please arrange a sitter.' },
+      { q: 'Will there be parking?', a: 'Yes, parking will be available at the wedding venue and at our home for the Sangeet gathering.' },
+      { q: 'What happens after the ceremony?', a: 'Welcome drinks and canapés are served while we take photos, followed by the reception — dinner, speeches and dancing. Come ready to celebrate!' },
+      { q: 'What time will the celebration end?', a: 'The celebration wraps up at 11:30pm.' },
+      { q: 'Is accommodation available nearby?', a: 'Anywhere in Durbanville should be close enough to the venue. The Cape Town CBD is about 40 minutes away — please allow at least an hour in traffic on the day to arrive on time.', linkKey: 'accommodation', linkLabel: 'See the Accommodation page' },
+      { q: 'Is there a gift registry?', a: 'Your presence is the greatest gift we could ask for. If you’d like to celebrate with a gift, we’ve included our registry details on your invitation.' },
+      { q: 'Who do I contact if I have a question?', a: 'You can reach us on WhatsApp, just like any other time.' },
+    ].map((f) => ({ ...f, hasLink: !!f.linkKey, onClick: f.linkKey ? () => this.go(f.linkKey) : null }));
+
+    return {
+      navItems, womensWear, mensWear, faqs,
+      isHome: p === 'home', isEvents: p === 'events', isVenue: p === 'venue',
+      isStay: p === 'accommodation', isAttire: p === 'attire', isFaqs: p === 'faqs', isRsvp: p === 'rsvp',
+      goHome: () => this.go('home'), goEvents: () => this.go('events'), goVenue: () => this.go('venue'),
+      goStay: () => this.go('accommodation'), goAttire: () => this.go('attire'),
+      goFaqs: () => this.go('faqs'), goRsvp: () => this.go('rsvp'),
+      day1, day2,
+    };
+  }
+}
+</script>
+</body>
+</html>

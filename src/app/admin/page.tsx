@@ -1,5 +1,5 @@
 import { adminLogin } from './actions'
-import { AccentBar } from '@/components/ui'
+import { Diamond } from '@/components/ui'
 
 interface Props {
   searchParams: Promise<{ error?: string }>
@@ -9,44 +9,51 @@ export default async function AdminLoginPage({ searchParams }: Props) {
   const { error } = await searchParams
 
   return (
-    <div className="relative min-h-[calc(100vh-56px)] flex items-center justify-center">
-      <AccentBar />
-      <div className="w-full max-w-sm px-6">
-        <div className="text-center mb-8">
-          <p className="text-xs tracking-[5px] text-purple-orchid uppercase font-sans mb-3">
-            Admin
-          </p>
-          <h1 className="font-serif text-3xl italic text-near-black">
-            Marlan &amp; Tramaine
-          </h1>
+    <div className="min-h-[80vh] flex items-center justify-center" style={{ padding: 24 }}>
+      <div className="w-full text-center" style={{ maxWidth: 380 }}>
+        <div className="font-label text-[11px] tracking-[.3em] text-gold-soft mb-2.5">
+          ADMIN
         </div>
+        <div className="font-serif italic text-[34px] text-ink">
+          Marlan &amp; Tramaine
+        </div>
+        <Diamond width={50} className="mt-[18px] mb-7" />
 
         {error && (
-          <p className="text-center text-sm font-sans text-red-600 mb-4">
+          <p className="font-serif text-[16px] text-acc-rust mb-4">
             Incorrect passphrase. Please try again.
           </p>
         )}
 
-        <form action={adminLogin} className="space-y-4">
-          <div>
-            <label className="block text-[10px] tracking-[3px] text-near-black/60 uppercase font-sans mb-2">
-              Passphrase
+        <div
+          className="bg-paper-card text-left"
+          style={{ border: '1px solid rgba(176,138,54,.5)', padding: '28px 26px' }}
+        >
+          <form action={adminLogin}>
+            <label className="block font-label text-[10px] tracking-[.2em] text-gold-soft mb-2">
+              PASSPHRASE
             </label>
             <input
               type="password"
               name="passphrase"
               required
               autoFocus
-              className="w-full border border-near-black/20 px-3.5 py-2.5 text-sm font-sans bg-white outline-none focus:border-orange-soft"
+              className="w-full font-serif text-[16px] text-ink outline-none mb-[18px]"
+              style={{
+                background: '#fffdf7',
+                border: '1px solid rgba(176,138,54,.45)',
+                padding: '11px 14px',
+              }}
             />
-          </div>
-          <button
-            type="submit"
-            className="w-full bg-orange-soft text-white py-3 text-xs tracking-[3px] uppercase font-sans"
-          >
-            Sign in
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="w-full font-label text-[12px] tracking-[.2em] text-paper-raised bg-gold-deep transition-colors hover:bg-[#6a4e10]"
+              style={{ padding: 14, border: 'none' }}
+            >
+              SIGN IN
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )
