@@ -19,25 +19,34 @@ export async function submitRsvp(email: string, rsvps: RsvpInput[]) {
   // Best-effort email — don't block the redirect on failure
   try {
     if (updatedInvite.email) {
-      // Fetch invite with guests and their attending RSVPs
+      // Fetch each guest with their attending RSVPs (events + dietary)
       const invite = await prisma.invite.findUnique({
         where: { id: inviteId },
-        include: { guests: true },
-      })
-      const attendingRsvps = await prisma.rsvp.findMany({
-        where: {
-          guestId: { in: invite?.guests.map((g) => g.id) ?? [] },
-          attending: true,
+        include: {
+          guests: {
+            include: {
+              rsvps: {
+                where: { attending: true },
+                include: { event: true },
+                orderBy: { event: { sortOrder: 'asc' } },
+              },
+            },
+          },
         },
-        include: { event: true },
-        distinct: ['eventId'],
-        orderBy: { event: { sortOrder: 'asc' } },
       })
-      const uniqueEvents = [...new Map(attendingRsvps.map((r) => [r.event.id, r.event])).values()]
+      const guests = (invite?.guests ?? []).map((g) => ({
+        name: g.name,
+        attendingEvents: g.rsvps.map((r) => ({
+          name: r.event.name,
+          venue: r.event.venue,
+          date: r.event.date,
+        })),
+        dietary: [...new Set(g.rsvps.flatMap((r) => r.dietary))],
+        dietaryNotes: g.rsvps.map((r) => r.dietaryNotes).find((n) => n?.trim()) ?? undefined,
+      }))
       await sendRsvpConfirmation({
         to: updatedInvite.email,
-        guestNames: invite?.guests.map((g) => g.name) ?? [],
-        attendingEvents: uniqueEvents,
+        guests,
       })
     }
   } catch (err) {

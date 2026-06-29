@@ -47,34 +47,60 @@ interface AttendingEvent {
   date: Date
 }
 
+interface GuestConfirmation {
+  name: string
+  attendingEvents: AttendingEvent[]
+  dietary: string[]
+  dietaryNotes?: string
+}
+
 interface RsvpConfirmationParams {
   to: string
-  guestNames: string[]
-  attendingEvents: AttendingEvent[]
+  guests: GuestConfirmation[]
+}
+
+function formatEventDate(date: Date) {
+  return date.toLocaleDateString('en-GB', {
+    weekday: 'long',
+    day: 'numeric',
+    month: 'long',
+    timeZone: 'UTC',
+  })
+}
+
+function formatDietary(guest: GuestConfirmation) {
+  const parts = [...guest.dietary]
+  if (guest.dietaryNotes?.trim()) parts.push(guest.dietaryNotes.trim())
+  return parts.join(', ')
 }
 
 export async function sendRsvpConfirmation({
   to,
-  guestNames,
-  attendingEvents,
+  guests,
 }: RsvpConfirmationParams) {
+  const guestNames = guests.map((g) => g.name)
   const greeting =
     guestNames.length === 1
       ? guestNames[0]
       : guestNames.slice(0, -1).join(', ') + ' & ' + guestNames.at(-1)
 
-  const eventLines = attendingEvents
-    .map((e) => {
-      const dateStr = e.date.toLocaleDateString('en-GB', {
-        weekday: 'long',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        timeZone: 'UTC',
-      })
-      return `• ${e.name} — ${dateStr} at ${e.venue}`
+  const guestTextSections = guests
+    .map((guest) => {
+      const lines = [guest.name]
+      if (guest.attendingEvents.length > 0) {
+        lines.push(
+          ...guest.attendingEvents.map(
+            (e) => `  • ${e.name} — ${formatEventDate(e.date)} at ${e.venue}`,
+          ),
+        )
+      } else {
+        lines.push('  Not attending — we’ll miss you!')
+      }
+      const dietary = formatDietary(guest)
+      if (dietary) lines.push(`  Dietary: ${dietary}`)
+      return lines.join('\n')
     })
-    .join('\n')
+    .join('\n\n')
 
   const html = `
 <!DOCTYPE html>
@@ -91,26 +117,32 @@ export async function sendRsvpConfirmation({
       <p style="font-size: 14px; color: #2E1A10; line-height: 1.6; margin: 0 0 24px;">
         Thank you for your RSVP! We are so excited to celebrate with you.
       </p>
-      ${
-        attendingEvents.length > 0
-          ? `
-      <p style="font-size: 11px; letter-spacing: 3px; color: #3DA4A1; text-transform: uppercase; font-family: sans-serif; margin: 0 0 12px;">You&rsquo;re attending</p>
-      <ul style="font-size: 14px; color: #2E1A10; line-height: 2; padding-left: 20px; margin: 0 0 24px;">
-        ${attendingEvents
-          .map((e) => {
-            const dateStr = e.date.toLocaleDateString('en-GB', {
-              weekday: 'long',
-              day: 'numeric',
-              month: 'long',
-              timeZone: 'UTC',
-            })
-            return `<li><strong>${e.name}</strong> — ${dateStr}, ${e.venue}</li>`
-          })
+      ${guests
+        .map((guest) => {
+          const dietary = formatDietary(guest)
+          return `
+      <div style="margin: 0 0 28px; padding: 0 0 4px;">
+        <p style="font-size: 11px; letter-spacing: 3px; color: #3DA4A1; text-transform: uppercase; font-family: sans-serif; margin: 0 0 10px;">${guest.name}</p>
+        ${
+          guest.attendingEvents.length > 0
+            ? `<ul style="font-size: 14px; color: #2E1A10; line-height: 2; padding-left: 20px; margin: 0 0 8px;">
+        ${guest.attendingEvents
+          .map(
+            (e) =>
+              `<li><strong>${e.name}</strong> — ${formatEventDate(e.date)}, ${e.venue}</li>`,
+          )
           .join('')}
-      </ul>
-      `
-          : ''
-      }
+      </ul>`
+            : `<p style="font-size: 14px; color: #2E1A10; font-style: italic; margin: 0 0 8px;">Not attending &mdash; we&rsquo;ll miss you!</p>`
+        }
+        ${
+          dietary
+            ? `<p style="font-size: 13px; color: #2E1A10; font-family: sans-serif; margin: 0; padding-left: 20px;"><span style="color: #9E6BB5;">Dietary:</span> ${dietary}</p>`
+            : ''
+        }
+      </div>`
+        })
+        .join('')}
       <p style="font-size: 14px; color: #2E1A10; line-height: 1.6; margin: 0 0 24px;">
         Full venue addresses and calendar downloads are available on your confirmation page:
       </p>
@@ -128,9 +160,7 @@ export async function sendRsvpConfirmation({
 </body>
 </html>`
 
-  const text = `Dear ${greeting},\n\nThank you for your RSVP! We are so excited to celebrate with you.\n\n${
-    attendingEvents.length > 0 ? `You're attending:\n${eventLines}\n\n` : ''
-  }Full venue addresses and .ics calendar downloads: ${BASE_URL}/rsvp/confirmed\n\nWith love,\nMarlan & Tramaine`
+  const text = `Dear ${greeting},\n\nThank you for your RSVP! We are so excited to celebrate with you.\n\n${guestTextSections}\n\nFull venue addresses and .ics calendar downloads: ${BASE_URL}/rsvp/confirmed\n\nWith love,\nMarlan & Tramaine`
 
   await deliver({
     from: FROM,
