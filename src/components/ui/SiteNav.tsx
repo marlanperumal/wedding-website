@@ -10,14 +10,29 @@ const navLinks = [
   { href: "/accommodation", label: "Accommodation" },
   { href: "/attire", label: "Attire" },
   { href: "/faqs", label: "FAQs" },
+  { href: "/rsvp", label: "RSVP" },
 ];
 
-export function SiteNav() {
+type RsvpStatus = 'none' | 'pending' | 'submitted'
+
+export function SiteNav({ rsvpStatus = 'none' }: { rsvpStatus?: RsvpStatus }) {
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
 
   function isActive(href: string) {
-    return pathname === href || pathname.startsWith(`${href}/`);
+    return pathname === href || (pathname?.startsWith(`${href}/`) ?? false);
+  }
+
+  function badge(href: string) {
+    if (href !== '/rsvp' || rsvpStatus !== 'submitted') return null;
+    return (
+      <span
+        aria-label="RSVP complete"
+        className="ml-1.5 text-teal-deep"
+      >
+        ✓
+      </span>
+    );
   }
 
   return (
@@ -45,6 +60,7 @@ export function SiteNav() {
                 }`}
               >
                 {link.label}
+                {badge(link.href)}
               </Link>
             </li>
           ))}
@@ -105,6 +121,7 @@ export function SiteNav() {
                 }`}
               >
                 {link.label}
+                {badge(link.href)}
               </Link>
             </li>
           ))}

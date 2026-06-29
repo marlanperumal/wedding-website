@@ -26,8 +26,12 @@ describe('proxy exports', () => {
     expect(Array.isArray(config.matcher)).toBe(true)
   })
 
-  it('matcher includes /rsvp/:path*', () => {
-    expect(config.matcher).toContain('/rsvp/:path*')
+  it('matcher includes /rsvp/edit/:path*', () => {
+    expect(config.matcher).toContain('/rsvp/edit/:path*')
+  })
+
+  it('does not gate the public /rsvp entry page', () => {
+    expect(config.matcher).not.toContain('/rsvp/:path*')
   })
 
   it('matcher includes /admin/dashboard/:path*', () => {

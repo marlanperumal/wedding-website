@@ -1,7 +1,7 @@
 'use server'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
-import { extractGuestInviteId } from '@/lib/cookies'
+import { extractGuestInviteId, signValue } from '@/lib/cookies'
 import { processRsvp, RsvpInput } from '@/lib/rsvp'
 import { sendRsvpConfirmation } from '@/lib/email'
 import { prisma } from '@/lib/prisma'
@@ -11,7 +11,7 @@ export async function submitRsvp(email: string, rsvps: RsvpInput[]) {
   const inviteId = await extractGuestInviteId(cookieStore.get('guestInviteId')?.value)
 
   if (!inviteId) {
-    redirect('/')
+    redirect('/rsvp')
   }
 
   const updatedInvite = await processRsvp(inviteId, email, rsvps)
@@ -54,4 +54,35 @@ export async function submitRsvp(email: string, rsvps: RsvpInput[]) {
   }
 
   redirect('/rsvp/confirmed')
+}
+
+export type EnterCodeState = { error?: string }
+
+export async function enterInviteCode(
+  _prevState: EnterCodeState,
+  formData: FormData,
+): Promise<EnterCodeState> {
+  const code = String(formData.get('code') ?? '')
+    .trim()
+    .toLowerCase()
+  if (!code) {
+    return { error: 'Please enter your invitation code.' }
+  }
+
+  const invite = await prisma.invite.findUnique({ where: { slug: code } })
+  if (!invite) {
+    return { error: "We couldn't find an invitation with that code." }
+  }
+
+  const signed = await signValue(invite.id, process.env.COOKIE_SECRET!)
+  const cookieStore = await cookies()
+  cookieStore.set('guestInviteId', signed, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 60 * 60 * 24 * 90,
+    path: '/',
+  })
+
+  redirect('/rsvp')
 }
