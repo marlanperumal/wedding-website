@@ -3,17 +3,20 @@ import { cookies } from 'next/headers'
 import { extractGuestInviteId } from '@/lib/cookies'
 import { prisma } from '@/lib/prisma'
 import { AccentBar, EventPill } from '@/components/ui'
+import { isRsvpClosed } from '@/lib/deadline'
 
 export default async function RsvpConfirmedPage() {
   const cookieStore = await cookies()
   const inviteId = await extractGuestInviteId(cookieStore.get('guestInviteId')?.value)
-  if (!inviteId) redirect('/')
+  if (!inviteId) redirect('/rsvp')
 
   const invite = await prisma.invite.findUnique({
     where: { id: inviteId },
-    include: { guests: true },
+    select: { id: true, submitted: true, guests: true },
   })
-  if (!invite) redirect('/')
+  if (!invite) redirect('/rsvp')
+
+  const closed = isRsvpClosed()
 
   // Load RSVPs that are attending = true, with event details
   const attendingRsvps = await prisma.rsvp.findMany({
@@ -67,6 +70,17 @@ export default async function RsvpConfirmedPage() {
           A confirmation email will be on its way. We look forward to celebrating with you.
         </p>
 
+        {!closed && (
+          <p className="mb-12 -mt-8">
+            <a
+              href="/rsvp/edit"
+              className="text-xs tracking-[2px] uppercase font-sans text-teal-deep underline underline-offset-4"
+            >
+              Edit my RSVP
+            </a>
+          </p>
+        )}
+
         {/* Venue details */}
         {attendedEvents.length > 0 && (
           <div className="text-left space-y-8">
@@ -111,9 +125,17 @@ export default async function RsvpConfirmedPage() {
           </div>
         )}
 
-        {attendedEvents.length === 0 && (
+        {attendedEvents.length === 0 && invite.submitted && (
           <p className="font-sans text-sm text-near-black/60 italic">
             You have indicated that you won&apos;t be attending. We&apos;ll miss you!
+          </p>
+        )}
+
+        {attendedEvents.length === 0 && !invite.submitted && (
+          <p className="font-sans text-sm text-near-black/60 italic">
+            {closed
+              ? "RSVP is now closed and we don't have a response on record for you."
+              : 'We don’t have an RSVP from you yet.'}
           </p>
         )}
       </div>
