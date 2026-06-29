@@ -13,7 +13,7 @@ export default function HomePage() {
         </p>
 
         {/* Names */}
-        <h1 className="font-serif text-5xl italic text-near-black mb-3">
+        <h1 className="font-serif text-4xl sm:text-5xl italic text-near-black mb-3">
           Marlan &amp; Tramaine
         </h1>
 

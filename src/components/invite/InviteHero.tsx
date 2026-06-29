@@ -14,7 +14,7 @@ export function InviteHero({ guestNames }: InviteHeroProps) {
       <p className="text-xs tracking-[5px] text-purple-orchid uppercase font-sans mb-4">
         You are invited
       </p>
-      <h1 className="font-serif text-5xl italic text-near-black mb-3">
+      <h1 className="font-serif text-4xl sm:text-5xl italic text-near-black mb-3">
         Marlan &amp; Tramaine
       </h1>
       <div className="flex items-center justify-center gap-3 mb-8">
