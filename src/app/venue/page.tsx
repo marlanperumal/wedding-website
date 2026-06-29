@@ -18,8 +18,11 @@ export default function VenuePage() {
         {/* Main heading */}
         <header className="text-center mb-10">
           <h1 className="font-serif text-4xl italic text-near-black mb-3">
-            Wedding &amp; Reception
+            Venue
           </h1>
+          <h2 className="font-serif text-2xl italic text-purple-deep mb-2">
+            Wedding &amp; Reception
+          </h2>
           <p className="font-sans text-sm text-near-black/75 tracking-wide">
             Goedgeleven
           </p>
