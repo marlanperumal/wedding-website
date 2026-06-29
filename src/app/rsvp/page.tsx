@@ -2,69 +2,27 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { extractGuestInviteId } from '@/lib/cookies'
 import { prisma } from '@/lib/prisma'
-import { AccentBar } from '@/components/ui'
-import { RsvpForm } from '@/components/rsvp/RsvpForm'
+import { isRsvpClosed } from '@/lib/deadline'
+import { RsvpEntry } from '@/components/rsvp/RsvpEntry'
+import { RsvpFormSection } from '@/components/rsvp/RsvpFormSection'
 
 export default async function RsvpPage() {
   const cookieStore = await cookies()
   const inviteId = await extractGuestInviteId(cookieStore.get('guestInviteId')?.value)
 
-  if (!inviteId) redirect('/')
+  // Not identified — show the code-entry input instead of redirecting away.
+  if (!inviteId) return <RsvpEntry />
 
   const invite = await prisma.invite.findUnique({
     where: { id: inviteId },
-    include: {
-      guests: true,
-      events: {
-        include: { event: true },
-      },
-    },
+    select: { submitted: true },
   })
 
-  if (!invite) redirect('/')
+  // Stale cookie (invite removed) — fall back to code entry.
+  if (!invite) return <RsvpEntry />
 
-  const events = invite.events
-    .map((ie) => ie.event)
-    .sort((a, b) => a.sortOrder - b.sortOrder)
+  // After the deadline, or already submitted: send to the read-only summary.
+  if (isRsvpClosed() || invite.submitted) redirect('/rsvp/confirmed')
 
-  const existingRsvps = await prisma.rsvp.findMany({
-    where: { guestId: { in: invite.guests.map((g) => g.id) } },
-  })
-
-  const guestNames = invite.guests.map((g) => g.name)
-  const greeting =
-    guestNames.length === 1
-      ? guestNames[0]
-      : guestNames.slice(0, -1).join(', ') + ' & ' + guestNames.at(-1)
-
-  return (
-    <div className="relative">
-      <AccentBar />
-      <div className="text-center py-12 px-6">
-        <p className="text-xs tracking-[5px] text-purple-orchid uppercase font-sans mb-3">
-          You are invited
-        </p>
-        <h1 className="font-serif text-4xl italic text-near-black mb-2">
-          Marlan &amp; Tramaine
-        </h1>
-        <div className="flex items-center justify-center gap-3 mb-6">
-          <div className="h-px w-10 bg-orange-soft" />
-          <span className="text-orange-soft text-sm">✦</span>
-          <div className="h-px w-10 bg-orange-soft" />
-        </div>
-        <p className="font-serif text-2xl italic text-near-black/80">Dear {greeting}</p>
-      </div>
-
-      <RsvpForm
-        guests={invite.guests}
-        events={events}
-        existingRsvps={existingRsvps.map((r) => ({
-          ...r,
-          dietaryNotes: r.dietaryNotes ?? null,
-        }))}
-        initialEmail={invite.email ?? ''}
-      />
-      <AccentBar />
-    </div>
-  )
+  return <RsvpFormSection inviteId={inviteId} />
 }
