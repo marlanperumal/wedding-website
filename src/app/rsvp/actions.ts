@@ -11,7 +11,7 @@ export async function submitRsvp(email: string, rsvps: RsvpInput[]) {
   const inviteId = await extractGuestInviteId(cookieStore.get('guestInviteId')?.value)
 
   if (!inviteId) {
-    redirect('/')
+    redirect('/rsvp')
   }
 
   const updatedInvite = await processRsvp(inviteId, email, rsvps)
