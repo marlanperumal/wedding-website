@@ -19,11 +19,18 @@ const womensWear = [
       "A long, often embellished skirt worn with a cropped blouse and a flowing dupatta (scarf). A celebratory, festive choice that's perfect for the wedding.",
   },
   {
-    name: "Anarkali / Salwar Kameez",
+    name: "Anarkali",
+    img: "/attire/anarkali-v2.jpeg",
+    alt: "Woman wearing a yellow floor-length Anarkali gown with gold embroidery and a matching dupatta",
+    blurb:
+      "A long, floor-length dress with a fitted bodice that flares into a full, flowing skirt, worn with a dupatta. Elegant and graceful — a striking, dressed-up option that's perfect for the wedding.",
+  },
+  {
+    name: "Salwar Kameez",
     img: "/attire/salwar-kameez.jpeg",
     alt: "Woman wearing a teal salwar kameez with a matching dupatta",
     blurb:
-      "A long tunic (kameez) worn over fitted trousers (churidar or salwar) with a dupatta. Comfortable and graceful — a lovely option if you'd prefer not to drape a sari.",
+      "A tunic (kameez) worn over matching trousers (salwar or churidar) with a dupatta. Comfortable and easy to wear — a lovely option if you'd prefer not to drape a sari.",
   },
   {
     name: "Panjabi / Patiala Suit",
@@ -186,7 +193,7 @@ function Garment({
   blurb: string;
 }) {
   return (
-    <article className="flex flex-wrap gap-[22px] items-start">
+    <article className="flex flex-wrap gap-[22px] items-start justify-center sm:justify-start">
       <ExpandableImage src={img} alt={alt} caption={name} description={blurb} />
       <div className="flex-1 basis-60">
         <div className="font-serif italic text-[26px] text-ink mb-1.5">{name}</div>
