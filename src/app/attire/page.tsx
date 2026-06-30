@@ -1,82 +1,91 @@
-import Image from "next/image";
-
 import { PageHeader } from "@/components/ui";
+import { ExpandableImage } from "@/components/attire/ExpandableImage";
 
 export const metadata = { title: "Attire — Marlan & Tramaine" };
 
 const womensWear = [
   {
     name: "Sari",
-    img: "/attire/sari.jpg",
-    alt: "Woman wearing a green cotton sari",
+    img: "/attire/saree-v2.jpg",
+    alt: "Woman wearing a mauve and gold silk saree",
     blurb:
       "A length of fabric draped elegantly around the body over a fitted blouse (choli). Timeless and endlessly versatile — if you're new to draping, the shops below can help, and many offer tutorials.",
   },
   {
     name: "Lehenga",
-    img: "/attire/lehenga.jpg",
-    alt: "Red and gold embroidered lehenga",
+    img: "/attire/lehenga.jpeg",
+    alt: "Woman wearing an olive-green embroidered lehenga with dupatta",
     blurb:
       "A long, often embellished skirt worn with a cropped blouse and a flowing dupatta (scarf). A celebratory, festive choice that's perfect for the wedding.",
   },
   {
     name: "Anarkali / Salwar Kameez",
-    img: "/attire/anarkali.jpg",
-    alt: "Woman in a teal Anarkali suit",
+    img: "/attire/salwar-kameez.jpeg",
+    alt: "Woman wearing a teal salwar kameez with a matching dupatta",
     blurb:
       "A long tunic (kameez) worn over fitted trousers (churidar or salwar) with a dupatta. Comfortable and graceful — a lovely option if you'd prefer not to drape a sari.",
+  },
+  {
+    name: "Panjabi / Patiala Suit",
+    img: "/attire/panjabi.jpg",
+    alt: "Woman wearing a royal-blue Panjabi suit with patiala salwar and a net dupatta",
+    blurb:
+      "A short kurti worn with gathered, pleated trousers (patiala salwar) and a dupatta. Easy to move in and full of colour — a comfortable, festive alternative to draping a sari.",
   },
 ];
 
 const mensWear = [
   {
     name: "Kurta",
-    img: "/attire/kurta.jpg",
-    alt: "Man wearing a cream kurta",
+    img: "/attire/kurta.jpeg",
+    alt: "Man wearing a cream embroidered kurta",
     blurb:
-      "A long tunic worn over loose or fitted trousers (the kurta pyjama). Light, comfortable and easy to wear — ideal for the more relaxed Thursday events. Known as a Panjabi in some communities.",
+      "A long tunic worn over loose or fitted trousers (the kurta pyjama). Light, comfortable and easy to wear — ideal for the more relaxed Thursday events.",
   },
   {
-    name: "Sherwani",
-    img: "/attire/sherwani.jpg",
-    alt: "Men wearing cream sherwanis",
+    name: "Nehru Jacket",
+    img: "/attire/nehru-jacket.jpeg",
+    alt: "Man wearing a cream Nehru jacket over a kurta",
     blurb:
-      "A structured, knee-length coat worn over a kurta, often with fine detailing for a more formal look. A great choice to dress up for the wedding — a Nehru jacket over a kurta works beautifully too.",
+      "A short, collared waistcoat worn over a kurta to dress the look up a little. An easy way to add a more polished, festive touch without committing to a full suit.",
+  },
+  {
+    name: "Bandhgala / Nehru Suit",
+    img: "/attire/bandhgala-suit.jpeg",
+    alt: "Man wearing a brown bandhgala suit",
+    blurb:
+      "A structured, mandarin-collared jacket worn with matching trousers for a sharp, formal look. A great choice to dress up for the wedding.",
+  },
+  {
+    name: "Dhoti",
+    img: "/attire/dhoti.jpeg",
+    alt: "Man wearing a white dhoti with a gold border and a linen shirt",
+    blurb:
+      "A length of cloth wrapped around the legs and knotted at the waist, worn with a shirt or kurta. A relaxed, traditional option that's especially fitting for the Thursday events.",
   },
 ];
 
-const onlineShops = [
-  { name: "Jayshrees / Rivaz", href: "https://jayshrees.co.za" },
-  { name: "Shringar", href: "https://shringar.co.za" },
-  { name: "The Maharani's Closet", href: "https://www.maharaniscloset.co.za" },
-  { name: "Raja Rani's Eastern Wear", href: "https://www.rajaranis.co.za" },
-];
-
-const credits = [
+const shops = [
   {
-    label: "Sari",
-    by: "Yann, CC BY-SA 4.0",
-    href: "https://commons.wikimedia.org/wiki/File:Sari_2.jpg",
+    name: "Khan's Punjabies",
+    href: "https://www.facebook.com/p/Khans-Punjabies-100088188561066/",
+    address: "39 Hadji Ebrahim Cres, Athlone, Cape Town, 7764",
+    note: "Men's and women's wear.",
   },
   {
-    label: "Lehenga",
-    by: "Iwaqarhashmi, CC BY-SA 4.0",
-    href: "https://commons.wikimedia.org/wiki/File:Close-up_of_a_red_velvet_lehenga_with_intricate_gold_embroidery,_featuring_a_choli_and_a_flowing_skirt.jpg",
+    name: "Jayshrees",
+    href: "https://jayshrees.co.za/",
+    note: "Men's and women's wear.",
   },
   {
-    label: "Anarkali",
-    by: "Brendan, CC BY 2.0",
-    href: "https://commons.wikimedia.org/wiki/File:Yogita_Grover,_Well_Groomed_Fashion_Show_(5420850558).jpg",
+    name: "Sahar",
+    href: "https://www.instagram.com/sahar_southafrica/",
+    note: "Women's wear.",
   },
   {
-    label: "Kurta",
-    by: "Fowler&fowler, public domain",
-    href: "https://commons.wikimedia.org/wiki/File:Kurta_traditional_front_sandalwood_buttons.jpg",
-  },
-  {
-    label: "Sherwani",
-    by: "Pk041, CC BY-SA 3.0",
-    href: "https://commons.wikimedia.org/wiki/File:Rajput_Sherwani_2014-04-23_04-27.JPG",
+    name: "Yaga",
+    href: "https://www.yaga.co.za/",
+    note: "Pre-loved men's and women's wear — a great option if you're hesitant to buy Eastern wear for a single occasion, or you'd like to support a circular economy.",
   },
 ];
 
@@ -115,7 +124,7 @@ export default function AttirePage() {
         style={{ fontSize: "18px", maxWidth: 620 }}
       >
         Please avoid pure white (worn for funerals), red or gold (the
-        bride&rsquo;s colours), and jeans. The Thursday events are more relaxed.
+        bride&rsquo;s colours), and denim. The Thursday events are more relaxed.
       </p>
 
       <SectionHeading>For the women</SectionHeading>
@@ -133,49 +142,23 @@ export default function AttirePage() {
       </div>
 
       <SectionHeading>Where to find it</SectionHeading>
-      <div className="font-label text-[11px] tracking-[.14em] text-acc-purple mb-2">
-        IN CAPE TOWN
-      </div>
-      <p className="font-serif text-[18px] leading-[1.6] text-ink-soft mb-2">
-        <InlineLink href="https://www.instagram.com/shahzadi_indian_attire/">
-          Shahzadi — Home of Indian Attire
-        </InlineLink>{" "}
-        — 65 Ernest Road, Rylands. The Rylands &amp; Athlone area is the hub for
-        eastern wear, with several boutiques worth a browse in person.
-      </p>
-      <div className="font-label text-[11px] tracking-[.14em] text-acc-purple mt-5 mb-2">
-        ONLINE (SHIPS WITHIN SOUTH AFRICA)
-      </div>
-      <div className="flex flex-wrap gap-x-[26px] gap-y-2 font-serif text-[18px]">
-        {onlineShops.map((s) => (
-          <InlineLink key={s.name} href={s.href}>
-            {s.name}
-          </InlineLink>
+      <div className="flex flex-col gap-5">
+        {shops.map((s) => (
+          <div key={s.name}>
+            <div className="font-serif italic text-[22px] text-ink mb-0.5">
+              <InlineLink href={s.href}>{s.name}</InlineLink>
+            </div>
+            {s.address && (
+              <p className="font-serif text-[16px] leading-[1.55] text-ink-muted">
+                {s.address}
+              </p>
+            )}
+            <p className="font-serif text-[18px] leading-[1.6] text-ink-soft">
+              {s.note}
+            </p>
+          </div>
         ))}
       </div>
-
-      {/* Image credits */}
-      <footer
-        className="mt-14 pt-5"
-        style={{ borderTop: "1px solid rgba(176,138,54,.3)" }}
-      >
-        <p className="font-label text-[10px] tracking-[.06em] leading-relaxed text-gold-soft">
-          IMAGE CREDITS:{" "}
-          {credits.map((c, i) => (
-            <span key={c.label}>
-              <a
-                href={c.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline underline-offset-2 hover:text-gold-deep"
-              >
-                {c.label}
-              </a>{" "}
-              ({c.by}){i < credits.length - 1 ? "; " : "."}
-            </span>
-          ))}
-        </p>
-      </footer>
     </div>
   );
 }
@@ -204,19 +187,7 @@ function Garment({
 }) {
   return (
     <article className="flex flex-wrap gap-[22px] items-start">
-      <div
-        className="shrink-0"
-        style={{ border: "1px solid rgba(176,138,54,.5)", padding: 5 }}
-      >
-        <Image
-          src={img}
-          alt={alt}
-          width={170}
-          height={220}
-          className="block object-cover"
-          style={{ width: 170, height: 220 }}
-        />
-      </div>
+      <ExpandableImage src={img} alt={alt} caption={name} description={blurb} />
       <div className="flex-1 basis-60">
         <div className="font-serif italic text-[26px] text-ink mb-1.5">{name}</div>
         <p className="font-serif text-[18px] leading-[1.6] text-ink-soft">
