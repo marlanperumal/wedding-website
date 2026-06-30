@@ -114,7 +114,7 @@ export default function AttirePage() {
         className="font-serif text-ink-muted leading-[1.6] text-center mx-auto mb-12"
         style={{ fontSize: "18px", maxWidth: 620 }}
       >
-        Please avoid pure white (worn for funerals), red &amp; gold (the
+        Please avoid pure white (worn for funerals), red or gold (the
         bride&rsquo;s colours), and jeans. The Thursday events are more relaxed.
       </p>
 

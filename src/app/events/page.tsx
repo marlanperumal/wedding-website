@@ -120,7 +120,7 @@ export default function EventsPage() {
             {
               label: "ATTIRE",
               value:
-                "Traditional Indian attire. Please avoid pure white, red & gold, and jeans.",
+                "Traditional Indian attire. Please avoid pure white, red, gold, and denim.",
             },
           ]}
         />

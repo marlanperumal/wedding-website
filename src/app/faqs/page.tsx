@@ -56,7 +56,7 @@ export default function FaqsPage() {
             Please wear traditional Indian attire (e.g. saris, lehengas, kurtas
             &mdash; see the <FaqLink href="/attire">Attire page</FaqLink> for full
             details). We encourage bright, festive colours. Please avoid wearing
-            pure white (that&rsquo;s for funerals), red and gold (that&rsquo;s
+            pure white (that&rsquo;s for funerals), red or gold (that&rsquo;s
             what the bride will be wearing) and jeans (I made Marlan add this in).
           </EventLine>
         </Faq>
@@ -180,7 +180,10 @@ function EventLine({
 }) {
   return (
     <p className="mb-2 last:mb-0">
-      <span className="font-label text-[10px] tracking-[.14em] text-acc-purple uppercase">
+      <span
+        className="font-label tracking-[.14em] text-acc-purple uppercase"
+        style={{ fontSize: "clamp(17px,2.2vw,19px)" }}
+      >
         {label}:
       </span>{" "}
       {children}

@@ -16,7 +16,7 @@ const venueStays = [
   },
   {
     name: "Spes Bona Guest House",
-    href: "https://spesbonaguesthouse.com",
+    href: "https://www.spesbonaguestfarm.co.za/",
     accent: "#e07a29",
   },
 ];
@@ -42,19 +42,19 @@ export default function AccommodationPage() {
       <ol className="list-decimal pl-[22px] space-y-2.5 font-serif text-[18px] leading-[1.6] text-ink-soft marker:text-gold-soft mb-11">
         <li>
           Stay somewhere near us in the{" "}
-          <b className="font-semibold">Southern Suburbs</b> (Wynberg,
-          Constantia, Tokai, Kenilworth) &mdash; near the Thursday events, and
-          drive through for the wedding.
+          <b className="font-semibold">Southern Suburbs</b>{" "}
+          (Wynberg, Constantia, Tokai, Kenilworth) &mdash; near the Thursday
+          events, and drive through for the wedding.
         </li>
         <li>
-          Stay near the <b className="font-semibold">wedding venue</b> &mdash;
-          there is limited accommodation at the venue itself (likely only
-          available for the night of the wedding), a few guest houses nearby, or
-          anywhere in Durbanville should be close enough.
+          Stay near the <b className="font-semibold">wedding venue</b>{" "}
+          &mdash; there is limited accommodation at the venue itself (likely
+          only available for the night of the wedding), a few guest houses
+          nearby, or anywhere in Durbanville should be close enough.
         </li>
         <li>
-          Stay somewhere <b className="font-semibold">in the middle</b> &mdash;
-          Cape Town CBD, Rondebosch or Century City.
+          Stay somewhere <b className="font-semibold">in the middle</b>{" "}
+          &mdash; Cape Town CBD, Rondebosch or Century City.
         </li>
       </ol>
 

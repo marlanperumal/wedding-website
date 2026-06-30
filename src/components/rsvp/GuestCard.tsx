@@ -26,7 +26,6 @@ const PILL_ACCENT: Record<string, string> = {
   Mehndi: '#e07a29',
   Nelengu: '#9e6bb5',
   Sangeet: '#3da4a1',
-  Sangeeth: '#3da4a1',
   Wedding: '#7c5c14',
   Reception: '#7c5c14',
 }

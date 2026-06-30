@@ -93,7 +93,11 @@ export default function VenuePage() {
       <SectionHeading>Other events</SectionHeading>
       <div className="flex flex-col gap-[18px]">
         <EventVenue event="Mehndi" address="11 Orient Road, Wynberg" />
-        <EventVenue event="Nelengu" address="1 Belle Constantia Close, Kreupelbosch" />
+        <EventVenue
+          event="Nelengu"
+          address="1 Belle Constantia Close, Kreupelbosch"
+          mapLink="https://maps.app.goo.gl/3119DKGR5e9b5uAp7"
+        />
         <EventVenue event="Sangeet" address="11 Orient Road, Wynberg" />
       </div>
     </div>
@@ -130,10 +134,18 @@ function Directions({
   );
 }
 
-function EventVenue({ event, address }: { event: string; address: string }) {
-  const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-    address,
-  )}`;
+function EventVenue({
+  event,
+  address,
+  mapLink,
+}: {
+  event: string;
+  address: string;
+  mapLink?: string;
+}) {
+  const mapsUrl =
+    mapLink ??
+    `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
   return (
     <div>
       <div className="font-serif italic text-[22px] text-ink">{event}</div>

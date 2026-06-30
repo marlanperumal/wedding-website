@@ -38,9 +38,9 @@ async function main() {
     },
   })
 
-  const sangeeth = await prisma.event.create({
+  const sangeet = await prisma.event.create({
     data: {
-      name: 'Sangeeth',
+      name: 'Sangeet',
       date: new Date('2026-11-26T19:00:00+02:00'),
       venue: '11 Orient Road',
       address: '11 Orient Road, Wynberg, Cape Town, 7800',
@@ -83,7 +83,7 @@ async function main() {
         create: [
           { eventId: mehndi.id },
           { eventId: nelengu.id },
-          { eventId: sangeeth.id },
+          { eventId: sangeet.id },
           { eventId: wedding.id },
           { eventId: reception.id },
         ],
