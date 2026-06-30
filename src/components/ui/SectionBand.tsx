@@ -18,6 +18,7 @@ const BG: Record<BandBg, string> = {
 
 interface SectionBandProps {
   children: React.ReactNode;
+  id?: string;
   bg?: BandBg;
   /** Inner container max-width (px). Omit for a full-bleed band. */
   maxWidth?: number;
@@ -31,6 +32,7 @@ interface SectionBandProps {
 // container. The stacking primitive for the Home page.
 export function SectionBand({
   children,
+  id,
   bg = "paper",
   maxWidth,
   topBorder = true,
@@ -40,6 +42,7 @@ export function SectionBand({
 }: SectionBandProps) {
   return (
     <section
+      id={id}
       className={className}
       style={{
         background: BG[bg],

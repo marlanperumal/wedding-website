@@ -44,11 +44,27 @@
 }
 
 @layer base {
+  html { scroll-behavior: smooth; }
   body {
     background: #f4ecda;
     color: #46370f;
     font-family: var(--font-serif);
   }
+  /* Offset anchor jumps so targets clear the sticky nav */
+  [id] { scroll-margin-top: 84px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+/* Scroll cue (home hero) — gentle downward nudge */
+@keyframes scroll-cue {
+  0%, 100% { transform: translateY(0); opacity: .5; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+.scroll-cue { animation: scroll-cue 1.8s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
 }
 
 /* Custom scrollbar */

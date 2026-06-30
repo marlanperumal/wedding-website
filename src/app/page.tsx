@@ -87,8 +87,35 @@ export default function HomePage() {
         }
       />
 
+      {/* Scroll cue — desktop only; signals there's more below the fold */}
+      <a
+        href="#our-story"
+        aria-label="Scroll down for more"
+        className="hidden md:flex flex-col items-center gap-2 no-underline group"
+        style={{ marginTop: "-6px", paddingBottom: "10px" }}
+      >
+        <span className="font-label text-[10px] tracking-[.3em] text-gold-soft transition-colors group-hover:text-gold-deep">
+          MORE BELOW
+        </span>
+        <svg
+          className="scroll-cue"
+          width="22"
+          height="13"
+          viewBox="0 0 22 13"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="1.6"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          style={{ color: "#a08648" }}
+          aria-hidden="true"
+        >
+          <path d="M2 2l9 9 9-9" />
+        </svg>
+      </a>
+
       {/* Our story + couple photo */}
-      <SectionBand bg="panel" maxWidth={1040} padding="clamp(36px,6vw,64px) clamp(20px,5vw,60px)">
+      <SectionBand id="our-story" bg="panel" maxWidth={1040} padding="clamp(36px,6vw,64px) clamp(20px,5vw,60px)">
         <div className="flex flex-wrap items-center gap-x-[44px] gap-y-8">
           <PhotoFrame className="flex-1 basis-80">
             <Image
