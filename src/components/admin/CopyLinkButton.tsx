@@ -9,7 +9,9 @@ export function CopyLinkButton({ slug }: CopyLinkButtonProps) {
   const [copied, setCopied] = useState(false)
 
   async function handleCopy() {
-    const base = process.env.NEXT_PUBLIC_BASE_URL ?? window.location.origin
+    // Use the current origin so copied links work on preview deployments
+    // (falls back to the configured base URL during SSR / if origin is unavailable).
+    const base = window.location.origin || process.env.NEXT_PUBLIC_BASE_URL
     await navigator.clipboard.writeText(`${base}/${slug}`)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
