@@ -18,8 +18,7 @@ const EVENT_DOT: Record<string, string> = {
   Mehndi: '#e07a29',
   Nelengu: '#9e6bb5',
   Sangeet: '#3da4a1',
-  Wedding: '#b08a36',
-  Reception: '#b08a36',
+  'Wedding & Reception': '#b08a36',
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {

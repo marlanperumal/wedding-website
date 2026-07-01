@@ -26,8 +26,7 @@ const PILL_ACCENT: Record<string, string> = {
   Mehndi: '#e07a29',
   Nelengu: '#9e6bb5',
   Sangeet: '#3da4a1',
-  Wedding: '#7c5c14',
-  Reception: '#7c5c14',
+  'Wedding & Reception': '#7c5c14',
 }
 
 export function GuestCard({
@@ -146,12 +145,12 @@ export function GuestCard({
           </label>
         ))}
       </div>
-      {dietary.includes('Other') && (
+      {dietary.includes('Allergies (please specify)') && (
         <input
           type="text"
           value={dietaryNotes}
           onChange={(e) => onDietaryNotesChange(e.target.value)}
-          placeholder="Please describe your dietary requirement"
+          placeholder="Please specify your allergies"
           maxLength={500}
           className="w-full font-serif text-[16px] text-ink outline-none"
           style={{

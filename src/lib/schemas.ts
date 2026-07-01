@@ -1,12 +1,12 @@
 import { z } from 'zod'
 
 export const DIETARY_OPTIONS = [
-  'Vegetarian',
   'Vegan',
-  'Halal',
-  'Gluten-free',
-  'Nut allergy',
-  'Other',
+  'Vegetarian',
+  'Dairy free',
+  'Gluten free',
+  'Halaal',
+  'Allergies (please specify)',
 ] as const
 
 export type DietaryOption = (typeof DIETARY_OPTIONS)[number]

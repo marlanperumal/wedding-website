@@ -17,11 +17,11 @@ async function main() {
   await prisma.invite.deleteMany()
   await prisma.event.deleteMany()
 
-  // Seed the 5 events
+  // Seed the 4 events
   const mehndi = await prisma.event.create({
     data: {
       name: 'Mehndi',
-      date: new Date('2026-11-26T14:00:00+02:00'),
+      date: new Date('2026-11-26T10:00:00+02:00'),
       venue: '11 Orient Road',
       address: '11 Orient Road, Wynberg, Cape Town, 7800',
       sortOrder: 1,
@@ -31,7 +31,7 @@ async function main() {
   const nelengu = await prisma.event.create({
     data: {
       name: 'Nelengu',
-      date: new Date('2026-11-26T16:00:00+02:00'),
+      date: new Date('2026-11-26T10:00:00+02:00'),
       venue: '11 Orient Road',
       address: '11 Orient Road, Wynberg, Cape Town, 7800',
       sortOrder: 2,
@@ -41,7 +41,7 @@ async function main() {
   const sangeet = await prisma.event.create({
     data: {
       name: 'Sangeet',
-      date: new Date('2026-11-26T19:00:00+02:00'),
+      date: new Date('2026-11-26T17:00:00+02:00'),
       venue: '11 Orient Road',
       address: '11 Orient Road, Wynberg, Cape Town, 7800',
       sortOrder: 3,
@@ -50,21 +50,12 @@ async function main() {
 
   const wedding = await prisma.event.create({
     data: {
-      name: 'Wedding',
-      date: new Date('2026-11-27T11:00:00+02:00'),
+      name: 'Wedding & Reception',
+      // Arrive by 15:00 SAST (ceremony 15:30); reception runs on to ~23:30 (see calendar duration)
+      date: new Date('2026-11-27T15:00:00+02:00'),
       venue: 'Goedgeleven',
       address: 'Goedgeleven, Durbanville, Cape Town, 7550',
       sortOrder: 4,
-    },
-  })
-
-  const reception = await prisma.event.create({
-    data: {
-      name: 'Reception',
-      date: new Date('2026-11-27T17:00:00+02:00'),
-      venue: 'Goedgeleven',
-      address: 'Goedgeleven, Durbanville, Cape Town, 7550',
-      sortOrder: 5,
     },
   })
 
@@ -85,13 +76,12 @@ async function main() {
           { eventId: nelengu.id },
           { eventId: sangeet.id },
           { eventId: wedding.id },
-          { eventId: reception.id },
         ],
       },
     },
   })
 
-  console.log('✓ Seeded 5 events')
+  console.log('✓ Seeded 4 events')
   console.log(`✓ Test invite: http://localhost:3000/${testInvite.slug}`)
 }
 

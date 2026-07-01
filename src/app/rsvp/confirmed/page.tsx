@@ -4,6 +4,7 @@ import { extractGuestInviteId } from '@/lib/cookies'
 import { prisma } from '@/lib/prisma'
 import { Diamond, EventPill } from '@/components/ui'
 import { isRsvpClosed } from '@/lib/deadline'
+import { googleCalendarUrl } from '@/lib/calendar'
 
 export default async function RsvpConfirmedPage() {
   const cookieStore = await cookies()
@@ -118,11 +119,12 @@ export default async function RsvpConfirmedPage() {
                       <div key={event.id} className="flex items-center gap-2.5">
                         <EventPill name={event.name} />
                         <a
-                          href={`/api/calendar/${event.id}`}
-                          download={`${event.name.toLowerCase()}.ics`}
+                          href={googleCalendarUrl(event)}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="font-label text-[9.5px] tracking-[.1em] text-acc-purple underline underline-offset-2 hover:text-gold-deep transition-colors"
                         >
-                          ADD TO CALENDAR
+                          ADD TO GOOGLE CALENDAR
                         </a>
                       </div>
                     ))}
@@ -148,6 +150,21 @@ export default async function RsvpConfirmedPage() {
             : 'We don’t have an RSVP from you yet.'}
         </p>
       )}
+
+      {/* Invite guests to explore the rest of the site */}
+      <div className="text-center mt-12 pt-8" style={{ borderTop: '1px solid rgba(176,138,54,.25)' }}>
+        <p className="font-serif italic text-[17px] text-ink-muted mb-4">
+          There&rsquo;s plenty more to explore before the big day — venue and
+          directions, where to stay, what to wear, and answers to common
+          questions.
+        </p>
+        <a
+          href="/"
+          className="font-label text-[11px] tracking-[.12em] text-acc-purple underline underline-offset-4 hover:text-gold-deep transition-colors"
+        >
+          EXPLORE THE WEBSITE
+        </a>
+      </div>
     </div>
   )
 }

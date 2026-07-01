@@ -3,12 +3,12 @@ import { RsvpSchema, AdminLoginSchema, AddInviteSchema, DIETARY_OPTIONS } from '
 
 describe('DIETARY_OPTIONS', () => {
   it('includes the 6 fixed options', () => {
-    expect(DIETARY_OPTIONS).toContain('Vegetarian')
     expect(DIETARY_OPTIONS).toContain('Vegan')
-    expect(DIETARY_OPTIONS).toContain('Halal')
-    expect(DIETARY_OPTIONS).toContain('Gluten-free')
-    expect(DIETARY_OPTIONS).toContain('Nut allergy')
-    expect(DIETARY_OPTIONS).toContain('Other')
+    expect(DIETARY_OPTIONS).toContain('Vegetarian')
+    expect(DIETARY_OPTIONS).toContain('Dairy free')
+    expect(DIETARY_OPTIONS).toContain('Gluten free')
+    expect(DIETARY_OPTIONS).toContain('Halaal')
+    expect(DIETARY_OPTIONS).toContain('Allergies (please specify)')
     expect(DIETARY_OPTIONS).toHaveLength(6)
   })
 })

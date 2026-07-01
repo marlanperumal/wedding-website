@@ -149,7 +149,7 @@ export async function sendRsvpConfirmation({
         })
         .join('')}
       <p style="font-size: 14px; color: #2E1A10; line-height: 1.6; margin: 0 0 24px;">
-        Full venue addresses and calendar downloads are available on your confirmation page:
+        Full venue addresses and links to add each event to Google Calendar are available on your confirmation page:
       </p>
       <a href="${BASE_URL}/rsvp/confirmed"
          style="display: inline-block; background: #F4A261; color: white; padding: 14px 28px; font-family: sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; text-decoration: none;">
@@ -165,7 +165,7 @@ export async function sendRsvpConfirmation({
 </body>
 </html>`
 
-  const text = `Dear ${greeting},\n\nThank you for your RSVP! We are so excited to celebrate with you.\n\n${guestTextSections}\n\nFull venue addresses and .ics calendar downloads: ${BASE_URL}/rsvp/confirmed\n\nWith love,\nMarlan & Tramaine`
+  const text = `Dear ${greeting},\n\nThank you for your RSVP! We are so excited to celebrate with you.\n\n${guestTextSections}\n\nFull venue addresses and links to add each event to Google Calendar: ${BASE_URL}/rsvp/confirmed\n\nWith love,\nMarlan & Tramaine`
 
   await deliver({
     from: FROM,
