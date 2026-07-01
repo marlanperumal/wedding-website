@@ -34,7 +34,12 @@ async function deliver(message: EmailMessage) {
 
   if (process.env.RESEND_API_KEY) {
     const resend = new Resend(process.env.RESEND_API_KEY)
-    await resend.emails.send(message)
+    // The Resend SDK does not throw on API errors — it returns { data, error }.
+    // Throw so the caller's try/catch can log the failure instead of silently swallowing it.
+    const { error } = await resend.emails.send(message)
+    if (error) {
+      throw new Error(`Resend send failed: ${error.name} — ${error.message}`)
+    }
     return
   }
 
