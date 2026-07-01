@@ -7,35 +7,48 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Wedding website for Marlan Perumal and Tramaine Liedeman.
 Hosted at wedding.liedeman.perumal.co.za. Guests receive personalised invite links with per-person per-event RSVP.
 
+## Workflow
+
+Work directly on `master` — commit and push there unless told otherwise. No feature branches or PRs by default.
+
 ## Commands
+
+Tasks are run via [`just`](https://github.com/casey/just). Run `just` (or `just --list`) to see all recipes. `just` does NOT load `.env.local`; Next.js loads it for dev/build and `prisma.config.ts` loads it for the Prisma recipes.
+
+### Setup
+```bash
+just setup                          # First-time: install, env, db-up, migrate, generate, seed
+just install                        # Install dependencies (pnpm)
+just env                            # Copy .env.example → .env.local if missing
+just secret                         # Generate a random COOKIE_SECRET
+just hash "my passphrase"           # Generate a bcrypt ADMIN_PASSPHRASE_HASH
+```
 
 ### Development
 ```bash
-docker-compose up -d                 # Start local Postgres (port 5433)
-pnpm install                        # Install dependencies
-pnpm prisma db push                 # Sync schema to local DB
-pnpm prisma db seed                 # Seed events + test invite
-pnpm dev                            # Start dev server (localhost:3000)
+just db-up                          # Start local services (Postgres :5433 + Mailpit)
+just db-down                        # Stop local services
+just dev                            # Start dev server (localhost:3000)
+just mail                           # Open the Mailpit web inbox (captured dev emails)
 ```
 
-### Testing
+### Testing & Build
 ```bash
-pnpm test                           # Run all tests (Vitest)
-pnpm test -- src/__tests__/lib/cookies.test.ts   # Run a single test file
-```
-
-### Build
-```bash
-pnpm build                          # Production build
-pnpm tsc --noEmit                   # Type-check only
+just test                           # Run all tests (Vitest)
+pnpm test src/__tests__/lib/cookies.test.ts   # Run a single test file
+just typecheck                      # Type-check only (tsc --noEmit)
+just build                          # Production build
 ```
 
 ### Prisma
 ```bash
-pnpm prisma generate                # Regenerate Prisma client after schema changes
-pnpm prisma migrate dev             # Create a new migration (local dev)
-pnpm prisma studio                  # Open Prisma Studio
+just migrate                        # Apply migrations (prisma migrate deploy)
+just generate                       # Regenerate the Prisma client
+just seed                           # Seed events + test invite
+just studio                         # Open Prisma Studio
 ```
+
+To create a new migration during local dev, use `pnpm prisma migrate dev`.
 
 ## Architecture
 
@@ -48,17 +61,20 @@ Next.js 16 App Router. All data fetching in Server Components. Mutations via Ser
   - `rsvp/` — RSVP form, confirmation page, Server Actions
   - `admin/` — Admin login, dashboard, guest management
   - `api/calendar/[eventId]/` — .ics calendar file Route Handler
+  - Static content pages: `events/`, `venue/`, `accommodation/`, `attire/`, `faqs/`
 - `src/components/` — Shared UI components
-  - `ui/` — AccentBar, EventPill, SiteNav
+  - `ui/` — layout + presentational primitives (Hero, PageHeader, SiteNav/SiteNavServer, Footer, EventCard, EventPill, Timeline, AccentBar, Diamond, PhotoFrame, SectionBand, ComingSoon; `navLinks.ts`, `index.ts` barrel)
   - `invite/` — InviteHero, EventBlock
-  - `rsvp/` — RsvpForm (client), GuestCard (client)
-  - `admin/` — DashboardStats, InviteTable, CopyLinkButton (client)
+  - `rsvp/` — RsvpForm, GuestCard, RsvpEntry, RsvpFormSection (client)
+  - `admin/` — DashboardStats, InviteTable, CopyLinkButton, AdminTopBar (client)
+  - `attire/` — ExpandableImage (client)
 - `src/lib/` — Pure utility modules
   - `prisma.ts` — Prisma client singleton
   - `cookies.ts` — HMAC-SHA256 cookie sign/verify (Web Crypto API)
   - `slugs.ts` — Invite slug generation
   - `schemas.ts` — Zod validation schemas
   - `rsvp.ts` — processRsvp business logic
+  - `deadline.ts` — RSVP_DEADLINE parsing / read-only cutoff helper
   - `email.ts` — confirmation email; transport switch: `SMTP_HOST` (Mailpit, dev) → Resend (prod) → skip
 
 ### Auth
