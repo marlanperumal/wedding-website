@@ -107,61 +107,119 @@ export async function sendRsvpConfirmation({
     })
     .join('\n\n')
 
+  // Brand palette + type mirroring the website (see src/app/globals.css).
+  // Web fonts are progressive enhancement (Apple Mail); everything falls back
+  // to Georgia/serif, which most email clients render.
+  const serif = "'Cormorant Garamond', Georgia, 'Times New Roman', serif"
+  const label = "'Cinzel', Georgia, serif"
+  const script = "'Parisienne', 'Snell Roundhand', Georgia, cursive"
+
+  const diamond = `
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 22px auto;">
+        <tr>
+          <td style="width: 64px; height: 1px; background: #b08a36; font-size: 0; line-height: 0;">&nbsp;</td>
+          <td style="padding: 0 10px; color: #b08a36; font-size: 11px; line-height: 1;">&#9670;</td>
+          <td style="width: 64px; height: 1px; background: #b08a36; font-size: 0; line-height: 0;">&nbsp;</td>
+        </tr>
+      </table>`
+
   const html = `
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
-<body style="font-family: Georgia, serif; background: #FAF4EE; margin: 0; padding: 0;">
-  <div style="max-width: 560px; margin: 40px auto; background: white; border: 1px solid #F4A261;">
-    <div style="height: 4px; background: linear-gradient(90deg, #7A4C8C, #F4A261, #3DA4A1, #F4A261, #7A4C8C);"></div>
-    <div style="padding: 40px;">
-      <p style="font-size: 11px; letter-spacing: 5px; color: #9E6BB5; text-transform: uppercase; font-family: sans-serif; margin: 0 0 12px;">You&rsquo;re confirmed</p>
-      <h1 style="font-size: 32px; font-style: italic; color: #2E1A10; margin: 0 0 8px;">Marlan &amp; Tramaine</h1>
-      <div style="height: 1px; background: #F4A261; margin: 16px 0;"></div>
-      <p style="font-size: 15px; color: #2E1A10; margin: 0 0 20px;">Dear ${greeting},</p>
-      <p style="font-size: 14px; color: #2E1A10; line-height: 1.6; margin: 0 0 24px;">
-        Thank you for your RSVP! We are so excited to celebrate with you.
-      </p>
-      ${guests
-        .map((guest) => {
-          const dietary = formatDietary(guest)
-          return `
-      <div style="margin: 0 0 28px; padding: 0 0 4px;">
-        <p style="font-size: 11px; letter-spacing: 3px; color: #3DA4A1; text-transform: uppercase; font-family: sans-serif; margin: 0 0 10px;">${guest.name}</p>
-        ${
-          guest.attendingEvents.length > 0
-            ? `<ul style="font-size: 14px; color: #2E1A10; line-height: 2; padding-left: 20px; margin: 0 0 8px;">
-        ${guest.attendingEvents
-          .map(
-            (e) =>
-              `<li><strong>${e.name}</strong> — ${formatEventDate(e.date)}, ${e.venue}</li>`,
-          )
-          .join('')}
-      </ul>`
-            : `<p style="font-size: 14px; color: #2E1A10; font-style: italic; margin: 0 0 8px;">Not attending &mdash; we&rsquo;ll miss you!</p>`
-        }
-        ${
-          dietary
-            ? `<p style="font-size: 13px; color: #2E1A10; font-family: sans-serif; margin: 0; padding-left: 20px;"><span style="color: #9E6BB5;">Dietary:</span> ${dietary}</p>`
-            : ''
-        }
-      </div>`
-        })
-        .join('')}
-      <p style="font-size: 14px; color: #2E1A10; line-height: 1.6; margin: 0 0 24px;">
-        Full venue addresses and links to add each event to Google Calendar are available on your confirmation page:
-      </p>
-      <a href="${BASE_URL}/rsvp/confirmed"
-         style="display: inline-block; background: #F4A261; color: white; padding: 14px 28px; font-family: sans-serif; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; text-decoration: none;">
-        View Confirmation
-      </a>
-      <div style="height: 1px; background: #eee; margin: 32px 0 24px;"></div>
-      <p style="font-size: 12px; color: #999; font-family: sans-serif; margin: 0;">
-        With love,<br>Marlan &amp; Tramaine
-      </p>
-    </div>
-    <div style="height: 4px; background: linear-gradient(90deg, #7A4C8C, #F4A261, #3DA4A1, #F4A261, #7A4C8C);"></div>
-  </div>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Parisienne&display=swap');
+  </style>
+</head>
+<body style="font-family: ${serif}; background: #f4ecda; margin: 0; padding: 0; -webkit-text-size-adjust: 100%;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #f4ecda;">
+    <tr>
+      <td align="center" style="padding: 40px 16px;">
+        <!-- Double gold hairline frame (echoes the site's invitation card) -->
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 560px; background: #f6efdf; border: 1px solid #c2a14e;">
+          <tr>
+            <td style="padding: 6px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #faf4e6; border: 1px solid #d3bd85;">
+                <tr>
+                  <td style="padding: 44px 40px 40px;">
+
+                    <!-- Header -->
+                    <p style="font-family: ${label}; font-size: 12px; letter-spacing: 5px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">You&rsquo;re confirmed</p>
+                    <p style="font-family: ${script}; font-size: 44px; font-style: italic; color: #8a5f10; text-align: center; line-height: 1.1; margin: 10px 0 0;">Marlan &amp; Tramaine</p>
+                    ${diamond}
+                    <p style="font-family: ${label}; font-size: 13px; letter-spacing: 3px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">26 &amp; 27 November 2026</p>
+                    <p style="font-family: ${serif}; font-size: 17px; color: #856312; text-align: center; margin: 5px 0 0;">Cape Town, South Africa</p>
+
+                    <!-- Greeting -->
+                    <p style="font-family: ${serif}; font-style: italic; font-size: 22px; color: #7c5c14; text-align: center; margin: 30px 0 0;">Dear ${greeting},</p>
+                    <p style="font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; text-align: center; margin: 12px 0 30px;">
+                      Thank you for your RSVP &mdash; we are so excited to celebrate with you.
+                    </p>
+
+                    ${guests
+                      .map((guest) => {
+                        const dietary = formatDietary(guest)
+                        return `
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 22px;">
+                      <tr><td style="border-top: 1px solid rgba(176,138,54,.28); padding: 18px 2px 0;">
+                        <p style="font-family: ${label}; font-size: 11px; letter-spacing: 2.5px; color: #2e7d7a; text-transform: uppercase; margin: 0 0 12px;">${guest.name}</p>
+                        ${
+                          guest.attendingEvents.length > 0
+                            ? guest.attendingEvents
+                                .map(
+                                  (e) => `
+                        <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 9px;">
+                          <tr>
+                            <td valign="middle"><span style="display: inline-block; font-family: ${label}; font-size: 9px; letter-spacing: 1px; color: #7c5c14; text-transform: uppercase; background: #f1e7cd; border: 1px solid #d9c48a; border-radius: 11px; padding: 4px 10px; white-space: nowrap;">${e.name}</span></td>
+                            <td valign="middle" style="padding-left: 10px; font-family: ${serif}; font-size: 16px; color: #5c4e2e;">${formatEventDate(e.date)} &middot; ${e.venue}</td>
+                          </tr>
+                        </table>`,
+                                )
+                                .join('')
+                            : `<p style="font-family: ${serif}; font-style: italic; font-size: 16px; color: #7c6a44; margin: 0;">Not attending &mdash; we&rsquo;ll miss you!</p>`
+                        }
+                        ${
+                          dietary
+                            ? `<p style="font-family: ${serif}; font-size: 15px; color: #5c4e2e; margin: 8px 0 0;"><span style="font-family: ${label}; font-size: 10px; letter-spacing: 1.5px; color: #9e6bb5; text-transform: uppercase;">Dietary</span> &nbsp;${dietary}</p>`
+                            : ''
+                        }
+                      </td></tr>
+                    </table>`
+                      })
+                      .join('')}
+
+                    <!-- Call to action -->
+                    <p style="font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; text-align: center; margin: 30px 0 22px;">
+                      Full venue addresses and links to add each event to Google Calendar are on your confirmation page.
+                    </p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 0 auto;">
+                      <tr><td style="background: #7c5c14; border-radius: 2px;">
+                        <a href="${BASE_URL}/rsvp/confirmed" style="display: inline-block; font-family: ${label}; font-size: 12px; letter-spacing: 3px; color: #f6efdf; text-transform: uppercase; text-decoration: none; padding: 14px 40px;">View Confirmation</a>
+                      </td></tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Footer band (mirrors the site footer) -->
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 560px; background: #7c5c14;">
+          <tr>
+            <td align="center" style="padding: 30px 24px;">
+              <p style="font-family: ${script}; font-size: 30px; font-style: italic; color: #f6ecd0; line-height: 1; margin: 0;">Marlan &amp; Tramaine</p>
+              <p style="font-family: ${label}; font-size: 11px; letter-spacing: 3px; color: #dcc99a; text-transform: uppercase; margin: 10px 0 0;">26 &amp; 27 November 2026 &middot; Cape Town</p>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
 </body>
 </html>`
 
