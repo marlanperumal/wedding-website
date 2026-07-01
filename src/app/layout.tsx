@@ -24,6 +24,10 @@ const cinzel = Cinzel({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_BASE_URL ??
+      "https://wedding.liedeman.perumal.co.za",
+  ),
   title: "Marlan & Tramaine — November 2026",
   description:
     "Join us to celebrate our wedding in Cape Town, November 2026.",
