@@ -1,3 +1,6 @@
+import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { extractAdminSession } from '@/lib/cookies'
 import { adminLogin } from './actions'
 import { Diamond } from '@/components/ui'
 
@@ -6,6 +9,10 @@ interface Props {
 }
 
 export default async function AdminLoginPage({ searchParams }: Props) {
+  const cookieStore = await cookies()
+  const isAdmin = await extractAdminSession(cookieStore.get('adminSession')?.value)
+  if (isAdmin) redirect('/admin/dashboard')
+
   const { error } = await searchParams
 
   return (
