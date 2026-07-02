@@ -46,6 +46,7 @@ export async function submitRsvp(email: string, rsvps: RsvpInput[]) {
       }))
       await sendRsvpConfirmation({
         to: updatedInvite.email,
+        inviteLabel: updatedInvite.label,
         guests,
       })
     }

@@ -13,7 +13,7 @@ export default async function RsvpConfirmedPage() {
 
   const invite = await prisma.invite.findUnique({
     where: { id: inviteId },
-    select: { id: true, submitted: true, guests: true },
+    select: { id: true, label: true, submitted: true, guests: true },
   })
   if (!invite) redirect('/rsvp')
 
@@ -45,11 +45,7 @@ export default async function RsvpConfirmedPage() {
     grouped.get(key)!.push(event)
   }
 
-  const guestNames = invite.guests.map((g) => g.name)
-  const greeting =
-    guestNames.length === 1
-      ? guestNames[0]
-      : guestNames.slice(0, -1).join(', ') + ' & ' + guestNames.at(-1)
+  const greeting = invite.label
 
   // Submitted, but nobody is attending anything — the whole party declined.
   const allDeclined = invite.submitted && attendedEvents.length === 0

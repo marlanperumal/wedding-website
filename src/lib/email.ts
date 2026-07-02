@@ -61,6 +61,7 @@ interface GuestConfirmation {
 
 interface RsvpConfirmationParams {
   to: string
+  inviteLabel: string
   guests: GuestConfirmation[]
 }
 
@@ -81,13 +82,10 @@ function formatDietary(guest: GuestConfirmation) {
 
 export async function sendRsvpConfirmation({
   to,
+  inviteLabel,
   guests,
 }: RsvpConfirmationParams) {
-  const guestNames = guests.map((g) => g.name)
-  const greeting =
-    guestNames.length === 1
-      ? guestNames[0]
-      : guestNames.slice(0, -1).join(', ') + ' & ' + guestNames.at(-1)
+  const greeting = inviteLabel
 
   // Everyone in the party has declined every event — swap the celebratory
   // framing for something appropriate.
