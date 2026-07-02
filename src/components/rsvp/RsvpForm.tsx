@@ -1,7 +1,7 @@
 'use client'
 import { useState } from 'react'
 import { GuestCard } from './GuestCard'
-import { submitRsvp } from '@/app/rsvp/actions'
+import { submitRsvp } from '@/app/(site)/rsvp/actions'
 import type { RsvpInput } from '@/lib/rsvp'
 
 interface GuestData {

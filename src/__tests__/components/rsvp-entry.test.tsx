@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderToStaticMarkup } from 'react-dom/server'
 
-vi.mock('@/app/rsvp/actions', () => ({
+vi.mock('@/app/(site)/rsvp/actions', () => ({
   enterInviteCode: vi.fn(),
 }))
 

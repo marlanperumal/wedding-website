@@ -1,6 +1,6 @@
 'use client'
 import { useActionState } from 'react'
-import { enterInviteCode, type EnterCodeState } from '@/app/rsvp/actions'
+import { enterInviteCode, type EnterCodeState } from '@/app/(site)/rsvp/actions'
 import { Diamond } from '@/components/ui'
 
 const initialState: EnterCodeState = {}

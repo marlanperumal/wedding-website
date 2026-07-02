@@ -17,7 +17,7 @@ vi.mock('next/navigation', () => ({
 }))
 
 import { prisma } from '@/lib/prisma'
-import { enterInviteCode } from '@/app/rsvp/actions'
+import { enterInviteCode } from '@/app/(site)/rsvp/actions'
 
 function fd(code: string) {
   const f = new FormData()

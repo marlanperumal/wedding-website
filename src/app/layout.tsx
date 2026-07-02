@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import { Parisienne, Cormorant_Garamond, Cinzel } from "next/font/google";
 import "./globals.css";
-import { SiteNavServer } from "@/components/ui/SiteNavServer";
-import { Footer } from "@/components/ui/Footer";
 
 const parisienne = Parisienne({
   variable: "--font-parisienne",
@@ -43,11 +41,7 @@ export default function RootLayout({
       lang="en"
       className={`${parisienne.variable} ${cormorant.variable} ${cinzel.variable}`}
     >
-      <body className="bg-paper text-ink antialiased">
-        <SiteNavServer />
-        <main>{children}</main>
-        <Footer />
-      </body>
+      <body className="bg-paper text-ink antialiased">{children}</body>
     </html>
   );
 }
