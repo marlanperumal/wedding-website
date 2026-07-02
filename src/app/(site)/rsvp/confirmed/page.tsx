@@ -51,6 +51,9 @@ export default async function RsvpConfirmedPage() {
       ? guestNames[0]
       : guestNames.slice(0, -1).join(', ') + ' & ' + guestNames.at(-1)
 
+  // Submitted, but nobody is attending anything — the whole party declined.
+  const allDeclined = invite.submitted && attendedEvents.length === 0
+
   return (
     <div
       className="mx-auto"
@@ -59,18 +62,19 @@ export default async function RsvpConfirmedPage() {
       {/* Confirmation header */}
       <div className="text-center">
         <div className="font-label text-[12px] tracking-[.3em] text-gold-deep">
-          YOU&rsquo;RE CONFIRMED
+          {allDeclined ? 'WE’LL MISS YOU' : 'YOU’RE CONFIRMED'}
         </div>
         <h1
           className="font-serif italic text-ink mt-2"
           style={{ fontSize: 'clamp(34px,6vw,46px)' }}
         >
-          See you there, {greeting}!
+          {allDeclined ? `Thank you, ${greeting}` : `See you there, ${greeting}!`}
         </h1>
         <Diamond className="mt-3.5 mb-5" />
         <p className="font-serif text-[18px] text-ink-soft leading-[1.55] mb-3">
-          A confirmation email will be on its way. We look forward to celebrating
-          with you.
+          {allDeclined
+            ? 'A confirmation email will be on its way. We’re sorry you can’t join us, but you’ll be in our thoughts on the day.'
+            : 'A confirmation email will be on its way. We look forward to celebrating with you.'}
         </p>
         {!closed && (
           <p className="mb-10">
@@ -134,13 +138,6 @@ export default async function RsvpConfirmedPage() {
             })}
           </div>
         </div>
-      )}
-
-      {attendedEvents.length === 0 && invite.submitted && (
-        <p className="font-serif italic text-[17px] text-ink-muted text-center">
-          You have indicated that you won&apos;t be attending. We&apos;ll miss
-          you!
-        </p>
       )}
 
       {attendedEvents.length === 0 && !invite.submitted && (

@@ -89,6 +89,28 @@ export async function sendRsvpConfirmation({
       ? guestNames[0]
       : guestNames.slice(0, -1).join(', ') + ' & ' + guestNames.at(-1)
 
+  // Everyone in the party has declined every event — swap the celebratory
+  // framing for something appropriate.
+  const allDeclined =
+    guests.length > 0 && guests.every((g) => g.attendingEvents.length === 0)
+
+  const eyebrow = allDeclined ? 'We&rsquo;ll miss you' : 'You&rsquo;re confirmed'
+  const introHtml = allDeclined
+    ? 'Thank you for letting us know. We&rsquo;re sorry you can&rsquo;t join us, but you&rsquo;ll be in our thoughts on the day.'
+    : 'Thank you for your RSVP &mdash; we are so excited to celebrate with you.'
+  const ctaHtml = allDeclined
+    ? 'If you declined by mistake, you can edit your RSVP on the website.'
+    : 'Full venue addresses and links to add each event to Google Calendar are on your confirmation page.'
+  const introText = allDeclined
+    ? 'Thank you for letting us know. We’re sorry you can’t join us, but you’ll be in our thoughts on the day.'
+    : 'Thank you for your RSVP! We are so excited to celebrate with you.'
+  const ctaText = allDeclined
+    ? `If you declined by mistake, you can edit your RSVP on the website: ${BASE_URL}/rsvp/confirmed`
+    : `Full venue addresses and links to add each event to Google Calendar: ${BASE_URL}/rsvp/confirmed`
+  const subject = allDeclined
+    ? `We'll miss you — Marlan & Tramaine's Wedding, November 2026`
+    : `You're confirmed for our Wedding, November 2026`
+
   const guestTextSections = guests
     .map((guest) => {
       const lines = [guest.name]
@@ -146,8 +168,8 @@ export async function sendRsvpConfirmation({
                   <td style="padding: 44px 40px 40px;">
 
                     <!-- Header -->
-                    <p style="font-family: ${label}; font-size: 12px; letter-spacing: 5px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">You&rsquo;re confirmed</p>
-                    <p style="font-family: ${script}; font-size: 44px; font-style: italic; color: #8a5f10; text-align: center; line-height: 1.1; margin: 10px 0 0;">Marlan &amp; Tramaine</p>
+                    <p style="font-family: ${label}; font-size: 12px; letter-spacing: 5px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">${eyebrow}</p>
+                    <p style="font-family: ${script}; font-size: 44px; font-style: italic; color: #8a5f10; text-align: center; line-height: 1.1; margin: 10px 0 0;">Marlan &amp; Tramaine&rsquo;s<br>Wedding</p>
                     ${diamond}
                     <p style="font-family: ${label}; font-size: 13px; letter-spacing: 3px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">26 &amp; 27 November 2026</p>
                     <p style="font-family: ${serif}; font-size: 17px; color: #856312; text-align: center; margin: 5px 0 0;">Cape Town, South Africa</p>
@@ -155,7 +177,7 @@ export async function sendRsvpConfirmation({
                     <!-- Greeting -->
                     <p style="font-family: ${serif}; font-style: italic; font-size: 22px; color: #7c5c14; text-align: center; margin: 30px 0 0;">Dear ${greeting},</p>
                     <p style="font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; text-align: center; margin: 12px 0 30px;">
-                      Thank you for your RSVP &mdash; we are so excited to celebrate with you.
+                      ${introHtml}
                     </p>
 
                     ${guests
@@ -192,7 +214,7 @@ export async function sendRsvpConfirmation({
 
                     <!-- Call to action -->
                     <p style="font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; text-align: center; margin: 30px 0 22px;">
-                      Full venue addresses and links to add each event to Google Calendar are on your confirmation page.
+                      ${ctaHtml}
                     </p>
                     <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 0 auto;">
                       <tr><td style="background: #7c5c14; border-radius: 2px;">
@@ -223,12 +245,12 @@ export async function sendRsvpConfirmation({
 </body>
 </html>`
 
-  const text = `Dear ${greeting},\n\nThank you for your RSVP! We are so excited to celebrate with you.\n\n${guestTextSections}\n\nFull venue addresses and links to add each event to Google Calendar: ${BASE_URL}/rsvp/confirmed\n\nWith love,\nMarlan & Tramaine`
+  const text = `Dear ${greeting},\n\n${introText}\n\n${guestTextSections}\n\n${ctaText}\n\nWith love,\nMarlan & Tramaine`
 
   await deliver({
     from: FROM,
     to,
-    subject: `You're confirmed — Marlan & Tramaine, November 2026`,
+    subject,
     html,
     text,
   })
