@@ -7,6 +7,9 @@ const DEFAULT_DURATION_HOURS = 4
 // Wedding & Reception: arrive 15:00 → reception until ~23:30 (8.5 hours).
 const DURATION_HOURS_BY_NAME: Record<string, number> = {
   'Wedding & Reception': 8.5,
+  // Mehndi and Nelengu run 10:00 → 13:00.
+  Mehndi: 3,
+  Nelengu: 3,
 }
 
 type CalendarEvent = {
