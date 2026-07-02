@@ -23,14 +23,14 @@ export function AdminTopBar() {
         className="mx-auto flex flex-wrap items-center justify-between gap-x-6 gap-y-2.5"
         style={{ maxWidth: 1080, padding: '12px clamp(18px,4vw,36px)' }}
       >
-        <div className="flex items-baseline gap-3">
-          <span className="font-label text-[13px] tracking-[.22em] text-gold-deep">
+        <Link href="/" className="flex items-baseline gap-3 group">
+          <span className="font-label text-[13px] tracking-[.22em] text-gold-deep transition-colors group-hover:text-acc-rust">
             LIEDEMAN · PERUMAL
           </span>
           <span className="font-label text-[9px] tracking-[.28em] text-gold-soft">
             ADMIN
           </span>
-        </div>
+        </Link>
         <div className="flex items-center gap-x-[22px] gap-y-2">
           {TABS.map((tab) => {
             const active = pathname?.startsWith(tab.href) ?? false
