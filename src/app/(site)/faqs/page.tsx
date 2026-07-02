@@ -122,8 +122,8 @@ export default function FaqsPage() {
         <Faq question="Is there a gift registry?">
           <p>Your presence is the greatest gift we could ask for.</p>
           <p className="mt-3">
-            If you would like to celebrate with a gift, we have included our
-            registry details on your invitation.
+            If you would like to celebrate with a gift, we&rsquo;ll be adding
+            registry details to the website soon.
           </p>
         </Faq>
 
