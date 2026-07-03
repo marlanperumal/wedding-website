@@ -6,6 +6,7 @@ import { adminLogout } from '@/app/admin/actions'
 const TABS = [
   { href: '/admin/dashboard', label: 'OVERVIEW' },
   { href: '/admin/guests', label: 'GUESTS' },
+  { href: '/admin/rsvps', label: 'RSVPS' },
 ]
 
 export function AdminTopBar() {

@@ -9,7 +9,11 @@ export function proxy(request: NextRequest) {
     }
   }
 
-  if (pathname.startsWith('/admin/dashboard') || pathname.startsWith('/admin/guests')) {
+  if (
+    pathname.startsWith('/admin/dashboard') ||
+    pathname.startsWith('/admin/guests') ||
+    pathname.startsWith('/admin/rsvps')
+  ) {
     if (!request.cookies.has('adminSession')) {
       return NextResponse.redirect(new URL('/admin', request.url))
     }
@@ -19,5 +23,10 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/rsvp/edit/:path*', '/admin/dashboard/:path*', '/admin/guests/:path*'],
+  matcher: [
+    '/rsvp/edit/:path*',
+    '/admin/dashboard/:path*',
+    '/admin/guests/:path*',
+    '/admin/rsvps/:path*',
+  ],
 }
