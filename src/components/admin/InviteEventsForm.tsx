@@ -23,6 +23,11 @@ export function InviteEventsForm({ inviteId, events }: Props) {
         e.currentTarget.querySelectorAll<HTMLInputElement>('input[name="eventIds"]:checked'),
       ).map((i) => i.value),
     )
+    if (checked.size === 0) {
+      alert('An invite must have at least one event.')
+      e.preventDefault()
+      return
+    }
     const losing = events.filter((ev) => ev.assigned && !checked.has(ev.id) && ev.rsvpCount > 0)
     if (losing.length === 0) return
     const total = losing.reduce((n, ev) => n + ev.rsvpCount, 0)

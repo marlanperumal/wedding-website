@@ -63,6 +63,7 @@ export async function removeGuestAction(inviteId: string, guestId: string) {
 export async function updateInviteEventsAction(inviteId: string, formData: FormData) {
   await requireAdmin()
   const eventIds = formData.getAll('eventIds').map(String)
+  if (eventIds.length === 0) return
   await invites.updateInviteEvents(inviteId, eventIds)
   revalidate(inviteId)
 }
@@ -76,5 +77,6 @@ export async function regenerateSlugAction(inviteId: string) {
 export async function deleteInviteAction(inviteId: string) {
   await requireAdmin()
   await invites.deleteInvite(inviteId)
+  revalidatePath('/admin/guests')
   redirect('/admin/guests')
 }
