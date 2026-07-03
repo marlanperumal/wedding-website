@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { EventPill } from '@/components/ui'
 import { CopyLinkButton } from './CopyLinkButton'
 
@@ -68,6 +69,12 @@ export function InviteTable({ invites }: InviteTableProps) {
                     {invite.email}
                   </div>
                 )}
+                <Link
+                  href={`/admin/guests/${invite.id}`}
+                  className="font-label text-[9.5px] tracking-[.14em] text-acc-teal-deep hover:opacity-70"
+                >
+                  EDIT
+                </Link>
               </td>
               <td className={`${td} font-serif text-[16px] text-ink-soft`}>
                 {invite.guests.map((g) => g.name).join(', ')}
