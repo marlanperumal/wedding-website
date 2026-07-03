@@ -36,3 +36,8 @@ export const AddInviteSchema = z.object({
   guestNames: z.array(z.string().min(1)).min(1),
   eventIds: z.array(z.string().cuid()).min(1),
 })
+
+export const UpdateInviteSchema = z.object({
+  label: z.string().min(1).max(100),
+  email: z.string().email().optional().or(z.literal('')),
+})

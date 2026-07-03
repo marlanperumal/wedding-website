@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { RsvpSchema, AdminLoginSchema, AddInviteSchema, DIETARY_OPTIONS } from '@/lib/schemas'
+import { RsvpSchema, AdminLoginSchema, AddInviteSchema, UpdateInviteSchema, DIETARY_OPTIONS } from '@/lib/schemas'
 
 describe('DIETARY_OPTIONS', () => {
   it('includes the 6 fixed options', () => {
@@ -102,5 +102,31 @@ describe('AddInviteSchema', () => {
 
   it('rejects empty eventIds array', () => {
     expect(AddInviteSchema.safeParse({ ...valid, eventIds: [] }).success).toBe(false)
+  })
+})
+
+describe('UpdateInviteSchema', () => {
+  const valid = { label: 'The Naidoo Family' }
+
+  it('accepts a valid label without email', () => {
+    expect(UpdateInviteSchema.safeParse(valid).success).toBe(true)
+  })
+
+  it('accepts a valid label with email', () => {
+    expect(
+      UpdateInviteSchema.safeParse({ ...valid, email: 'priya@example.com' }).success,
+    ).toBe(true)
+  })
+
+  it('accepts an empty string email (treat as absent)', () => {
+    expect(UpdateInviteSchema.safeParse({ ...valid, email: '' }).success).toBe(true)
+  })
+
+  it('rejects an invalid email', () => {
+    expect(UpdateInviteSchema.safeParse({ ...valid, email: 'nope' }).success).toBe(false)
+  })
+
+  it('rejects an empty label', () => {
+    expect(UpdateInviteSchema.safeParse({ label: '' }).success).toBe(false)
   })
 })
