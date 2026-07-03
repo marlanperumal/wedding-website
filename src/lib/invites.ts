@@ -1,5 +1,24 @@
+import { Prisma } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 import { generateInviteSlug } from '@/lib/slugs'
+
+/**
+ * Keep the `submitted` flag consistent with reality: an invite must never be
+ * marked submitted once it has no RSVP responses left. Called after operations
+ * that can delete a guest's or event's responses.
+ */
+async function resetSubmittedIfEmpty(
+  tx: Prisma.TransactionClient,
+  inviteId: string,
+) {
+  const remaining = await tx.rsvp.count({ where: { guest: { inviteId } } })
+  if (remaining === 0) {
+    await tx.invite.update({
+      where: { id: inviteId },
+      data: { submitted: false, submittedAt: null },
+    })
+  }
+}
 
 export async function updateInviteDetails(
   inviteId: string,
@@ -16,7 +35,15 @@ export async function addGuest(inviteId: string, name: string) {
 }
 
 export async function removeGuest(guestId: string) {
-  return prisma.guest.delete({ where: { id: guestId } })
+  return prisma.$transaction(async (tx) => {
+    const guest = await tx.guest.findUnique({
+      where: { id: guestId },
+      select: { inviteId: true },
+    })
+    const deleted = await tx.guest.delete({ where: { id: guestId } })
+    if (guest) await resetSubmittedIfEmpty(tx, guest.inviteId)
+    return deleted
+  })
 }
 
 export async function renameGuest(guestId: string, name: string) {
@@ -47,17 +74,18 @@ export async function updateInviteEvents(inviteId: string, eventIds: string[]) {
   const toAdd = eventIds.filter((id) => !currentIds.has(id))
   const toRemove = [...currentIds].filter((id) => !nextIds.has(id))
 
-  await prisma.$transaction([
-    prisma.rsvp.deleteMany({
+  await prisma.$transaction(async (tx) => {
+    await tx.rsvp.deleteMany({
       where: { eventId: { in: toRemove }, guest: { inviteId } },
-    }),
-    prisma.inviteEvent.deleteMany({
+    })
+    await tx.inviteEvent.deleteMany({
       where: { inviteId, eventId: { in: toRemove } },
-    }),
-    prisma.inviteEvent.createMany({
+    })
+    await tx.inviteEvent.createMany({
       data: toAdd.map((eventId) => ({ inviteId, eventId })),
-    }),
-  ])
+    })
+    await resetSubmittedIfEmpty(tx, inviteId)
+  })
 }
 
 export async function getInviteForEdit(inviteId: string) {

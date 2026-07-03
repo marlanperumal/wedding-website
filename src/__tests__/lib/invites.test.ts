@@ -11,6 +11,7 @@ vi.mock('@/lib/prisma', () => ({
       create: vi.fn(),
       update: vi.fn(),
       delete: vi.fn(),
+      findUnique: vi.fn(),
     },
     inviteEvent: {
       findMany: vi.fn(),
@@ -20,6 +21,7 @@ vi.mock('@/lib/prisma', () => ({
     rsvp: {
       deleteMany: vi.fn(),
       groupBy: vi.fn(),
+      count: vi.fn(),
     },
     $transaction: vi.fn(),
   },
@@ -43,7 +45,13 @@ beforeEach(() => {
   vi.mocked(prisma.guest.create).mockResolvedValue({} as any)
   vi.mocked(prisma.guest.update).mockResolvedValue({} as any)
   vi.mocked(prisma.guest.delete).mockResolvedValue({} as any)
-  vi.mocked(prisma.$transaction).mockResolvedValue([] as any)
+  vi.mocked(prisma.guest.findUnique).mockResolvedValue({ inviteId: 'invite-1' } as any)
+  // Default: RSVPs remain, so submitted is left untouched unless a test says otherwise.
+  vi.mocked(prisma.rsvp.count).mockResolvedValue(1 as any)
+  // Route the interactive-transaction callback to the mocked client; pass arrays through.
+  vi.mocked(prisma.$transaction).mockImplementation(async (arg: any) =>
+    typeof arg === 'function' ? arg(prisma) : arg,
+  )
 })
 
 describe('updateInviteDetails', () => {
@@ -79,6 +87,23 @@ describe('removeGuest', () => {
   it('deletes the guest (RSVPs cascade via schema)', async () => {
     await removeGuest('guest-1')
     expect(prisma.guest.delete).toHaveBeenCalledWith({ where: { id: 'guest-1' } })
+  })
+
+  it('resets submitted/submittedAt when no RSVPs remain on the invite', async () => {
+    vi.mocked(prisma.guest.findUnique).mockResolvedValue({ inviteId: 'invite-1' } as any)
+    vi.mocked(prisma.rsvp.count).mockResolvedValue(0 as any)
+    await removeGuest('guest-1')
+    expect(prisma.invite.update).toHaveBeenCalledWith({
+      where: { id: 'invite-1' },
+      data: { submitted: false, submittedAt: null },
+    })
+  })
+
+  it('leaves submitted untouched when RSVPs remain', async () => {
+    vi.mocked(prisma.guest.findUnique).mockResolvedValue({ inviteId: 'invite-1' } as any)
+    vi.mocked(prisma.rsvp.count).mockResolvedValue(2 as any)
+    await removeGuest('guest-1')
+    expect(prisma.invite.update).not.toHaveBeenCalled()
   })
 })
 
@@ -152,5 +177,20 @@ describe('updateInviteEvents', () => {
   it('wraps the writes in a single transaction', async () => {
     await updateInviteEvents('invite-1', ['e2', 'e3'])
     expect(prisma.$transaction).toHaveBeenCalledTimes(1)
+  })
+
+  it('resets submitted/submittedAt when no RSVPs remain after unassigning events', async () => {
+    vi.mocked(prisma.rsvp.count).mockResolvedValue(0 as any)
+    await updateInviteEvents('invite-1', ['e2'])
+    expect(prisma.invite.update).toHaveBeenCalledWith({
+      where: { id: 'invite-1' },
+      data: { submitted: false, submittedAt: null },
+    })
+  })
+
+  it('leaves submitted untouched when RSVPs remain', async () => {
+    vi.mocked(prisma.rsvp.count).mockResolvedValue(4 as any)
+    await updateInviteEvents('invite-1', ['e2'])
+    expect(prisma.invite.update).not.toHaveBeenCalled()
   })
 })
