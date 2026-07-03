@@ -35,3 +35,51 @@ export async function regenerateSlug(inviteId: string) {
 export async function deleteInvite(inviteId: string) {
   return prisma.invite.delete({ where: { id: inviteId } })
 }
+
+export async function updateInviteEvents(inviteId: string, eventIds: string[]) {
+  const current = await prisma.inviteEvent.findMany({
+    where: { inviteId },
+    select: { eventId: true },
+  })
+  const currentIds = new Set(current.map((e) => e.eventId))
+  const nextIds = new Set(eventIds)
+
+  const toAdd = eventIds.filter((id) => !currentIds.has(id))
+  const toRemove = [...currentIds].filter((id) => !nextIds.has(id))
+
+  await prisma.$transaction([
+    prisma.rsvp.deleteMany({
+      where: { eventId: { in: toRemove }, guest: { inviteId } },
+    }),
+    prisma.inviteEvent.deleteMany({
+      where: { inviteId, eventId: { in: toRemove } },
+    }),
+    prisma.inviteEvent.createMany({
+      data: toAdd.map((eventId) => ({ inviteId, eventId })),
+    }),
+  ])
+}
+
+export async function getInviteForEdit(inviteId: string) {
+  return prisma.invite.findUnique({
+    where: { id: inviteId },
+    include: {
+      guests: {
+        orderBy: { name: 'asc' },
+        include: { _count: { select: { rsvps: true } } },
+      },
+      events: { select: { eventId: true } },
+    },
+  })
+}
+
+export async function getEventRsvpCounts(
+  inviteId: string,
+): Promise<Record<string, number>> {
+  const rows = await prisma.rsvp.groupBy({
+    by: ['eventId'],
+    where: { guest: { inviteId } },
+    _count: { _all: true },
+  })
+  return Object.fromEntries(rows.map((r) => [r.eventId, r._count._all]))
+}

@@ -33,6 +33,7 @@ import {
   renameGuest,
   regenerateSlug,
   deleteInvite,
+  updateInviteEvents,
 } from '@/lib/invites'
 
 beforeEach(() => {
@@ -115,5 +116,41 @@ describe('deleteInvite', () => {
   it('deletes the invite (guests/links/rsvps cascade via schema)', async () => {
     await deleteInvite('invite-1')
     expect(prisma.invite.delete).toHaveBeenCalledWith({ where: { id: 'invite-1' } })
+  })
+})
+
+describe('updateInviteEvents', () => {
+  beforeEach(() => {
+    vi.mocked(prisma.inviteEvent.findMany).mockResolvedValue([
+      { eventId: 'e1' },
+      { eventId: 'e2' },
+    ] as any)
+    vi.mocked(prisma.rsvp.deleteMany).mockReturnValue({} as any)
+    vi.mocked(prisma.inviteEvent.deleteMany).mockReturnValue({} as any)
+    vi.mocked(prisma.inviteEvent.createMany).mockReturnValue({} as any)
+  })
+
+  it('adds newly-checked events and removes unchecked ones', async () => {
+    await updateInviteEvents('invite-1', ['e2', 'e3'])
+
+    expect(prisma.inviteEvent.deleteMany).toHaveBeenCalledWith({
+      where: { inviteId: 'invite-1', eventId: { in: ['e1'] } },
+    })
+    expect(prisma.inviteEvent.createMany).toHaveBeenCalledWith({
+      data: [{ inviteId: 'invite-1', eventId: 'e3' }],
+    })
+  })
+
+  it('deletes orphaned RSVPs only for removed events and only for this invite', async () => {
+    await updateInviteEvents('invite-1', ['e2', 'e3'])
+
+    expect(prisma.rsvp.deleteMany).toHaveBeenCalledWith({
+      where: { eventId: { in: ['e1'] }, guest: { inviteId: 'invite-1' } },
+    })
+  })
+
+  it('wraps the writes in a single transaction', async () => {
+    await updateInviteEvents('invite-1', ['e2', 'e3'])
+    expect(prisma.$transaction).toHaveBeenCalledTimes(1)
   })
 })
