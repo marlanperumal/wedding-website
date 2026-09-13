@@ -1,33 +1,25 @@
 import { PageHeader } from "@/components/ui";
 
-export const metadata = { title: "Registry — Marlan & Tramaine" };
+export const metadata = { title: "Gifts — Marlan & Tramaine" };
 
 const REGISTRY_URL =
   "https://www.myregistry.com/wedding-registry/tramaine-liedeman-and-marlan-perumal-cape-town-western-cape/5509809";
 
-export default function RegistryPage() {
+export default function GiftsPage() {
   return (
     <div
       className="mx-auto"
       style={{ maxWidth: 740, padding: "clamp(40px,6vw,64px) clamp(20px,5vw,40px)" }}
     >
-      <PageHeader eyebrow="GIFTS" title="Registry" />
+      <PageHeader eyebrow="REGISTRY" title="Gifts" />
 
       <p
-        className="font-serif text-ink-soft leading-[1.65] text-center mx-auto mb-[18px]"
+        className="font-serif text-ink-soft leading-[1.65] text-center mx-auto mb-10"
         style={{ fontSize: "clamp(18px,2.4vw,20px)", maxWidth: 620 }}
       >
         Your presence on the day is the part that matters to us. If you&rsquo;d
         like to give a gift as well, we&rsquo;ve put a registry together to make
         it easier.
-      </p>
-
-      <p
-        className="font-serif text-ink-muted leading-[1.6] text-center mx-auto mb-10"
-        style={{ fontSize: "18px", maxWidth: 620 }}
-      >
-        It opens on MyRegistry, where you can see what&rsquo;s still available
-        and mark off anything you choose.
       </p>
 
       <div className="flex justify-center">
