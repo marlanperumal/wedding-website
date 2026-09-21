@@ -123,8 +123,8 @@ export default function FaqsPage() {
           <p>Your presence is the greatest gift we could ask for.</p>
           <p className="mt-3">
             If you would like to celebrate with a gift as well, we&rsquo;ve put
-            a registry together &mdash; see the{" "}
-            <FaqLink href="/gifts">Gifts page</FaqLink>.
+            together a <FaqLink href="/gifts">Registry</FaqLink> that we hope
+            will be helpful.
           </p>
         </Faq>
 
