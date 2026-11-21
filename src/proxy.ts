@@ -12,7 +12,8 @@ export function proxy(request: NextRequest) {
   if (
     pathname.startsWith('/admin/dashboard') ||
     pathname.startsWith('/admin/guests') ||
-    pathname.startsWith('/admin/rsvps')
+    pathname.startsWith('/admin/rsvps') ||
+    pathname.startsWith('/admin/reminder')
   ) {
     if (!request.cookies.has('adminSession')) {
       return NextResponse.redirect(new URL('/admin', request.url))
@@ -28,5 +29,6 @@ export const config = {
     '/admin/dashboard/:path*',
     '/admin/guests/:path*',
     '/admin/rsvps/:path*',
+    '/admin/reminder/:path*',
   ],
 }

@@ -1,8 +1,8 @@
 import { Resend } from 'resend'
 import nodemailer from 'nodemailer'
 
-const FROM = 'Marlan & Tramaine <wedding@liedeman.perumal.co.za>'
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wedding.liedeman.perumal.co.za'
+export const FROM = 'Marlan & Tramaine <wedding@liedeman.perumal.co.za>'
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL ?? 'https://wedding.liedeman.perumal.co.za'
 
 interface EmailMessage {
   from: string
@@ -18,7 +18,7 @@ interface EmailMessage {
  * - else RESEND_API_KEY set → Resend (production).
  * - else → logged and skipped (no transport configured).
  */
-async function deliver(message: EmailMessage) {
+export async function deliver(message: EmailMessage) {
   if (process.env.SMTP_HOST) {
     const transport = nodemailer.createTransport({
       host: process.env.SMTP_HOST,
@@ -44,6 +44,82 @@ async function deliver(message: EmailMessage) {
   }
 
   console.warn('[email] No SMTP_HOST or RESEND_API_KEY set — skipping email')
+}
+
+// Brand palette + type mirroring the website (see src/app/globals.css).
+// Web fonts are progressive enhancement (Apple Mail); everything falls back
+// to Georgia/serif, which most email clients render.
+export const serif = "'Cormorant Garamond', Georgia, 'Times New Roman', serif"
+export const label = "'Cinzel', Georgia, serif"
+export const script = "'Parisienne', 'Snell Roundhand', Georgia, cursive"
+
+export const diamond = `
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 22px auto;">
+      <tr>
+        <td style="width: 64px; height: 1px; background: #b08a36; font-size: 0; line-height: 0;">&nbsp;</td>
+        <td style="padding: 0 10px; color: #b08a36; font-size: 11px; line-height: 1;">&#9670;</td>
+        <td style="width: 64px; height: 1px; background: #b08a36; font-size: 0; line-height: 0;">&nbsp;</td>
+      </tr>
+    </table>`
+
+/**
+ * The shared email frame: double gold hairline card with the couple's header
+ * (eyebrow, names, diamond, dates) and the gold footer band. `body` is the
+ * HTML that goes inside the card under the header.
+ */
+export function renderEmailLayout({ eyebrow, body }: { eyebrow: string; body: string }) {
+  return `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Parisienne&display=swap');
+  </style>
+</head>
+<body style="font-family: ${serif}; background: #f4ecda; margin: 0; padding: 0; -webkit-text-size-adjust: 100%;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #f4ecda;">
+    <tr>
+      <td align="center" style="padding: 40px 16px;">
+        <!-- Double gold hairline frame (echoes the site's invitation card) -->
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 560px; background: #f6efdf; border: 1px solid #c2a14e;">
+          <tr>
+            <td style="padding: 6px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #faf4e6; border: 1px solid #d3bd85;">
+                <tr>
+                  <td style="padding: 44px 40px 40px;">
+
+                    <!-- Header -->
+                    <p style="font-family: ${label}; font-size: 12px; letter-spacing: 5px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">${eyebrow}</p>
+                    <p style="font-family: ${script}; font-size: 44px; font-style: italic; color: #8a5f10; text-align: center; line-height: 1.1; margin: 10px 0 0;">Marlan &amp; Tramaine&rsquo;s<br>Wedding</p>
+                    ${diamond}
+                    <p style="font-family: ${label}; font-size: 13px; letter-spacing: 3px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">26 &amp; 27 November 2026</p>
+                    <p style="font-family: ${serif}; font-size: 17px; color: #856312; text-align: center; margin: 5px 0 0;">Cape Town, South Africa</p>
+
+${body}
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+        </table>
+
+        <!-- Footer band (mirrors the site footer) -->
+        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 560px; background: #7c5c14;">
+          <tr>
+            <td align="center" style="padding: 30px 24px;">
+              <p style="font-family: ${script}; font-size: 30px; font-style: italic; color: #f6ecd0; line-height: 1; margin: 0;">Marlan &amp; Tramaine</p>
+              <p style="font-family: ${label}; font-size: 11px; letter-spacing: 3px; color: #dcc99a; text-transform: uppercase; margin: 10px 0 0;">26 &amp; 27 November 2026 &middot; Cape Town</p>
+            </td>
+          </tr>
+        </table>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`
 }
 
 interface AttendingEvent {
@@ -127,51 +203,9 @@ export async function sendRsvpConfirmation({
     })
     .join('\n\n')
 
-  // Brand palette + type mirroring the website (see src/app/globals.css).
-  // Web fonts are progressive enhancement (Apple Mail); everything falls back
-  // to Georgia/serif, which most email clients render.
-  const serif = "'Cormorant Garamond', Georgia, 'Times New Roman', serif"
-  const label = "'Cinzel', Georgia, serif"
-  const script = "'Parisienne', 'Snell Roundhand', Georgia, cursive"
-
-  const diamond = `
-      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 22px auto;">
-        <tr>
-          <td style="width: 64px; height: 1px; background: #b08a36; font-size: 0; line-height: 0;">&nbsp;</td>
-          <td style="padding: 0 10px; color: #b08a36; font-size: 11px; line-height: 1;">&#9670;</td>
-          <td style="width: 64px; height: 1px; background: #b08a36; font-size: 0; line-height: 0;">&nbsp;</td>
-        </tr>
-      </table>`
-
-  const html = `
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Parisienne&display=swap');
-  </style>
-</head>
-<body style="font-family: ${serif}; background: #f4ecda; margin: 0; padding: 0; -webkit-text-size-adjust: 100%;">
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #f4ecda;">
-    <tr>
-      <td align="center" style="padding: 40px 16px;">
-        <!-- Double gold hairline frame (echoes the site's invitation card) -->
-        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 560px; background: #f6efdf; border: 1px solid #c2a14e;">
-          <tr>
-            <td style="padding: 6px;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background: #faf4e6; border: 1px solid #d3bd85;">
-                <tr>
-                  <td style="padding: 44px 40px 40px;">
-
-                    <!-- Header -->
-                    <p style="font-family: ${label}; font-size: 12px; letter-spacing: 5px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">${eyebrow}</p>
-                    <p style="font-family: ${script}; font-size: 44px; font-style: italic; color: #8a5f10; text-align: center; line-height: 1.1; margin: 10px 0 0;">Marlan &amp; Tramaine&rsquo;s<br>Wedding</p>
-                    ${diamond}
-                    <p style="font-family: ${label}; font-size: 13px; letter-spacing: 3px; color: #7c5c14; text-transform: uppercase; text-align: center; margin: 0;">26 &amp; 27 November 2026</p>
-                    <p style="font-family: ${serif}; font-size: 17px; color: #856312; text-align: center; margin: 5px 0 0;">Cape Town, South Africa</p>
-
+  const html = renderEmailLayout({
+    eyebrow,
+    body: `
                     <!-- Greeting -->
                     <p style="font-family: ${serif}; font-style: italic; font-size: 22px; color: #7c5c14; text-align: center; margin: 30px 0 0;">Dear ${greeting},</p>
                     <p style="font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; text-align: center; margin: 12px 0 30px;">
@@ -219,29 +253,8 @@ export async function sendRsvpConfirmation({
                         <a href="${BASE_URL}/rsvp/confirmed" style="display: inline-block; font-family: ${label}; font-size: 12px; letter-spacing: 3px; color: #f6efdf; text-transform: uppercase; text-decoration: none; padding: 14px 40px;">View Confirmation</a>
                       </td></tr>
                     </table>
-
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-
-        <!-- Footer band (mirrors the site footer) -->
-        <table role="presentation" width="560" cellpadding="0" cellspacing="0" border="0" style="width: 100%; max-width: 560px; background: #7c5c14;">
-          <tr>
-            <td align="center" style="padding: 30px 24px;">
-              <p style="font-family: ${script}; font-size: 30px; font-style: italic; color: #f6ecd0; line-height: 1; margin: 0;">Marlan &amp; Tramaine</p>
-              <p style="font-family: ${label}; font-size: 11px; letter-spacing: 3px; color: #dcc99a; text-transform: uppercase; margin: 10px 0 0;">26 &amp; 27 November 2026 &middot; Cape Town</p>
-            </td>
-          </tr>
-        </table>
-
-      </td>
-    </tr>
-  </table>
-</body>
-</html>`
+`,
+  })
 
   const text = `Dear ${greeting},\n\n${introText}\n\n${guestTextSections}\n\n${ctaText}\n\nWith love,\nMarlan & Tramaine`
 

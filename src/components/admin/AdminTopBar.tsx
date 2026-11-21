@@ -7,6 +7,7 @@ const TABS = [
   { href: '/admin/dashboard', label: 'OVERVIEW' },
   { href: '/admin/guests', label: 'GUESTS' },
   { href: '/admin/rsvps', label: 'RSVPS' },
+  { href: '/admin/reminder', label: 'REMINDER' },
 ]
 
 export function AdminTopBar() {

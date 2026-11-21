@@ -75,3 +75,7 @@ typecheck:
 # Production build
 build:
     pnpm build
+
+# Reminder email: dry run lists recipients; pass --confirm to send. Preview at /admin/reminder.
+reminder *args:
+    pnpm exec tsx --env-file=.env.local scripts/send-reminder.ts {{args}}
