@@ -138,7 +138,7 @@ export function renderReminder(recipient: Pick<ReminderRecipient, 'label' | 'eve
       section('The Wedding', when(wedding.date), [
         'Please arrive by 3pm &mdash; the ceremony starts promptly at 3:30pm.',
         'There are road works in the area at the moment, so please leave plenty of time to travel on the day.',
-        `Curious about what happens during the ceremony? We&rsquo;ve put together a <a href="${CEREMONIES_URL}" style="${link}">guide to the ceremonies</a> on the website.`,
+        `We&rsquo;ve put together a <a href="${CEREMONIES_URL}" style="${link}">guide to the ceremonies</a> on the website.`,
         `Our wedding song &amp; dance is <a href="${SONG_URL}" style="${link}">Panwadi</a> &mdash; have a listen before the day.`,
       ]),
     )
