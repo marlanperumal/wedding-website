@@ -10,96 +10,61 @@ export default function CeremoniesPage() {
     >
       <PageHeader
         eyebrow="ORDER OF SERVICE"
-        title="Our Ceremonies"
+        title="The Ceremonies"
         subtitle="Friday, 27 November 2026"
         titleClamp="clamp(34px,6vw,48px)"
       />
 
       <Intro>
-        Our wedding brings together a Christian ceremony and a Hindu ceremony.
-        Here&rsquo;s what happens, and what each part means.
+        Our wedding ceremony will be part Christian, part Hindu and part Us.
+        Here&rsquo;s what will happen, and what each part means.
       </Intro>
 
-      <Section title="Before You Arrive">
-        <Item name="Sandana Nalangu">
-          <em>Nalangu</em> means anointing, and <em>sandanam</em> is sandalwood
-          paste. Following the previous day&rsquo;s Mehndi and Nelengu, three
-          married women give us a final blessing before the wedding. They circle{" "}
-          <em>aalam</em>{" "}water (turmeric and lime juice) around us to shield us
-          from negative energy, jealousy and the &ldquo;evil eye&rdquo; that
-          comes with being the centre of attention. They apply sandanam to
-          purify us, bless us with <em>vibuthi</em> (holy ash) and red{" "}
-          <em>kumkum</em> powder, and sprinkle rose water to wish us a long and
-          happy married life.
-        </Item>
-      </Section>
-
-      <Section title="The Procession">
-        <p className="programme-lead">
-          To traditional, auspicious <em>nadaswaram</em> music:
-        </p>
-        <ol className="programme-procession">
-          <li>
-            Our sisters &mdash; Delisha, carrying the holy lamp, and Nasreen,
-            carrying the bridal garlands
-          </li>
-          <li>Our mothers &mdash; Maggie and Virginia</li>
-          <li>Marlan</li>
-          <li>Tramaine, walked down the aisle by her son, Travis</li>
-        </ol>
-      </Section>
-
-      <Section title="The Christian Ceremony" startsBackPage>
+      <Section title="The Christian Ceremony" leader="Led by Lay Minister James">
         <Item name="Opening Prayer">
-          James Chapman leads the ceremony and opens with a prayer.
+          To bless everyone present and seek a harmonious wedding ceremony.
         </Item>
-        <Item name="Bible Reading">
-          Travis reads Colossians 3:12&ndash;15.
-        </Item>
+        <Item name="Bible Reading – Colossians 3:12–15" />
         <Item name="Unity Candle">
-          At the start of the ceremony, our mothers light two taper candles.
+          Our mothers light two taper candles.
           They represent each of us as individuals, with our own histories,
           values and families. Together we light the centre candle, which stands
-          for the shared life and household we create as we become &ldquo;one
-          flesh&rdquo; (Genesis 2:24). Our mothers then put out the tapers, a
+          for the shared life and household we create as we become one.
+          Our mothers then put out the tapers, a
           sign that they support and bless our union.
         </Item>
-        <Item name="Blessing of the Rings & Exchange of Vows">
-          James blesses our wedding rings, and we make our vows to each other.
-        </Item>
-        <p className="programme-transition">
-          We then move across to the <em>pandhal</em> (wedding canopy) for the
-          Hindu ceremony.
-        </p>
+        <Item name="Blessing and Exchange of Rings & Vows" />
       </Section>
 
-      <Section title="The Hindu Ceremony">
+      <Section title="The Hindu Ceremony" leader="Led by Guru Krishna">
         <Item name="Invocation">
-          We offer prayers to Lord Ganesha, the elephant-headed god and remover
-          of obstacles.
+          We offer prayers to Lord Ganesha, remover
+          of obstacles, seeking blessing for a peaceful and happy marriage.
         </Item>
-        <Item name="Havan (Fire Ceremony)">
-          We offer <em>havan samagri</em> (a herbal mixture with ghee and
-          sandalwood) into the fire, so that Agni, the fire god, bears witness
+        <Item name="Havan">
+          We offer a herbal mixture with ghee and
+          sandalwood into the fire, so that Agni, the fire god, bears witness
           to our marriage.
         </Item>
         <Item name="Tray Exchange">
-          Seven women from each of our families exchange trays filled with gifts
-          for us. The exchange marks the agreement, mutual respect and lifelong
-          bond between our families. It ends with the elders bowing to one
-          another, embracing or touching feet to seek blessings: our two
-          households are now one extended family.
+          Seven women from each of our families exchange trays filled with gifts.
+          The exchange marks the agreement, mutual respect and lifelong
+          bond between our families.
         </Item>
         <Item name="Pheras">
           We walk around the fire seven times, making seven vows: love, trust,
           respect, family, prosperity, friendship and lifelong commitment. No
-          inauspicious sounds should interrupt this, so please ring the bells
-          provided to drown out any that might.
+          inauspicious sounds should interrupt this, so <strong>please ring the bells
+          provided</strong> to drown out any that might.
         </Item>
         <Item name="Tying of the Thali">
-          Marlan places kumkum (a red dot) on Tramaine&rsquo;s forehead and ties
+          Marlan places <em>kumkum</em> (red dot) on Tramaine&rsquo;s forehead and ties
           the <em>thali</em> (a sacred thread and pendant) around her neck with
           three knots, for duty, love and fidelity.
+        </Item>
+        <Item name="Toe Rings">
+          Marlan places <em>metti</em> (toe rings) on Tramaine&rsquo;s second toes, while her foot rests
+          on a grinding stone, signifying her steadfastness in marriage.
         </Item>
         <Item name="Exchange of Garlands">
           We exchange garlands three times, affirming that we are one in mind,
@@ -123,27 +88,30 @@ function Intro({ children }: { children: React.ReactNode }) {
 
 function Section({
   title,
-  startsBackPage = false,
+  leader,
   children,
 }: {
   title: string;
-  /** In print, start this section on the back of the A5 pamphlet. */
-  startsBackPage?: boolean;
+  /** Who leads this part, shown under the title. */
+  leader: string;
   children: React.ReactNode;
 }) {
   return (
-    <section
-      className={`programme-section mb-12 last:mb-0 ${startsBackPage ? "programme-back-page" : ""}`}
-    >
-      <h2 className="programme-section-title font-label text-[13px] tracking-[.24em] text-acc-purple uppercase text-center mb-6">
-        {title}
-      </h2>
+    <section className="programme-section mb-12 last:mb-0">
+      <header className="programme-section-header text-center mb-6">
+        <h2 className="programme-section-title font-label text-[13px] tracking-[.24em] text-acc-purple uppercase">
+          {title}
+        </h2>
+        <p className="programme-section-leader font-serif italic text-ink-soft text-[17px] mt-1">
+          {leader}
+        </p>
+      </header>
       <div className="flex flex-col gap-6">{children}</div>
     </section>
   );
 }
 
-function Item({ name, children }: { name: string; children: React.ReactNode }) {
+function Item({ name, children }: { name: string; children?: React.ReactNode }) {
   return (
     <div className="programme-item">
       <h3
@@ -152,12 +120,14 @@ function Item({ name, children }: { name: string; children: React.ReactNode }) {
       >
         {name}
       </h3>
-      <p
-        className="programme-item-body font-serif text-ink-soft leading-[1.65]"
-        style={{ fontSize: "clamp(17px,2.2vw,19px)" }}
-      >
-        {children}
-      </p>
+      {children && (
+        <p
+          className="programme-item-body font-serif text-ink-soft leading-[1.65]"
+          style={{ fontSize: "clamp(17px,2.2vw,19px)" }}
+        >
+          {children}
+        </p>
+      )}
     </div>
   );
 }
