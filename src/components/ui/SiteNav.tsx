@@ -15,7 +15,7 @@ export function SiteNav({ rsvpStatus = 'none' }: { rsvpStatus?: RsvpStatus }) {
 
   return (
     <nav
-      className="sticky top-0 z-40 bg-paper-raised"
+      className="sticky top-0 z-40 bg-paper-raised print:hidden"
       style={{
         borderBottom: '1px solid rgba(176,138,54,.4)',
         boxShadow: '0 4px 18px -12px rgba(120,90,30,.4)',
@@ -32,7 +32,7 @@ export function SiteNav({ rsvpStatus = 'none' }: { rsvpStatus?: RsvpStatus }) {
           LIEDEMAN · PERUMAL
         </Link>
 
-        <div className="flex flex-nowrap items-center gap-x-2.5 gap-y-2 sm:gap-x-[22px]">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-x-1.5 gap-y-2 sm:gap-x-[22px]">
           {NAV_LINKS.map((link) => {
             const active = isActive(link.href);
             return (
@@ -40,7 +40,7 @@ export function SiteNav({ rsvpStatus = 'none' }: { rsvpStatus?: RsvpStatus }) {
                 key={link.href}
                 href={link.href}
                 aria-current={active ? "page" : undefined}
-                className={`relative font-label text-[10px] tracking-[.06em] sm:text-[11px] sm:tracking-[.14em] whitespace-nowrap pb-[3px] transition-colors hover:text-acc-rust ${
+                className={`relative font-label text-[10px] tracking-[.02em] sm:text-[11px] sm:tracking-[.14em] whitespace-nowrap pb-[3px] transition-colors hover:text-acc-rust ${
                   active ? "text-acc-rust" : "text-gold-mid"
                 }`}
               >
@@ -55,7 +55,7 @@ export function SiteNav({ rsvpStatus = 'none' }: { rsvpStatus?: RsvpStatus }) {
           <Link
             href="/rsvp"
             aria-current={isActive('/rsvp') ? "page" : undefined}
-            className="font-label text-[10px] tracking-[.08em] sm:text-[11px] sm:tracking-[.16em] text-paper-raised bg-gold-deep rounded-[2px] whitespace-nowrap transition-colors hover:bg-[#6a4e10] px-2.5 py-2 sm:px-5 sm:py-[9px]"
+            className="font-label text-[10px] tracking-[.06em] sm:text-[11px] sm:tracking-[.16em] text-paper-raised bg-gold-deep rounded-[2px] whitespace-nowrap transition-colors hover:bg-[#6a4e10] px-2 py-2 sm:px-5 sm:py-[9px]"
           >
             RSVP
             {rsvpStatus === 'submitted' && (

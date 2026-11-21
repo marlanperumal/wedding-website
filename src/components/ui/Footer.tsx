@@ -4,7 +4,7 @@ import { FOOTER_LINKS } from "./navLinks";
 export function Footer() {
   return (
     <footer
-      className="bg-gold-deep text-center"
+      className="bg-gold-deep text-center print:hidden"
       style={{ padding: "clamp(36px,5vw,52px) clamp(20px,5vw,40px)" }}
     >
       <div className="font-script text-[38px] text-footer-name leading-none">
