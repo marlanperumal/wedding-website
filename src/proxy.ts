@@ -13,7 +13,8 @@ export function proxy(request: NextRequest) {
     pathname.startsWith('/admin/dashboard') ||
     pathname.startsWith('/admin/guests') ||
     pathname.startsWith('/admin/rsvps') ||
-    pathname.startsWith('/admin/reminder')
+    // TEMPORARY: open without login on the local dev server only. Delete once the reminder is sent.
+    (pathname.startsWith('/admin/reminder') && process.env.NODE_ENV !== 'development')
   ) {
     if (!request.cookies.has('adminSession')) {
       return NextResponse.redirect(new URL('/admin', request.url))
