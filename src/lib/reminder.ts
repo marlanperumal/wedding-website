@@ -128,7 +128,7 @@ export function renderReminder(recipient: Pick<ReminderRecipient, 'label' | 'eve
       section('Sangeet', when(sangeet.date), [
         `At our home, ${home}. ${homeParking}`,
         'Please do not park on the street or sidewalk.',
-        'Come whenever suits you &mdash; it&rsquo;s absolutely fine to arrive later or leave earlier. We&rsquo;ll be serving vegetarian breyani.',
+        'Come whenever suits you &mdash; it&rsquo;s absolutely fine to arrive later or leave earlier, but don&rsquo;t miss out on the Veg Biryani!',
       ]),
     )
   }
