@@ -77,6 +77,10 @@ const sectionWhen = `font-family: ${serif}; font-style: italic; font-size: 16px;
 const para = `font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; margin: 0 0 10px;`
 const link = `color: #9e6bb5; text-decoration: underline;`
 
+// Addresses match the Venue page (src/app/(site)/venue/page.tsx).
+const mapLink = (address: string) =>
+  `<a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(address)}" style="${link}">${address}</a>`
+
 function section(title: string, whenHtml: string, paragraphs: string[]) {
   return `
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 22px;">
@@ -95,22 +99,26 @@ export function renderReminder(recipient: Pick<ReminderRecipient, 'label' | 'eve
   const sangeet = find(events, /sangeet/i)
   const wedding = find(events, /wedding/i)
 
-  const parking =
-    'Parking is available in the parking lot on Orient Road, opposite the Apostolic Church.'
-
   // ─── Email content: edit the wording below ───────────────────────────────
   const subject = "One week to go — Marlan & Tramaine's Wedding"
   const eyebrow = 'One week to go'
   const intro =
     'We can&rsquo;t believe it&rsquo;s almost here! Here are a few things to know before the celebrations begin.'
 
+  const home = mapLink('11 Orient Road, Wynberg')
+  const homeParking =
+    'Parking is available in the parking lot on Orient Road, opposite the Apostolic Church.'
+
   const sections: string[] = []
 
   if (mehndi || nelengu) {
     const lines: string[] = []
-    if (mehndi) lines.push('The Mehndi is at our home.')
-    if (nelengu) lines.push('The Nelengu is at Sam&rsquo;s.')
-    if (mehndi) lines.push(parking)
+    if (mehndi) lines.push(`The Mehndi is at our home, ${home}. ${homeParking}`)
+    if (nelengu) {
+      lines.push(
+        `The Nelengu is at Sam&rsquo;s, ${mapLink('1 Belle Constantia Close, Kreupelbosch')}. Parking is on the grass patch behind the house.`,
+      )
+    }
     const title = mehndi && nelengu ? 'Mehndi &amp; Nelengu' : mehndi ? 'Mehndi' : 'Nelengu'
     sections.push(section(title, when((mehndi ?? nelengu)!.date), lines))
   }
@@ -118,8 +126,8 @@ export function renderReminder(recipient: Pick<ReminderRecipient, 'label' | 'eve
   if (sangeet) {
     sections.push(
       section('Sangeet', when(sangeet.date), [
+        `At our home, ${home}. ${homeParking}`,
         'Come whenever suits you &mdash; it&rsquo;s absolutely fine to arrive later or leave earlier. We&rsquo;ll be serving vegetarian breyani.',
-        ...(mehndi ? [] : [parking]),
       ]),
     )
   }
