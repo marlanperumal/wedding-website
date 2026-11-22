@@ -55,7 +55,7 @@ export default async function AdminReminderPage({
           <h1 className="font-label text-[12px] tracking-[.24em] text-gold-deep">REMINDER EMAIL</h1>
           <p className="font-serif text-[15px] text-ink-soft mt-2 leading-snug">
             {recipients.length} households said yes to at least one event; {withEmail} have an
-            email address. Pick one to see their version.
+            email address. Everyone gets the same email; only the “Dear …” line changes.
           </p>
           <ul className="mt-4 flex flex-col gap-1.5">
             {[sample, ...recipients].map((r) => {

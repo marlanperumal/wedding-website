@@ -1,7 +1,7 @@
 import { prisma } from '@/lib/prisma'
 import type { ReminderRecipient } from '@/lib/reminder'
 
-/** A made-up household attending every event, so every section shows. */
+/** A made-up household for previewing when no real invite has RSVPed yet. */
 export async function sampleRecipient(): Promise<ReminderRecipient> {
   const events = await prisma.event.findMany({ orderBy: { sortOrder: 'asc' } })
   return {

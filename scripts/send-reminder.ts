@@ -1,5 +1,5 @@
 /**
- * Sends the one-week reminder email to every household that said yes to at
+ * Sends the reminder email to every household that said yes to at
  * least one event, has an email address, and hasn't already been sent it
  * (from here or from the Send button on /admin/guests).
  *

@@ -14,7 +14,7 @@ const base = 'font-label text-[9.5px] tracking-[.14em] whitespace-nowrap'
 const box = { padding: '6px 12px', border: '1px solid rgba(176,138,54,.5)' }
 
 /**
- * Sends the one-week reminder to one invite. The first click asks for
+ * Sends the reminder email to one invite. The first click asks for
  * confirmation; the second sends. Once sent it turns into a disabled "Sent".
  */
 export function SendReminderButton({

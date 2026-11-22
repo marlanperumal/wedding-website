@@ -54,29 +54,6 @@ export async function getReminderRecipients(inviteId?: string): Promise<Reminder
     .filter((r) => r.events.length > 0)
 }
 
-// Event names come from the database; match loosely so "Wedding & Reception"
-// and similar variants still land in the right section.
-const find = (events: ReminderEvent[], pattern: RegExp) => events.find((e) => pattern.test(e.name))
-
-const when = (date: Date) => {
-  const day = date.toLocaleDateString('en-GB', {
-    weekday: 'long',
-    day: 'numeric',
-    month: 'long',
-    timeZone: 'Africa/Johannesburg',
-  })
-  const time = date
-    .toLocaleTimeString('en-GB', {
-      hour: 'numeric',
-      minute: '2-digit',
-      hour12: true,
-      timeZone: 'Africa/Johannesburg',
-    })
-    .replace(':00', '')
-    .replace(' ', '')
-  return `${day} &middot; ${time}`
-}
-
 const CEREMONIES_URL = `${BASE_URL}/ceremonies`
 const SONG_URL = 'https://www.youtube.com/watch?v=usVq_4K_m_w'
 
@@ -101,16 +78,10 @@ function section(title: string, whenHtml: string, paragraphs: string[]) {
                     </table>`
 }
 
-export function renderReminder(recipient: Pick<ReminderRecipient, 'label' | 'events'>) {
-  const { events } = recipient
-  const mehndi = find(events, /mehndi/i)
-  const nelengu = find(events, /nelengu/i)
-  const sangeet = find(events, /sangeet/i)
-  const wedding = find(events, /wedding/i)
-
+export function renderReminder(recipient: Pick<ReminderRecipient, 'label'>) {
   // ─── Email content: edit the wording below ───────────────────────────────
-  const subject = "One week to go — Marlan & Tramaine's Wedding"
-  const eyebrow = 'One week to go'
+  const subject = "A few days to go — Marlan & Tramaine's Wedding"
+  const eyebrow = 'A few days to go'
   const intro =
     'We can&rsquo;t believe it&rsquo;s almost here! Here are a few things to know before the celebrations begin.'
 
@@ -118,40 +89,23 @@ export function renderReminder(recipient: Pick<ReminderRecipient, 'label' | 'eve
   const homeParking =
     'Parking is available in the parking lot on Orient Road, opposite the Apostolic Church.'
 
-  const sections: string[] = []
-
-  if (mehndi || nelengu) {
-    const lines: string[] = []
-    if (mehndi) lines.push(`The Mehndi is at our home, ${home}. ${homeParking}`)
-    if (nelengu) {
-      lines.push(
-        `The Nelengu is at Sam&rsquo;s, ${mapLink('1 Belle Constantia Close, Kreupelbosch')}. Parking is on the grass patch behind the house.`,
-      )
-    }
-    const title = mehndi && nelengu ? 'Mehndi &amp; Nelengu' : mehndi ? 'Mehndi' : 'Nelengu'
-    sections.push(section(title, when((mehndi ?? nelengu)!.date), lines))
-  }
-
-  if (sangeet) {
-    sections.push(
-      section('Sangeet', when(sangeet.date), [
-        `At our home, ${home}. ${homeParking}`,
-        'Please do not park on the street or sidewalk.',
-        'Come whenever suits you &mdash; it&rsquo;s absolutely fine to arrive later or leave earlier, but don&rsquo;t miss out on the Veg Biryani!',
-      ]),
-    )
-  }
-
-  if (wedding) {
-    sections.push(
-      section('The Wedding', when(wedding.date), [
-        'Please arrive by 3pm &mdash; the ceremony starts promptly at 3:30pm.',
-        'There are road works in the area at the moment, so please leave plenty of time to travel on the day.',
-        `We&rsquo;ve put together a <a href="${CEREMONIES_URL}" style="${link}">guide to the ceremonies</a> on the website.`,
-        `Our wedding song &amp; dance is <a href="${SONG_URL}" style="${link}">Panwadi</a> &mdash; have a look &amp; listen before the day and if you&rsquo;re up for it, try to learn the steps as we all join in.`,
-      ]),
-    )
-  }
+  const sections = [
+    section('Mehndi &amp; Nelengu', 'Thursday 26 November &middot; 10am', [
+      `The Mehndi is at our home, ${home}. ${homeParking}`,
+      `The Nelengu is at Sam&rsquo;s, ${mapLink('1 Belle Constantia Close, Kreupelbosch')}. Parking is on the grass patch behind the house.`,
+    ]),
+    section('Sangeet', 'Thursday 26 November &middot; 5pm', [
+      `At our home, ${home}. ${homeParking}`,
+      'Please do not park on the street or sidewalk.',
+      'Come whenever suits you &mdash; it&rsquo;s absolutely fine to arrive later or leave earlier, but don&rsquo;t miss out on the Veg Biryani!',
+    ]),
+    section('The Wedding', 'Friday 27 November &middot; 3pm', [
+      'Please arrive by 3pm &mdash; the ceremony starts promptly at 3:30pm.',
+      'There are road works in the area at the moment, so please leave plenty of time to travel on the day.',
+      `We&rsquo;ve put together a <a href="${CEREMONIES_URL}" style="${link}">guide to the ceremonies</a> on the website.`,
+      `Our wedding song &amp; dance is <a href="${SONG_URL}" style="${link}">Panwadi</a> &mdash; have a look &amp; listen before the day and if you&rsquo;re up for it, try to learn the steps as we all join in.`,
+    ]),
+  ]
 
   const closing =
     'We&rsquo;re looking forward to seeing you all dressed up, and to sharing these moments with you.'
@@ -202,7 +156,7 @@ function htmlToText(html: string) {
 }
 
 /** Sends a copy of the reminder for `recipient` to `to`. Records nothing — used for test sends. */
-export async function sendReminder(recipient: Pick<ReminderRecipient, 'label' | 'events'>, to: string) {
+export async function sendReminder(recipient: Pick<ReminderRecipient, 'label'>, to: string) {
   const { subject, html, text } = renderReminder(recipient)
   await deliver({ from: FROM, to, subject, html, text })
 }
