@@ -3,10 +3,10 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { extractAdminSession } from '@/lib/cookies'
 import { getReminderRecipients, renderReminder } from '@/lib/reminder'
+import { PREVIEW_NAME } from './preview-name'
 import { AdminTopBar } from '@/components/admin/AdminTopBar'
 import { EmailFrame } from '@/components/admin/EmailFrame'
 import { sendTestReminderAction } from './actions'
-import { sampleRecipient } from './sample'
 
 export const dynamic = 'force-dynamic'
 
@@ -20,23 +20,21 @@ function transportLabel() {
 export default async function AdminReminderPage({
   searchParams,
 }: {
-  searchParams: Promise<{ invite?: string; width?: string; sent?: string }>
+  searchParams: Promise<{ width?: string; sent?: string }>
 }) {
   const cookieStore = await cookies()
   const isAdmin = await extractAdminSession(cookieStore.get('adminSession')?.value)
   if (!isAdmin) redirect('/admin')
 
-  const { invite, width, sent } = await searchParams
+  const { width, sent } = await searchParams
   const recipients = await getReminderRecipients()
-  const sample = await sampleRecipient()
-  const selected = recipients.find((r) => r.inviteId === invite) ?? sample
-  const { subject, html, text } = renderReminder(selected)
+  const { subject, html, text } = renderReminder({ label: PREVIEW_NAME })
   const phone = width === 'phone'
   const transport = transportLabel()
   const withEmail = recipients.filter((r) => r.email).length
 
   const href = (params: Record<string, string | undefined>) => {
-    const merged = { invite: selected.inviteId, width, ...params }
+    const merged = { width, ...params }
     const qs = new URLSearchParams(
       Object.entries(merged).filter((e): e is [string, string] => !!e[1]),
     )
@@ -47,49 +45,16 @@ export default async function AdminReminderPage({
     <div className="min-h-screen bg-paper">
       <AdminTopBar />
       <div
-        className="mx-auto grid gap-8 lg:grid-cols-[300px_1fr]"
-        style={{ maxWidth: 1180, padding: '28px clamp(18px,4vw,36px)' }}
+        className="mx-auto"
+        style={{ maxWidth: 820, padding: '28px clamp(18px,4vw,36px)' }}
       >
-        {/* Households */}
-        <aside>
-          <h1 className="font-label text-[12px] tracking-[.24em] text-gold-deep">REMINDER EMAIL</h1>
-          <p className="font-serif text-[15px] text-ink-soft mt-2 leading-snug">
-            {recipients.length} households said yes to at least one event; {withEmail} have an
-            email address. Everyone gets the same email; only the “Dear …” line changes.
-          </p>
-          <ul className="mt-4 flex flex-col gap-1.5">
-            {[sample, ...recipients].map((r) => {
-              const active = r.inviteId === selected.inviteId
-              return (
-                <li key={r.inviteId}>
-                  <Link
-                    href={href({ invite: r.inviteId, sent: undefined })}
-                    className={`block px-3 py-2 transition-colors ${
-                      active ? 'bg-paper-card' : 'hover:bg-paper-panel'
-                    }`}
-                    style={{
-                      border: '1px solid rgba(176,138,54,.3)',
-                      borderLeft: active ? '3px solid #9e6bb5' : undefined,
-                    }}
-                  >
-                    <span className="font-serif text-[16px] text-ink">{r.label}</span>
-                    <span className="block font-serif text-[13px] text-ink-muted">
-                      {r.inviteId === 'sample' ? 'every event' : r.events.map((e) => e.name).join(', ')}
-                    </span>
-                    {r.inviteId !== 'sample' && !r.email && (
-                      <span className="block font-label text-[9px] tracking-[.14em] text-acc-rust mt-0.5">
-                        NO EMAIL
-                      </span>
-                    )}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-        </aside>
-
-        {/* Preview */}
         <main className="min-w-0">
+          <h1 className="font-label text-[12px] tracking-[.24em] text-gold-deep">REMINDER EMAIL</h1>
+          <p className="font-serif text-[15px] text-ink-soft mt-1 mb-5 leading-snug">
+            Edit the wording in <code className="text-[14px]">src/emails/reminder.ts</code> and reload.
+            It goes to {withEmail} of the {recipients.length} invites where someone said yes;
+            only the &ldquo;Dear &hellip;&rdquo; line changes.
+          </p>
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <p className="font-serif text-[17px] text-ink">
               <span className="font-label text-[10px] tracking-[.16em] text-gold-deep mr-2">SUBJECT</span>
@@ -105,7 +70,7 @@ export default async function AdminReminderPage({
             </div>
           </div>
 
-          <EmailFrame key={`${selected.inviteId}-${phone}`} html={html} width={phone ? 375 : '100%'} />
+          <EmailFrame key={String(phone)} html={html} width={phone ? 375 : '100%'} />
 
           <details className="mt-4">
             <summary className="font-label text-[10px] tracking-[.16em] text-gold-deep cursor-pointer">
@@ -122,9 +87,8 @@ export default async function AdminReminderPage({
             className="mt-6 p-4 bg-paper-card"
             style={{ border: '1px solid rgba(176,138,54,.3)' }}
           >
-            <input type="hidden" name="invite" value={selected.inviteId} />
             <label className="font-label text-[10px] tracking-[.16em] text-gold-deep" htmlFor="to">
-              SEND A TEST OF THIS VERSION TO
+              SEND A TEST TO
             </label>
             <div className="mt-2 flex flex-wrap gap-2">
               <input
@@ -144,7 +108,7 @@ export default async function AdminReminderPage({
               </button>
             </div>
             <p className={`font-serif text-[14px] mt-2 ${transport.real ? 'text-acc-rust' : 'text-ink-muted'}`}>
-              Goes to the address above only, never to the household. Transport: {transport.name}.
+              Goes to this address only. Transport: {transport.name}.
             </p>
             {sent?.startsWith('ok:') && (
               <p className="font-serif text-[15px] text-acc-teal-deep mt-2">Sent to {sent.slice(3)}.</p>

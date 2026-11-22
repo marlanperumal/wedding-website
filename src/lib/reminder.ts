@@ -1,5 +1,6 @@
 import { prisma } from '@/lib/prisma'
-import { BASE_URL, FROM, deliver, label, renderEmailLayout, serif } from '@/lib/email'
+import { FROM, deliver, label, renderEmailLayout, serif } from '@/lib/email'
+import * as reminderContent from '@/emails/reminder'
 
 export interface ReminderEvent {
   name: string
@@ -54,104 +55,71 @@ export async function getReminderRecipients(inviteId?: string): Promise<Reminder
     .filter((r) => r.events.length > 0)
 }
 
-const CEREMONIES_URL = `${BASE_URL}/ceremonies`
-const SONG_URL = 'https://www.youtube.com/watch?v=usVq_4K_m_w'
-
-// Styles for the email body. Inline because most email clients strip <style>.
-const sectionTitle = `font-family: ${label}; font-size: 11px; letter-spacing: 2.5px; color: #2e7d7a; text-transform: uppercase; margin: 0;`
-const sectionWhen = `font-family: ${serif}; font-style: italic; font-size: 16px; color: #7c5c14; margin: 2px 0 10px;`
-const para = `font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; margin: 0 0 10px;`
+// Inline styles for each tag/class the content file may use. Inline because
+// most email clients strip <style> blocks.
+const text = `font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6;`
+const centred = `${text} text-align: center;`
+const PARAGRAPH_STYLES: Record<string, string> = {
+  greeting: `font-family: ${serif}; font-style: italic; font-size: 22px; color: #7c5c14; text-align: center; margin: 30px 0 0;`,
+  intro: `${centred} margin: 12px 0 30px;`,
+  when: `font-family: ${serif}; font-style: italic; font-size: 16px; color: #7c5c14; margin: 2px 0 10px;`,
+  closing: `${centred} margin: 30px 0 14px;`,
+  'sign-off': `font-family: ${serif}; font-style: italic; font-size: 20px; color: #7c5c14; text-align: center; margin: 0 0 26px;`,
+}
+const paragraph = `${text} margin: 0 0 10px;`
+const heading = `font-family: ${label}; font-size: 11px; font-weight: normal; letter-spacing: 2.5px; color: #2e7d7a; text-transform: uppercase; margin: 22px 0 0; padding-top: 18px; border-top: 1px solid rgba(176,138,54,.28);`
 const link = `color: #9e6bb5; text-decoration: underline;`
 
-// Addresses match the Venue page (src/app/(site)/venue/page.tsx).
-const mapLink = (address: string) =>
-  `<a href="https://www.google.com/maps/search/?api=1&amp;query=${encodeURIComponent(address)}" style="${link}">${address}</a>`
+const button = (href: string, label_: string) => `
+<table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 0 auto;">
+  <tr><td style="background: #7c5c14; border-radius: 2px;">
+    <a style="display: inline-block; font-family: ${label}; font-size: 12px; letter-spacing: 3px; color: #f6efdf; text-transform: uppercase; text-decoration: none; padding: 14px 40px;" href="${href}">${label_}</a>
+  </td></tr>
+</table>`
 
-function section(title: string, whenHtml: string, paragraphs: string[]) {
-  return `
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin: 0 0 22px;">
-                      <tr><td style="border-top: 1px solid rgba(176,138,54,.28); padding: 18px 2px 0;">
-                        <p style="${sectionTitle}">${title}</p>
-                        <p style="${sectionWhen}">${whenHtml}</p>
-                        ${paragraphs.map((p) => `<p style="${para}">${p}</p>`).join('\n                        ')}
-                      </td></tr>
-                    </table>`
+/** Adds the email styling to the plain HTML in src/emails/reminder.ts. */
+function styleBody(html: string) {
+  return html
+    .replace(/<a class="button" href="([^"]*)">([\s\S]*?)<\/a>/g, (_, href, text) => button(href, text.trim()))
+    .replace(/<h2>/g, `<h2 style="${heading}">`)
+    .replace(/<p class="([^"]*)">/g, (_, cls: string) => {
+      const style = PARAGRAPH_STYLES[cls]
+      if (!style) throw new Error(`Unknown class "${cls}" in src/emails/reminder.ts`)
+      return `<p style="${style}">`
+    })
+    .replace(/<p>/g, `<p style="${paragraph}">`)
+    .replace(/<a href=/g, `<a style="${link}" href=`)
 }
+
+const escapeHtml = (value: string) =>
+  value.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;')
 
 export function renderReminder(recipient: Pick<ReminderRecipient, 'label'>) {
-  // ─── Email content: edit the wording below ───────────────────────────────
-  const subject = "A few days to go — Marlan & Tramaine's Wedding"
-  const eyebrow = 'A few days to go'
-  const intro =
-    'We can&rsquo;t believe it&rsquo;s almost here! Here are a few things to know before the celebrations begin.'
-
-  const home = mapLink('11 Orient Road, Wynberg')
-  const homeParking =
-    'Parking is available in the parking lot on Orient Road, opposite the Apostolic Church.'
-
-  const sections = [
-    section('Mehndi &amp; Nelengu', 'Thursday 26 November &middot; 10am', [
-      `The Mehndi is at our home, ${home}. ${homeParking}`,
-      `The Nelengu is at Sam&rsquo;s, ${mapLink('1 Belle Constantia Close, Kreupelbosch')}. Parking is on the grass patch behind the house.`,
-    ]),
-    section('Sangeet', 'Thursday 26 November &middot; 5pm', [
-      `At our home, ${home}. ${homeParking}`,
-      'Please do not park on the street or sidewalk.',
-      'Come whenever suits you &mdash; it&rsquo;s absolutely fine to arrive later or leave earlier, but don&rsquo;t miss out on the Veg Biryani!',
-    ]),
-    section('The Wedding', 'Friday 27 November &middot; 3pm', [
-      'Please arrive by 3pm &mdash; the ceremony starts promptly at 3:30pm.',
-      'There are road works in the area at the moment, so please leave plenty of time to travel on the day.',
-      `We&rsquo;ve put together a <a href="${CEREMONIES_URL}" style="${link}">guide to the ceremonies</a> on the website.`,
-      `Our wedding song &amp; dance is <a href="${SONG_URL}" style="${link}">Panwadi</a> &mdash; have a look &amp; listen before the day and if you&rsquo;re up for it, try to learn the steps as we all join in.`,
-    ]),
-  ]
-
-  const closing =
-    'We&rsquo;re looking forward to seeing you all dressed up, and to sharing these moments with you.'
-  const signOff = 'With love,<br>Marlan &amp; Tramaine'
-  // ─────────────────────────────────────────────────────────────────────────
-
-  const html = renderEmailLayout({
-    eyebrow,
-    body: `
-                    <!-- Greeting -->
-                    <p style="font-family: ${serif}; font-style: italic; font-size: 22px; color: #7c5c14; text-align: center; margin: 30px 0 0;">Dear ${recipient.label},</p>
-                    <p style="font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; text-align: center; margin: 12px 0 30px;">
-                      ${intro}
-                    </p>
-${sections.join('\n')}
-
-                    <!-- Closing -->
-                    <p style="font-family: ${serif}; font-size: 17px; color: #5c4e2e; line-height: 1.6; text-align: center; margin: 30px 0 14px;">
-                      ${closing}
-                    </p>
-                    <p style="font-family: ${serif}; font-style: italic; font-size: 20px; color: #7c5c14; text-align: center; margin: 0 0 26px;">${signOff}</p>
-                    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" style="margin: 0 auto;">
-                      <tr><td style="background: #7c5c14; border-radius: 2px;">
-                        <a href="${CEREMONIES_URL}" style="display: inline-block; font-family: ${label}; font-size: 12px; letter-spacing: 3px; color: #f6efdf; text-transform: uppercase; text-decoration: none; padding: 14px 40px;">The Ceremonies</a>
-                      </td></tr>
-                    </table>
-`,
-  })
-
-  return { subject, html, text: htmlToText(`Dear ${recipient.label},<br><br>${intro}<br><br>${sections.join('<br>')}<br>${closing}<br><br>${signOff}`) }
+  const content = reminderContent.body(escapeHtml(recipient.label))
+  return {
+    subject: reminderContent.subject,
+    html: renderEmailLayout({ eyebrow: reminderContent.eyebrow, body: styleBody(content) }),
+    text: htmlToText(content),
+  }
 }
 
-/** Plain-text fallback derived from the HTML, so the two never drift apart. */
+/** Plain-text fallback derived from the same content, so the two never drift apart. */
 function htmlToText(html: string) {
   return html
     .replace(/<a [^>]*href="([^"]+)"[^>]*>([^<]+)<\/a>/g, '$2 ($1)')
-    .replace(/<br\s*\/?>/g, '\n')
-    .replace(/<\/p>/g, '\n')
+    .replace(/<br\s*\/?>/g, '\u2028') // kept apart from source line breaks until the end
+    .replace(/<\/(p|h2)>/g, '\n\n')
     .replace(/<[^>]+>/g, '')
     .replace(/&amp;/g, '&')
-    .replace(/&rsquo;/g, '’')
-    .replace(/&mdash;/g, '—')
-    .replace(/&middot;/g, '·')
-    .replace(/[ \t]+/g, ' ')
-    .replace(/\n /g, '\n')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .split('\n')
+    .map((line) => line.trim())
+    .join('\n')
+    .replace(/([^\n])\n(?=[^\n])/g, '$1 ')
     .replace(/\n{3,}/g, '\n\n')
+    .replace(/ ?\u2028 ?/g, '\n')
     .trim()
 }
 
