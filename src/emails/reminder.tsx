@@ -44,7 +44,7 @@ export function ReminderEmail({ name }: { name: string }) {
       </P>
 
       <P>
-        The Nelengu is at Sam’s, <Link href={SAMS_MAP}>1 Belle Constantia Close, Kreupelbosch</Link>. Parking
+        The Nelengu is at Sam and Priya’s home, <Link href={SAMS_MAP}>1 Belle Constantia Close, Kreupelbosch</Link>. Parking
         is on the grass patch behind the house.
       </P>
 
@@ -60,7 +60,7 @@ export function ReminderEmail({ name }: { name: string }) {
 
       <P>
         Come whenever suits you — it’s absolutely fine to arrive later or leave earlier, but don’t miss
-        out on the Veg Biryani!
+        out on the veg biryani!
       </P>
 
       <Heading>The Wedding</Heading>
@@ -75,8 +75,9 @@ export function ReminderEmail({ name }: { name: string }) {
       </P>
 
       <P>
-        Our wedding song & dance is <Link href={PANWADI}>Panwadi</Link> — have a look & listen before the
-        day and if you’re up for it, try to learn the steps as we all join in.
+        We've chosen a fun theme song <Link href={PANWADI}>Panwadi</Link>. Have a look & listen — we'll
+        be playing it a few times at the Sangeet, so if you want to try to learn the moves to the chorus, we can
+        all try it together at the wedding!
       </P>
 
       <Closing>
