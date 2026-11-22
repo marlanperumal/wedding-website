@@ -31,7 +31,7 @@ async function main() {
 
   console.log(`Database: ${dbHost}`)
   console.log(`Transport: ${transport}`)
-  console.log(`Subject: ${renderReminder(sendable[0] ?? { label: '', events: [] }).subject}\n`)
+  console.log(`Subject: ${(await renderReminder({ label: '' })).subject}\n`)
 
   for (const r of sendable) {
     console.log(`  ${r.label} <${r.email}> — ${r.events.map((e) => e.name).join(', ')}`)

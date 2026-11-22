@@ -28,7 +28,7 @@ export default async function AdminReminderPage({
 
   const { width, sent } = await searchParams
   const recipients = await getReminderRecipients()
-  const { subject, html, text } = renderReminder({ label: PREVIEW_NAME })
+  const { subject, html, text } = await renderReminder({ label: PREVIEW_NAME })
   const phone = width === 'phone'
   const transport = transportLabel()
   const withEmail = recipients.filter((r) => r.email).length
