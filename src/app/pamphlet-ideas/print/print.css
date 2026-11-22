@@ -1,0 +1,12 @@
+/* A4 landscape holds two A5 portrait pages exactly (2 × 148.5mm × 210mm). */
+@page { size: A4 landscape; margin: 0; }
+
+.pi.sheet {
+  min-height: 0; padding: 0; background: #fff;
+  width: 297mm; height: 210mm; display: flex; overflow: hidden;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+
+  & .page { width: 148.5mm; box-shadow: none; flex: none; }
+  /* a faint cut line down the middle */
+  & .page + .page { border-left: .2mm dashed rgba(124, 92, 20, .35); }
+}

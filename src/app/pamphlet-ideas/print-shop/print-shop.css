@@ -1,0 +1,8 @@
+/* A5 (148 × 210mm) plus the shop's 3mm bleed on every side. */
+@page { size: 154mm 216mm; margin: 0; }
+
+.pi.shop-sheet {
+  min-height: 0; padding: 0; background: #fff;
+  -webkit-print-color-adjust: exact; print-color-adjust: exact;
+  & .page { box-shadow: none; }
+}
