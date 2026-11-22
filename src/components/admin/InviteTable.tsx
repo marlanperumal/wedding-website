@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { EventPill } from '@/components/ui'
 import { CopyLinkButton } from './CopyLinkButton'
+import { SendReminderButton } from './SendReminderButton'
 
 interface GuestData {
   id: string
@@ -20,6 +21,9 @@ interface InviteData {
   submitted: boolean
   guests: GuestData[]
   events: { event: EventData }[]
+  reminderSentAt: Date | null
+  /** Whether anyone on the invite said yes to an event, so there's a reminder to send. */
+  attending: boolean
 }
 
 interface InviteTableProps {
@@ -47,10 +51,10 @@ export function InviteTable({ invites }: InviteTableProps) {
       className="bg-paper-card overflow-x-auto"
       style={{ border: '1px solid rgba(176,138,54,.4)' }}
     >
-      <table className="w-full border-collapse" style={{ minWidth: 720 }}>
+      <table className="w-full border-collapse" style={{ minWidth: 860 }}>
         <thead>
           <tr style={{ borderBottom: '1px solid rgba(176,138,54,.4)' }}>
-            {['INVITE', 'GUESTS', 'EVENTS', 'STATUS', 'LINK'].map((h) => (
+            {['INVITE', 'GUESTS', 'EVENTS', 'STATUS', 'LINK', 'REMINDER'].map((h) => (
               <th key={h} className={th}>
                 {h}
               </th>
@@ -100,6 +104,15 @@ export function InviteTable({ invites }: InviteTableProps) {
               </td>
               <td className={td}>
                 <CopyLinkButton slug={invite.slug} />
+              </td>
+              <td className={td}>
+                {invite.reminderSentAt || (invite.email && invite.attending) ? (
+                  <SendReminderButton inviteId={invite.id} sentAt={invite.reminderSentAt} />
+                ) : (
+                  <span className="font-label text-[9px] tracking-[.1em] text-ink-muted">
+                    {invite.email ? 'NOT ATTENDING' : 'NO EMAIL'}
+                  </span>
+                )}
               </td>
             </tr>
           ))}

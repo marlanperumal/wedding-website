@@ -1,6 +1,7 @@
 /**
  * Sends the one-week reminder email to every household that said yes to at
- * least one event and has an email address.
+ * least one event, has an email address, and hasn't already been sent it
+ * (from here or from the Send button on /admin/guests).
  *
  *   just reminder                 # dry run: list who would get it, send nothing
  *   just reminder --confirm       # actually send
@@ -8,7 +9,7 @@
  * Uses whatever DATABASE_URL and email transport the env file provides (see
  * deliver() in src/lib/email.ts). Preview and test-send from /admin/reminder.
  */
-import { getReminderRecipients, renderReminder, sendReminder } from '@/lib/reminder'
+import { getReminderRecipients, renderReminder, sendReminderToInvite } from '@/lib/reminder'
 import { prisma } from '@/lib/prisma'
 
 // Resend's default limit is 2 requests a second.
@@ -17,7 +18,8 @@ const DELAY_MS = 600
 async function main() {
   const confirm = process.argv.includes('--confirm')
   const recipients = await getReminderRecipients()
-  const sendable = recipients.filter((r) => r.email)
+  const alreadySent = recipients.filter((r) => r.reminderSentAt)
+  const sendable = recipients.filter((r) => r.email && !r.reminderSentAt)
   const skipped = recipients.filter((r) => !r.email)
 
   const transport = process.env.SMTP_HOST
@@ -34,6 +36,9 @@ async function main() {
   for (const r of sendable) {
     console.log(`  ${r.label} <${r.email}> — ${r.events.map((e) => e.name).join(', ')}`)
   }
+  if (alreadySent.length) {
+    console.log(`\nAlready sent (skipped): ${alreadySent.map((r) => r.label).join(', ')}`)
+  }
   if (skipped.length) {
     console.log(`\nNo email address (skipped): ${skipped.map((r) => r.label).join(', ')}`)
   }
@@ -46,13 +51,13 @@ async function main() {
   let sent = 0
   const failed: string[] = []
   for (const r of sendable) {
-    try {
-      await sendReminder(r, r.email!)
+    const { status } = await sendReminderToInvite(r.inviteId)
+    if (status === 'sent') {
       sent++
       console.log(`✓ ${r.label}`)
-    } catch (err) {
+    } else {
       failed.push(r.label)
-      console.error(`✗ ${r.label}:`, err)
+      console.error(`✗ ${r.label}: ${status}`)
     }
     await new Promise((resolve) => setTimeout(resolve, DELAY_MS))
   }

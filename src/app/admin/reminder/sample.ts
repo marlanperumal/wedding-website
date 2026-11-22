@@ -8,6 +8,7 @@ export async function sampleRecipient(): Promise<ReminderRecipient> {
     inviteId: 'sample',
     label: 'Sample Family',
     email: null,
+    reminderSentAt: null,
     events: events.map(({ name, date }) => ({ name, date })),
   }
 }

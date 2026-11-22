@@ -13,6 +13,8 @@ model Invite {
   email       String?
   submitted   Boolean   @default(false)
   submittedAt DateTime?
+  /// When the one-week reminder email was sent to this invite's email address.
+  reminderSentAt DateTime?
   createdAt   DateTime  @default(now())
 
   guests Guest[]

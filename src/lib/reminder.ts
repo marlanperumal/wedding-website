@@ -10,17 +10,20 @@ export interface ReminderRecipient {
   inviteId: string
   label: string
   email: string | null
+  /** When the reminder was sent to this invite, or null if not yet. */
+  reminderSentAt: Date | null
   /** Events at least one guest on the invite said yes to, in programme order. */
   events: ReminderEvent[]
 }
 
 /**
- * Every invite with at least one guest attending at least one event. Invites
- * without an email are included (the admin preview shows them) but can't be
- * sent to.
+ * Every invite with at least one guest attending at least one event, or just
+ * the one invite when `inviteId` is given. Invites without an email are
+ * included (the admin preview shows them) but can't be sent to.
  */
-export async function getReminderRecipients(): Promise<ReminderRecipient[]> {
+export async function getReminderRecipients(inviteId?: string): Promise<ReminderRecipient[]> {
   const invites = await prisma.invite.findMany({
+    where: inviteId ? { id: inviteId } : undefined,
     orderBy: { label: 'asc' },
     include: {
       guests: {
@@ -40,7 +43,13 @@ export async function getReminderRecipients(): Promise<ReminderRecipient[]> {
       const events = [...byId.values()]
         .sort((a, b) => a.sortOrder - b.sortOrder)
         .map(({ name, date }) => ({ name, date }))
-      return { inviteId: invite.id, label: invite.label, email: invite.email, events }
+      return {
+        inviteId: invite.id,
+        label: invite.label,
+        email: invite.email,
+        reminderSentAt: invite.reminderSentAt,
+        events,
+      }
     })
     .filter((r) => r.events.length > 0)
 }
@@ -192,7 +201,45 @@ function htmlToText(html: string) {
     .trim()
 }
 
-export async function sendReminder(recipient: ReminderRecipient, to: string) {
+/** Sends a copy of the reminder for `recipient` to `to`. Records nothing — used for test sends. */
+export async function sendReminder(recipient: Pick<ReminderRecipient, 'label' | 'events'>, to: string) {
   const { subject, html, text } = renderReminder(recipient)
   await deliver({ from: FROM, to, subject, html, text })
+}
+
+export type ReminderSendResult =
+  | { status: 'sent'; sentAt: Date }
+  | { status: 'already-sent' | 'no-email' | 'not-attending' | 'failed' }
+
+/**
+ * Sends the reminder to an invite's own email address, at most once.
+ *
+ * The invite is marked as sent before the email goes out, and only if it
+ * wasn't already, so two clicks (or the bulk command running alongside the
+ * admin page) can't both send. If delivery fails the mark is cleared so it
+ * can be retried.
+ */
+export async function sendReminderToInvite(inviteId: string): Promise<ReminderSendResult> {
+  const [recipient] = await getReminderRecipients(inviteId)
+  if (!recipient) return { status: 'not-attending' }
+  if (!recipient.email) return { status: 'no-email' }
+
+  const sentAt = new Date()
+  const claimed = await prisma.invite.updateMany({
+    where: { id: inviteId, reminderSentAt: null },
+    data: { reminderSentAt: sentAt },
+  })
+  if (claimed.count === 0) return { status: 'already-sent' }
+
+  try {
+    await sendReminder(recipient, recipient.email)
+    return { status: 'sent', sentAt }
+  } catch (err) {
+    console.error(`Reminder to invite ${inviteId} failed:`, err)
+    await prisma.invite.updateMany({
+      where: { id: inviteId, reminderSentAt: sentAt },
+      data: { reminderSentAt: null },
+    })
+    return { status: 'failed' }
+  }
 }

@@ -4,6 +4,7 @@ import { extractAdminSession } from '@/lib/cookies'
 import { prisma } from '@/lib/prisma'
 import { AdminTopBar } from '@/components/admin/AdminTopBar'
 import { InviteTable } from '@/components/admin/InviteTable'
+import { getReminderRecipients } from '@/lib/reminder'
 import { addInvite } from './actions'
 
 const fieldLabel =
@@ -21,7 +22,7 @@ export default async function AdminGuestsPage() {
   const isAdmin = await extractAdminSession(cookieStore.get('adminSession')?.value)
   if (!isAdmin) redirect('/admin')
 
-  const [invites, events] = await Promise.all([
+  const [invites, events, recipients] = await Promise.all([
     prisma.invite.findMany({
       orderBy: { createdAt: 'asc' },
       include: {
@@ -30,7 +31,9 @@ export default async function AdminGuestsPage() {
       },
     }),
     prisma.event.findMany({ orderBy: { sortOrder: 'asc' } }),
+    getReminderRecipients(),
   ])
+  const attendingIds = new Set(recipients.map((r) => r.inviteId))
 
   return (
     <div>
@@ -134,7 +137,9 @@ export default async function AdminGuestsPage() {
         <div className="font-label text-[11px] tracking-[.22em] text-acc-teal-deep mb-3.5">
           ALL INVITES · {invites.length}
         </div>
-        <InviteTable invites={invites} />
+        <InviteTable
+          invites={invites.map((i) => ({ ...i, attending: attendingIds.has(i.id) }))}
+        />
       </div>
     </div>
   )

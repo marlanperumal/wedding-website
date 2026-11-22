@@ -3,6 +3,10 @@ import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { generateInviteSlug } from '@/lib/slugs'
 import { AddInviteSchema } from '@/lib/schemas'
+import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { extractAdminSession } from '@/lib/cookies'
+import { sendReminderToInvite, type ReminderSendResult } from '@/lib/reminder'
 
 export async function addInvite(formData: FormData) {
   const rawNames = ((formData.get('guestNames') as string) ?? '')
@@ -44,4 +48,13 @@ export async function addInvite(formData: FormData) {
   })
 
   revalidatePath('/admin/guests')
+}
+
+export async function sendReminderAction(inviteId: string): Promise<ReminderSendResult> {
+  const cookieStore = await cookies()
+  if (!(await extractAdminSession(cookieStore.get('adminSession')?.value))) redirect('/admin')
+
+  const result = await sendReminderToInvite(inviteId)
+  revalidatePath('/admin/guests')
+  return result
 }
