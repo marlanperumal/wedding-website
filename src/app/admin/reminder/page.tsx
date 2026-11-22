@@ -24,8 +24,7 @@ export default async function AdminReminderPage({
 }) {
   const cookieStore = await cookies()
   const isAdmin = await extractAdminSession(cookieStore.get('adminSession')?.value)
-  // TEMPORARY: open without login on the local dev server only. Delete once the reminder is sent.
-  if (!isAdmin && process.env.NODE_ENV !== 'development') redirect('/admin')
+  if (!isAdmin) redirect('/admin')
 
   const { invite, width, sent } = await searchParams
   const recipients = await getReminderRecipients()

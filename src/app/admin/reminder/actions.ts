@@ -12,9 +12,7 @@ import { sampleRecipient } from './sample'
  */
 export async function sendTestReminderAction(formData: FormData) {
   const cookieStore = await cookies()
-  const isAdmin = await extractAdminSession(cookieStore.get('adminSession')?.value)
-  // TEMPORARY: open without login on the local dev server only. Delete once the reminder is sent.
-  if (!isAdmin && process.env.NODE_ENV !== 'development') redirect('/admin')
+  if (!(await extractAdminSession(cookieStore.get('adminSession')?.value))) redirect('/admin')
 
   const inviteId = String(formData.get('invite') ?? '')
   const to = z.string().trim().email().safeParse(formData.get('to'))
