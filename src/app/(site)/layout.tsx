@@ -9,7 +9,7 @@ export default function SiteLayout({
   return (
     // Column layout so short pages push the footer to the bottom of the
     // viewport instead of leaving it stranded mid-screen.
-    <div className="flex min-h-dvh flex-col">
+    <div className="flex min-h-dvh flex-col print:min-h-0">
       <SiteNavServer />
       <main className="flex-1">{children}</main>
       <Footer />

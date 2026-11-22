@@ -77,7 +77,7 @@
 .ceremony-programme em { padding-right: .15em; }
 
 @media print {
-  @page { size: A5 portrait; margin: 10mm 11mm; }
+  @page { size: A5 portrait; margin: 13mm 16mm; }
   html, body { background: #fff !important; }
   .ceremony-programme {
     max-width: none !important;
@@ -87,23 +87,24 @@
   }
   /* Drop the "Order of Service" eyebrow to save space */
   .ceremony-programme > header > div:first-child { display: none; }
-  .ceremony-programme > header { margin-bottom: 6pt; }
-  .ceremony-programme h1 { font-size: 22pt !important; margin-top: 0; }
-  .ceremony-programme > header > div:nth-of-type(2) { font-size: 12pt !important; margin-top: 2pt; }
-  .ceremony-programme > header > div:last-child { margin-top: 5pt; }
-  .programme-intro { font-size: 10pt !important; line-height: 1.35 !important; margin-bottom: 9pt !important; }
-  .programme-section { margin-bottom: 9pt !important; }
-  .programme-section > div { gap: 4pt !important; }
-  .programme-section-header { margin-bottom: 5pt !important; break-after: avoid; }
-  .programme-section-title { font-size: 8.5pt !important; }
-  .programme-section-leader { font-size: 9.5pt !important; margin-top: 0 !important; }
+  .ceremony-programme > header { margin-bottom: 10pt; }
+  .ceremony-programme h1 { font-size: 20pt !important; margin-top: 0; }
+  .ceremony-programme > header > div:nth-of-type(2) { font-size: 11pt !important; margin-top: 2pt; }
+  .ceremony-programme > header > div:last-child { margin-top: 7pt; }
+  .programme-intro { font-size: 8.5pt !important; line-height: 1.45 !important; margin-bottom: 13pt !important; max-width: 92% !important; }
+  .programme-section { margin-bottom: 13pt !important; }
+  .programme-section:last-child { margin-bottom: 0 !important; }
+  .programme-section > div { gap: 6pt !important; }
+  .programme-section-header { margin-bottom: 8pt !important; break-after: avoid; }
+  .programme-section-title { font-size: 8pt !important; }
+  .programme-section-leader { font-size: 8.5pt !important; margin-top: 1pt !important; }
   /* Run the step name into its description to save a line per step */
-  .programme-item { break-inside: avoid; font-size: 9.5pt; line-height: 1.35; }
-  .programme-item-name { display: inline; font-size: 11pt !important; margin: 0 !important; }
+  .programme-item { break-inside: avoid; font-size: 8pt; line-height: 1.42; }
+  .programme-item-name { display: inline; font-size: 9.5pt !important; margin: 0 !important; }
   .programme-item-name:has(+ .programme-item-body)::after {
     content: "\00a0\2014\00a0";
     font-style: normal;
     color: #b08a36;
   }
-  .programme-item-body { display: inline; font-size: 9.5pt !important; line-height: 1.35 !important; }
+  .programme-item-body { display: inline; font-size: 8pt !important; line-height: 1.42 !important; }
 }
