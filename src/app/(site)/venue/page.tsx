@@ -1,4 +1,5 @@
 import { PageHeader, PhotoFrame } from "@/components/ui";
+import { HOME_ADDRESS, HOME_MAP_LINK } from "@/lib/places";
 
 export const metadata = { title: "Venue — Marlan & Tramaine" };
 
@@ -92,13 +93,13 @@ export default function VenuePage() {
       {/* Other events */}
       <SectionHeading>Other events</SectionHeading>
       <div className="flex flex-col gap-[18px]">
-        <EventVenue event="Mehndi" address="11 Orient Road, Wynberg" />
+        <EventVenue event="Mehndi" address={HOME_ADDRESS} mapLink={HOME_MAP_LINK} />
         <EventVenue
           event="Nelengu"
           address="1 Belle Constantia Close, Kreupelbosch"
           mapLink="https://maps.app.goo.gl/3119DKGR5e9b5uAp7"
         />
-        <EventVenue event="Sangeet" address="11 Orient Road, Wynberg" />
+        <EventVenue event="Sangeet" address={HOME_ADDRESS} mapLink={HOME_MAP_LINK} />
       </div>
     </div>
   );

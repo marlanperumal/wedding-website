@@ -15,13 +15,14 @@
  * break next to a tag swallows the space ("home,11 Orient Road").
  */
 import { Button, Closing, Greeting, Heading, Intro, Link, P, SignOff, When } from './components'
+import { HOME_MAP_LINK } from '@/lib/places'
 
 export const subject = 'A few days to go — Marlan & Tramaine’s Wedding'
 
 /** The small capitals line above "Marlan & Tramaine's Wedding". */
 export const eyebrow = 'A few days to go'
 
-const HOME_MAP = 'https://maps.google.com/?q=11+Orient+Road,+Wynberg'
+const HOME_MAP = HOME_MAP_LINK
 const SAMS_MAP = 'https://maps.app.goo.gl/cx4enkpuLqWZ4HkY6'
 const CEREMONIES = 'https://wedding.liedeman.perumal.co.za/ceremonies'
 const PANWADI = 'https://www.youtube.com/watch?v=usVq_4K_m_w'
@@ -71,13 +72,14 @@ export function ReminderEmail({ name }: { name: string }) {
       <P>There are road works in the area at the moment, so please leave plenty of time to travel on the day.</P>
 
       <P>
-        We’ve put together a <Link href={CEREMONIES}>guide to the ceremonies</Link> on the website.
+        We’ve put together a <Link href={CEREMONIES}>guide to the ceremonies</Link> on the website. There are also
+        pages about the Events, Venue, Attire and Gifts if you haven't had a look yet.
       </P>
 
       <P>
-        We've chosen a fun theme song <Link href={PANWADI}>Panwadi</Link>. Have a look & listen — we'll
-        be playing it a few times at the Sangeet, so if you want to try to learn the moves to the chorus, we can
-        all try it together at the wedding!
+        We’ve chosen a fun wedding song <Link href={PANWADI}>Panwadi</Link>. Have a look & listen — we’ll
+        be playing it a few times at the Sangeet, so if you want to learn the moves to the chorus, we can
+        all try it together!
       </P>
 
       <Closing>
