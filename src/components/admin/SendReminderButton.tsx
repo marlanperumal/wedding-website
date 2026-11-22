@@ -10,12 +10,12 @@ const sentFmt = new Intl.DateTimeFormat('en-ZA', {
   timeZone: 'Africa/Johannesburg',
 })
 
-const base = 'font-label text-[9.5px] tracking-[.14em] whitespace-nowrap'
+const base = 'font-label text-[9.5px] tracking-[.14em] whitespace-nowrap disabled:opacity-60'
 const box = { padding: '6px 12px', border: '1px solid rgba(176,138,54,.5)' }
 
 /**
- * Sends the reminder email to one invite. The first click asks for
- * confirmation; the second sends. Once sent it turns into a disabled "Sent".
+ * Sends the reminder email to one invite. Once sent it shows the time, with a
+ * ↻ button to send it again.
  */
 export function SendReminderButton({
   inviteId,
@@ -27,45 +27,51 @@ export function SendReminderButton({
   // The saved time arrives with the page refresh that follows the action;
   // until then, show the time the action returned.
   const [justSentAt, setJustSentAt] = useState<Date | null>(null)
-  const sentAt = savedSentAt ?? justSentAt
-  const [confirming, setConfirming] = useState(false)
+  const sentAt = justSentAt ?? savedSentAt
   const [error, setError] = useState<string | null>(null)
   const [pending, startTransition] = useTransition()
 
-  if (sentAt) {
-    return (
-      <button type="button" disabled className={`${base} text-acc-teal-deep cursor-default`} style={{ ...box, borderColor: 'rgba(46,125,122,.35)', background: 'rgba(46,125,122,.08)' }}>
-        SENT · {sentFmt.format(new Date(sentAt))}
-      </button>
-    )
-  }
-
-  function send() {
+  function send(resend: boolean) {
     setError(null)
     startTransition(async () => {
-      const result = await sendReminderAction(inviteId)
-      setConfirming(false)
+      const result = await sendReminderAction(inviteId, { resend })
       if (result.status === 'sent') setJustSentAt(result.sentAt)
-      else if (result.status !== 'already-sent') setError(result.status === 'failed' ? 'Sending failed — try again' : 'Can’t send to this invite')
+      else if (result.status !== 'already-sent')
+        setError(result.status === 'failed' ? 'Sending failed — try again' : 'Can’t send to this invite')
     })
   }
 
   return (
     <div>
-      {confirming ? (
-        <div className="flex gap-1.5">
-          <button type="button" onClick={send} disabled={pending} className={`${base} text-paper-raised bg-acc-rust disabled:opacity-60`} style={{ ...box, borderColor: 'transparent' }}>
-            {pending ? 'SENDING…' : 'CONFIRM SEND'}
+      {sentAt ? (
+        <div className="flex items-center gap-1.5">
+          <span
+            className={`${base} text-acc-teal-deep`}
+            style={{ ...box, borderColor: 'rgba(46,125,122,.35)', background: 'rgba(46,125,122,.08)' }}
+          >
+            {pending ? 'SENDING…' : `SENT · ${sentFmt.format(new Date(sentAt))}`}
+          </span>
+          <button
+            type="button"
+            onClick={() => send(true)}
+            disabled={pending}
+            title="Send again"
+            aria-label="Send the reminder again"
+            className={`${base} text-gold-deep hover:text-acc-rust text-[13px] leading-none`}
+            style={{ ...box, padding: '5px 9px' }}
+          >
+            ↻
           </button>
-          {!pending && (
-            <button type="button" onClick={() => setConfirming(false)} className={`${base} text-ink-muted hover:text-acc-rust`} style={box}>
-              CANCEL
-            </button>
-          )}
         </div>
       ) : (
-        <button type="button" onClick={() => setConfirming(true)} className={`${base} text-gold-deep hover:text-acc-rust`} style={box}>
-          SEND
+        <button
+          type="button"
+          onClick={() => send(false)}
+          disabled={pending}
+          className={`${base} text-gold-deep hover:text-acc-rust`}
+          style={box}
+        >
+          {pending ? 'SENDING…' : 'SEND'}
         </button>
       )}
       {error && <div className="font-serif text-[13px] text-acc-rust mt-1">{error}</div>}

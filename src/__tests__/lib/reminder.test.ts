@@ -90,4 +90,31 @@ describe('sendReminderToInvite', () => {
       data: { reminderSentAt: null },
     })
   })
+  it('resends to an invite already sent when asked to, and updates the time', async () => {
+    const earlier = new Date('2026-11-22T10:00:00Z')
+    vi.mocked(prisma.invite.findMany).mockResolvedValue([invite({ reminderSentAt: earlier })] as any)
+
+    const result = await sendReminderToInvite('invite-1', { resend: true })
+
+    expect(result.status).toBe('sent')
+    expect(prisma.invite.updateMany).toHaveBeenCalledWith({
+      where: { id: 'invite-1' },
+      data: { reminderSentAt: expect.any(Date) },
+    })
+    expect(deliver).toHaveBeenCalledOnce()
+  })
+
+  it('puts back the earlier time when a resend fails', async () => {
+    const earlier = new Date('2026-11-22T10:00:00Z')
+    vi.mocked(prisma.invite.findMany).mockResolvedValue([invite({ reminderSentAt: earlier })] as any)
+    vi.mocked(deliver).mockRejectedValueOnce(new Error('Resend down'))
+
+    const result = await sendReminderToInvite('invite-1', { resend: true })
+
+    expect(result.status).toBe('failed')
+    expect(prisma.invite.updateMany).toHaveBeenLastCalledWith({
+      where: { id: 'invite-1', reminderSentAt: expect.any(Date) },
+      data: { reminderSentAt: earlier },
+    })
+  })
 })

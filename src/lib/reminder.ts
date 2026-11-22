@@ -100,21 +100,25 @@ export type ReminderSendResult =
   | { status: 'already-sent' | 'no-email' | 'not-attending' | 'failed' }
 
 /**
- * Sends the reminder to an invite's own email address, at most once.
+ * Sends the reminder to an invite's own email address.
  *
- * The invite is marked as sent before the email goes out, and only if it
- * wasn't already, so two clicks (or the bulk command running alongside the
- * admin page) can't both send. If delivery fails the mark is cleared so it
- * can be retried.
+ * Without `resend`, it sends at most once: the invite is marked as sent
+ * before the email goes out, and only if it wasn't already, so two clicks
+ * (or the bulk command running alongside the admin page) can't both send.
+ * With `resend`, it sends again and updates the time. If delivery fails the
+ * previous time (or none) is put back so it can be retried.
  */
-export async function sendReminderToInvite(inviteId: string): Promise<ReminderSendResult> {
+export async function sendReminderToInvite(
+  inviteId: string,
+  { resend = false }: { resend?: boolean } = {},
+): Promise<ReminderSendResult> {
   const [recipient] = await getReminderRecipients(inviteId)
   if (!recipient) return { status: 'not-attending' }
   if (!recipient.email) return { status: 'no-email' }
 
   const sentAt = new Date()
   const claimed = await prisma.invite.updateMany({
-    where: { id: inviteId, reminderSentAt: null },
+    where: resend ? { id: inviteId } : { id: inviteId, reminderSentAt: null },
     data: { reminderSentAt: sentAt },
   })
   if (claimed.count === 0) return { status: 'already-sent' }
@@ -126,7 +130,7 @@ export async function sendReminderToInvite(inviteId: string): Promise<ReminderSe
     console.error(`Reminder to invite ${inviteId} failed:`, err)
     await prisma.invite.updateMany({
       where: { id: inviteId, reminderSentAt: sentAt },
-      data: { reminderSentAt: null },
+      data: { reminderSentAt: resend ? recipient.reminderSentAt : null },
     })
     return { status: 'failed' }
   }

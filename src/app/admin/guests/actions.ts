@@ -50,11 +50,14 @@ export async function addInvite(formData: FormData) {
   revalidatePath('/admin/guests')
 }
 
-export async function sendReminderAction(inviteId: string): Promise<ReminderSendResult> {
+export async function sendReminderAction(
+  inviteId: string,
+  { resend = false }: { resend?: boolean } = {},
+): Promise<ReminderSendResult> {
   const cookieStore = await cookies()
   if (!(await extractAdminSession(cookieStore.get('adminSession')?.value))) redirect('/admin')
 
-  const result = await sendReminderToInvite(inviteId)
+  const result = await sendReminderToInvite(inviteId, { resend })
   revalidatePath('/admin/guests')
   return result
 }
