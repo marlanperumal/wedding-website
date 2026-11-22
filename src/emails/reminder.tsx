@@ -22,7 +22,7 @@ export const subject = 'A few days to go — Marlan & Tramaine’s Wedding'
 export const eyebrow = 'A few days to go'
 
 const HOME_MAP = 'https://maps.google.com/?q=11+Orient+Road,+Wynberg'
-const SAMS_MAP = 'https://maps.google.com/?q=1+Belle+Constantia+Close,+Kreupelbosch'
+const SAMS_MAP = 'https://maps.app.goo.gl/cx4enkpuLqWZ4HkY6'
 const CEREMONIES = 'https://wedding.liedeman.perumal.co.za/ceremonies'
 const PANWADI = 'https://www.youtube.com/watch?v=usVq_4K_m_w'
 
