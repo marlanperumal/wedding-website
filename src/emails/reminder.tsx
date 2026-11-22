@@ -15,7 +15,7 @@
  * break next to a tag swallows the space ("home,11 Orient Road").
  */
 import { Button, Closing, Greeting, Heading, Intro, Link, P, SignOff, When } from './components'
-import { HOME_MAP_LINK } from '@/lib/places'
+import { HOME_MAP_LINK, SAMS_MAP_LINK } from '@/lib/places'
 
 export const subject = 'A few days to go — Marlan & Tramaine’s Wedding'
 
@@ -23,7 +23,7 @@ export const subject = 'A few days to go — Marlan & Tramaine’s Wedding'
 export const eyebrow = 'A few days to go'
 
 const HOME_MAP = HOME_MAP_LINK
-const SAMS_MAP = 'https://maps.app.goo.gl/cx4enkpuLqWZ4HkY6'
+const SAMS_MAP = SAMS_MAP_LINK
 const CEREMONIES = 'https://wedding.liedeman.perumal.co.za/ceremonies'
 const PANWADI = 'https://www.youtube.com/watch?v=usVq_4K_m_w'
 
